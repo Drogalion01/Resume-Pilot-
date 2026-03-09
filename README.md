@@ -1,73 +1,132 @@
-# Welcome to your Lovable project
+# ResumePilot
 
-## Project info
+ResumePilot is an AI-powered resume analysis and job application tracking platform built for students, interns, and early-career professionals. It helps users analyze resumes for ATS and recruiter readiness, save tailored resume versions, track applications, manage interviews, and keep follow-up reminders in one place.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+This repository currently contains:
 
-## How can I edit this code?
+- a **React + Vite + TypeScript frontend**
+- a **FastAPI + PostgreSQL backend**
+- a product structure designed to support a future **Flutter / native Android client**
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Core Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Resume Analysis
+- Upload resume as **PDF** or **DOCX**
+- Paste raw resume text manually
+- Analyze resume against ATS and recruiter-style scoring
+- Detect:
+  - missing contact details
+  - weak section coverage
+  - weak action verbs
+  - lack of measurable achievements
+  - missing role-specific keywords
+- Return:
+  - ATS score
+  - Recruiter score
+  - overall score
+  - issues to fix
+  - missing keywords
+  - action plan
+  - rewrite suggestions placeholder
 
-Changes made via Lovable will be committed automatically to this repo.
+### Resume Version Management
+- Save multiple resume versions
+- Create role-specific / company-specific resume variants
+- Duplicate versions
+- View version details and analysis history
 
-**Use your preferred IDE**
+### Application Tracking
+- Track job applications by status
+- View recent applications
+- View application detail timeline
+- Attach a resume version to an application
+- Store recruiter and job information
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Interview Tracking
+- Add interview rounds to an application
+- Store date, time, timezone, meeting link, interviewer, and notes
+- Track interview stage progress
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Reminders and Notes
+- Add follow-up reminders per application
+- Add recruiter / personal notes
+- View everything from one application detail screen
 
-Follow these steps:
+### User and Settings
+- JWT-based authentication
+- Login / signup / forgot password
+- User profile
+- Appearance and notification settings
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Product Philosophy
 
-# Step 3: Install the necessary dependencies.
-npm i
+ResumePilot is designed around one core workflow:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+**analyze resume → improve it → save a targeted version → attach it to an application → manage interviews and follow-ups**
 
-**Edit a file directly in GitHub**
+The goal is not to be a generic job board or a bloated career platform.  
+The goal is to be a focused workflow tool.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## Tech Stack
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
+### Frontend
+- React 18
 - Vite
 - TypeScript
-- React
-- shadcn-ui
 - Tailwind CSS
+- shadcn/ui
+- Framer Motion
+- React Router v6
+- TanStack Query (integration-ready)
 
-## How can I deploy this project?
+### Backend
+- FastAPI
+- Python 3.10+
+- PostgreSQL
+- SQLAlchemy 2.0
+- Alembic
+- Pydantic v2
+- python-jose (JWT auth)
+- passlib[bcrypt]
+- pdfplumber
+- python-docx
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+### Planned Mobile Layer
+- Flutter (planned native/mobile rebuild)
+- Existing web frontend currently acts as the design and product specification
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## Repository Structure
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```text
+.
+├── frontend/                       # React + Vite frontend (or project root if frontend is at root)
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── ...
+│
+├── backend/
+│   ├── .env
+│   ├── alembic.ini
+│   ├── requirements.txt
+│   ├── alembic/
+│   └── app/
+│       ├── main.py
+│       ├── config.py
+│       ├── database.py
+│       ├── dependencies.py
+│       ├── models/
+│       ├── schemas/
+│       ├── routes/
+│       ├── services/
+│       └── utils/
+│
+└── README.md
