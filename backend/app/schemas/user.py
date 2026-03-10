@@ -18,16 +18,4 @@ class UserResponse(UserBase):
 
     model_config = ConfigDict(from_attributes=True)
 
-class SettingsUpdate(BaseModel):
-    dark_mode: bool | None = None
-    email_notifications: bool | None = None
-    resume_privacy: bool | None = None
-
-class SettingsResponse(BaseModel):
-    id: int
-    user_id: int
-    dark_mode: bool
-    email_notifications: bool
-    resume_privacy: bool
-
-    model_config = ConfigDict(from_attributes=True)
+# SettingsResponse / SettingsUpdate moved to schemas/settings.py — do not redeclare here.

@@ -1,6 +1,8 @@
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
+
+
 class SettingsBase(BaseModel):
     theme_preference: str = "system"
     email_notifications_enabled: bool = True

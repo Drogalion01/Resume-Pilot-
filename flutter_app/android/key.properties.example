@@ -1,0 +1,25 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Android Release Signing — key.properties
+#
+# Copy this file to key.properties (same directory — flutter_app/android/) and
+# fill in your keystore details.
+#
+# NEVER commit key.properties to version control.
+# The .gitignore already excludes it.
+#
+# ─── How to generate a release keystore ─────────────────────────────────────
+#
+#   keytool -genkey -v \
+#     -keystore ~/resumepilot-release.jks \
+#     -alias resumepilot \
+#     -keyalg RSA -keysize 2048 \
+#     -validity 10000
+#
+# Store the .jks file somewhere OUTSIDE the repository (e.g. a secrets manager,
+# a password vault, or a CI/CD secrets store).
+# ─────────────────────────────────────────────────────────────────────────────
+
+storePassword=your_keystore_password
+keyPassword=your_key_password
+keyAlias=resumepilot
+storeFile=/absolute/path/to/resumepilot-release.jks

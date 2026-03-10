@@ -1,0 +1,81 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // ── Flutter: Windows desktop (instant local dev — no emulator needed) ──
+    {
+      "name": "Flutter (Windows — dev)",
+      "type": "dart",
+      "request": "launch",
+      "program": "flutter_app/lib/main.dart",
+      "args": [
+        "--dart-define=API_BASE_URL=http://localhost:8000/api/v1",
+        "-d", "windows"
+      ]
+    },
+    // ── Flutter: Chrome / web ───────────────────────────────────────────────
+    {
+      "name": "Flutter (Chrome — dev)",
+      "type": "dart",
+      "request": "launch",
+      "program": "flutter_app/lib/main.dart",
+      "args": [
+        "--dart-define=API_BASE_URL=http://localhost:8000/api/v1",
+        "-d", "chrome"
+      ]
+    },
+    // ── Flutter: Android emulator (default dev) ─────────────────────────────
+    // 10.0.2.2 is the Android emulator alias for the host machine's localhost.
+    // This is also the ApiConstants.baseUrl default, so no --dart-define needed.
+    {
+      "name": "Flutter (Android emulator — dev)",
+      "type": "dart",
+      "request": "launch",
+      "program": "flutter_app/lib/main.dart",
+      "args": [
+        "--dart-define=API_BASE_URL=http://10.0.2.2:8000/api/v1"
+      ]
+    },
+    // ── Flutter: iOS simulator ──────────────────────────────────────────────
+    {
+      "name": "Flutter (iOS simulator — dev)",
+      "type": "dart",
+      "request": "launch",
+      "program": "flutter_app/lib/main.dart",
+      "args": [
+        "--dart-define=API_BASE_URL=http://localhost:8000/api/v1"
+      ]
+    },
+    // ── Flutter: Physical device — replace <YOUR-LAN-IP> ───────────────────
+    // Find your LAN IP: Windows → ipconfig, Mac/Linux → ifconfig
+    // Both your machine and device must be on the same Wi-Fi network.
+    {
+      "name": "Flutter (physical device — dev)",
+      "type": "dart",
+      "request": "launch",
+      "program": "flutter_app/lib/main.dart",
+      "args": [
+        "--dart-define=API_BASE_URL=http://192.168.1.100:8000/api/v1"
+      ]
+    },
+    // ── Flutter: Staging ────────────────────────────────────────────────────
+    {
+      "name": "Flutter (staging)",
+      "type": "dart",
+      "request": "launch",
+      "program": "flutter_app/lib/main.dart",
+      "args": [
+        "--dart-define=API_BASE_URL=https://api-staging.resumepilot.app/api/v1"
+      ]
+    },
+    // ── Flutter: Production ─────────────────────────────────────────────────
+    {
+      "name": "Flutter (production)",
+      "type": "dart",
+      "request": "launch",
+      "program": "flutter_app/lib/main.dart",
+      "args": [
+        "--dart-define=API_BASE_URL=https://api.resumepilot.app/api/v1"
+      ]
+    }
+  ]
+}

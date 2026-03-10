@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.dependencies import get_current_active_user
 from app.models.user import User, UserSettings
-from app.schemas.user import UserResponse, UserUpdate, SettingsResponse, SettingsUpdate
+from app.schemas.user import UserResponse, UserUpdate
+from app.schemas.settings import SettingsResponse, SettingsUpdate
 
 router = APIRouter()
 

@@ -1,0 +1,79 @@
+# ResumePilot Flutter App
+# Run: flutter pub get
+#
+# Purpose: Package manifest — declares app identity, Flutter SDK constraint,
+#          and all third-party dependencies used across every feature.
+#
+# Key dependency groups:
+#   UI/Theme      : google_fonts, shimmer
+#   Navigation    : go_router
+#   State         : flutter_riverpod, riverpod_annotation
+#   Network       : dio
+#   Storage       : flutter_secure_storage, shared_preferences
+#   Models        : freezed_annotation, json_annotation
+#   Utilities     : intl, file_picker
+#   Dev/codegen   : build_runner, freezed, json_serializable, riverpod_generator, custom_lint
+
+name: resume_pilot
+description: ResumePilot — AI-powered resume analysis and job application tracker.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Navigation
+  go_router: ^17.1.0
+
+  # State management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.3.5
+
+  # Network
+  dio: ^5.9.2
+  connectivity_plus: ^6.0.3
+
+  # Secure storage
+  flutter_secure_storage: ^10.0.0
+  shared_preferences: ^2.5.4
+
+  # Models (code-gen annotations only — generators go in dev_dependencies)
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
+  # UI
+  google_fonts: ^6.2.1
+  shimmer: ^3.0.0
+
+  # Utilities
+  intl: ^0.20.2
+  file_picker: ^10.3.10
+
+  # UI extras (added)
+  flutter_animate: ^4.5.2
+  flutter_svg: ^2.2.4
+  cached_network_image: ^3.4.1
+  fl_chart: ^1.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+  # Code generators — must be in dev_dependencies, NOT dependencies
+  build_runner: ^2.4.13
+  freezed: ^2.5.2
+  json_serializable: ^6.8.0
+  riverpod_generator: ^2.4.0
+  custom_lint: ^0.6.4
+  riverpod_lint: ^2.3.10
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/

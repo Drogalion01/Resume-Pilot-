@@ -7,7 +7,6 @@ from app.database import get_db
 from app.config import settings
 from app.models.user import User
 from app.schemas.auth import TokenPayload
-from app.services.auth_service import ALGORITHM
 
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/auth/login"
@@ -27,7 +26,7 @@ def get_current_user(
     )
     
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         user_id_str: str = payload.get("sub")
         if user_id_str is None:
             raise credentials_exception

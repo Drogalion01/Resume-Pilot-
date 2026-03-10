@@ -1,132 +1,183 @@
-# ResumePilot
+﻿# ResumePilot
 
 ResumePilot is an AI-powered resume analysis and job application tracking platform built for students, interns, and early-career professionals. It helps users analyze resumes for ATS and recruiter readiness, save tailored resume versions, track applications, manage interviews, and keep follow-up reminders in one place.
-
-This repository currently contains:
-
-- a **React + Vite + TypeScript frontend**
-- a **FastAPI + PostgreSQL backend**
-- a product structure designed to support a future **Flutter / native Android client**
 
 ---
 
 ## Core Features
 
 ### Resume Analysis
-- Upload resume as **PDF** or **DOCX**
-- Paste raw resume text manually
-- Analyze resume against ATS and recruiter-style scoring
-- Detect:
-  - missing contact details
-  - weak section coverage
-  - weak action verbs
-  - lack of measurable achievements
-  - missing role-specific keywords
-- Return:
-  - ATS score
-  - Recruiter score
-  - overall score
-  - issues to fix
-  - missing keywords
-  - action plan
-  - rewrite suggestions placeholder
+- Upload resume as **PDF** or **DOCX**, or paste raw resume text
+- Analyze against ATS and recruiter-style scoring
+- Detect missing contact details, weak action verbs, lack of measurable achievements, and missing role-specific keywords
+- Returns ATS score, recruiter score, overall score, issues list, missing keywords, and action plan
 
 ### Resume Version Management
-- Save multiple resume versions
-- Create role-specific / company-specific resume variants
-- Duplicate versions
-- View version details and analysis history
+- Save multiple resume versions; create role-specific or company-specific variants
+- Duplicate versions, view version details and analysis history
 
 ### Application Tracking
-- Track job applications by status
-- View recent applications
-- View application detail timeline
-- Attach a resume version to an application
-- Store recruiter and job information
+- Track job applications by status with a full detail timeline
+- Attach a resume version to an application; store recruiter and job information
 
 ### Interview Tracking
-- Add interview rounds to an application
-- Store date, time, timezone, meeting link, interviewer, and notes
+- Add interview rounds per application with date, time, timezone, meeting link, interviewer, and notes
 - Track interview stage progress
 
 ### Reminders and Notes
-- Add follow-up reminders per application
-- Add recruiter / personal notes
-- View everything from one application detail screen
+- Add follow-up reminders and recruiter / personal notes per application
 
 ### User and Settings
-- JWT-based authentication
-- Login / signup / forgot password
-- User profile
-- Appearance and notification settings
+- JWT-based authentication — login, signup, forgot password
+- User profile, appearance, and notification settings
 
 ---
 
 ## Product Philosophy
 
-ResumePilot is designed around one core workflow:
+ResumePilot is built around one core workflow:
 
 **analyze resume → improve it → save a targeted version → attach it to an application → manage interviews and follow-ups**
 
-The goal is not to be a generic job board or a bloated career platform.  
-The goal is to be a focused workflow tool.
+The goal is a focused workflow tool — not a generic job board or a bloated career platform.
 
 ---
 
 ## Tech Stack
 
-### Frontend
-- React 18
-- Vite
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-- Framer Motion
-- React Router v6
-- TanStack Query (integration-ready)
+### Mobile Client
+- Flutter 3.x (Dart)
+- Material 3 design system
+- Riverpod (state management)
+- `go_router` (navigation)
+- `dio` + `retrofit` (HTTP)
+- `flutter_secure_storage` (token storage)
 
 ### Backend
-- FastAPI
-- Python 3.10+
-- PostgreSQL
-- SQLAlchemy 2.0
-- Alembic
+- FastAPI (Python 3.10+)
+- PostgreSQL via Neon (serverless)
+- SQLAlchemy 2.0 (async)
+- Alembic (migrations)
 - Pydantic v2
-- python-jose (JWT auth)
-- passlib[bcrypt]
-- pdfplumber
-- python-docx
-
-### Planned Mobile Layer
-- Flutter (planned native/mobile rebuild)
-- Existing web frontend currently acts as the design and product specification
+- python-jose (JWT), passlib[bcrypt]
+- pdfplumber + python-docx (resume parsing)
 
 ---
 
 ## Repository Structure
 
-```text
+```
 .
-├── frontend/                       # React + Vite frontend (or project root if frontend is at root)
-│   ├── src/
-│   ├── public/
-│   ├── package.json
-│   └── ...
+├── flutter_app/               # Flutter mobile client
+│   ├── lib/
+│   │   ├── main.dart
+│   │   ├── app/               # App bootstrap, router, theme
+│   │   ├── core/              # API client, constants, error handling
+│   │   ├── features/          # Feature modules (auth, applications, resumes, …)
+│   │   └── shared/            # Shared widgets, providers, utilities
+│   ├── android/
+│   ├── assets/
+│   └── pubspec.yaml
 │
-├── backend/
-│   ├── .env
+├── backend/                   # FastAPI backend
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   ├── dependencies.py
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── alembic/               # Database migrations
 │   ├── alembic.ini
 │   ├── requirements.txt
-│   ├── alembic/
-│   └── app/
-│       ├── main.py
-│       ├── config.py
-│       ├── database.py
-│       ├── dependencies.py
-│       ├── models/
-│       ├── schemas/
-│       ├── routes/
-│       ├── services/
-│       └── utils/
+│   └── .env.example
 │
+├── uploads/                   # Backend file storage (gitignored)
+├── resumepilotbdbackup.sql    # Database backup
 └── README.md
+```
+
+---
+
+## Getting Started
+
+### Backend
+
+```bash
+cd backend
+
+# Create and activate Python virtualenv
+python -m venv ../myenv
+# Windows:
+..\myenv\Scripts\activate
+# macOS/Linux:
+source ../myenv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env — set DATABASE_URL, SECRET_KEY, etc.
+
+# Run migrations
+alembic upgrade head
+
+# Start dev server
+uvicorn app.main:app --reload --port 8000
+```
+
+Backend available at `http://localhost:8000`.  
+Interactive docs at `http://localhost:8000/docs`.
+
+### Flutter App
+
+```bash
+cd flutter_app
+
+# Fetch dependencies
+flutter pub get
+
+# Run on connected device / emulator
+flutter run
+
+# Build release APK
+flutter build apk --release
+```
+
+> The app points to `http://10.0.2.2:8000` (Android emulator localhost) by default.  
+> Update `lib/core/constants/api_constants.dart` for a staging or production URL.
+
+---
+
+## Environment Variables
+
+Copy `backend/.env.example` to `backend/.env` and fill in:
+
+| Variable | Description |
+|---|---|
+| `DATABASE_URL` | PostgreSQL connection string (Neon or local) |
+| `SECRET_KEY` | JWT signing secret (min 32 chars) |
+| `ALGORITHM` | JWT algorithm — default `HS256` |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | Token TTL — default `30` |
+| `ALLOWED_ORIGINS` | Comma-separated CORS origins |
+
+---
+
+## Database
+
+Migrations are managed with **Alembic**.
+
+```bash
+# Apply all pending migrations
+alembic upgrade head
+
+# Create a new migration after model changes
+alembic revision --autogenerate -m "description"
+
+# Verify database tables
+python verify_db.py
+```

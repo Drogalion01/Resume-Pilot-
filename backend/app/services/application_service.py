@@ -4,7 +4,7 @@ from sqlalchemy import desc
 from app.models.tracker import Application, TimelineEvent, Interview, Reminder, Note
 from app.models.resume import ResumeVersion
 from app.schemas.application import ApplicationDetailResponse
-from datetime import datetime
+from datetime import datetime, timezone
 
 def compose_application_detail(db: Session, application: Application) -> ApplicationDetailResponse:
     """
@@ -64,7 +64,7 @@ def log_timeline_event(db: Session, application_id: int, event_type: str, title:
         event_type=event_type,
         title=title,
         detail=detail,
-        timestamp=datetime.utcnow()
+        timestamp=datetime.now(timezone.utc)
     )
     db.add(event)
     # Don't natively commit here, allow calling function to commit DB transactions 

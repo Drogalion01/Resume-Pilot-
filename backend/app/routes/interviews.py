@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -9,6 +10,20 @@ from app.schemas.interview import InterviewBase, InterviewUpdate, InterviewRespo
 from app.services.application_service import log_timeline_event
 
 router = APIRouter()
+
+@router.get("", response_model=List[InterviewResponse])
+def get_interviews(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """Get all interviews for the current user across all applications, ordered by date."""
+    return (
+        db.query(Interview)
+        .join(Application, Interview.application_id == Application.id)
+        .filter(Application.user_id == current_user.id)
+        .order_by(Interview.date.asc(), Interview.time.asc())
+        .all()
+    )
 
 def _get_user_interview(db: Session, interview_id: int, user_id: int) -> Interview:
     """Helper to fetch an interview and ensure its parent application belongs to the current user."""

@@ -7,8 +7,6 @@ from app.config import settings
 # Password hashing context configuration
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-ALGORITHM = "HS256"
-
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verifies a plain text password against a hashed one."""
     return pwd_context.verify(plain_password, hashed_password)
@@ -26,5 +24,5 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
         expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt

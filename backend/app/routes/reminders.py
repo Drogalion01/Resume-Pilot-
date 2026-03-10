@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -6,11 +7,31 @@ from app.dependencies import get_current_active_user
 from app.models.user import User
 from app.models.tracker import Application, Reminder, Note
 from app.schemas.reminder import ReminderBase, ReminderUpdate, ReminderResponse
-from app.schemas.note import NoteUpdate, NoteResponse
+from app.schemas.note import NoteBase, NoteUpdate, NoteResponse
 from app.services.application_service import log_timeline_event
 
 router = APIRouter()
 app_sub_router = APIRouter()
+notes_router = APIRouter()
+
+
+# ---------------------------------------------------------
+# REMINDERS LIST (/api/v1/reminders)
+# ---------------------------------------------------------
+
+@router.get("", response_model=List[ReminderResponse])
+def get_reminders(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """Get all reminders for the current user across all applications."""
+    return (
+        db.query(Reminder)
+        .join(Application, Reminder.application_id == Application.id)
+        .filter(Application.user_id == current_user.id)
+        .order_by(Reminder.scheduled_for.asc())
+        .all()
+    )
 
 def _get_user_reminder(db: Session, reminder_id: int, user_id: int) -> Reminder:
     """Helper to fetch a reminder mapped to a verified user application."""
@@ -92,6 +113,74 @@ def upsert_application_note(
     db.commit()
     db.refresh(note)
     return note
+
+
+@app_sub_router.post("/{id}/notes", response_model=NoteResponse, status_code=status.HTTP_201_CREATED)
+def create_application_note(
+    id: int,
+    note_in: NoteBase,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """
+    Create a new note for an application.
+    Multiple notes per application are supported.
+    """
+    application = db.query(Application).filter(Application.id == id, Application.user_id == current_user.id).first()
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    note = Note(application_id=application.id, content=note_in.content)
+    db.add(note)
+    db.commit()
+    db.refresh(note)
+    return note
+
+
+# ---------------------------------------------------------
+# DIRECT NOTES ROUTER (/api/v1/notes)
+# ---------------------------------------------------------
+
+def _get_user_note(db: Session, note_id: int, user_id: int) -> Note:
+    """Helper to fetch a note and verify it belongs to the current user via its parent application."""
+    note = (
+        db.query(Note)
+        .join(Application, Note.application_id == Application.id)
+        .filter(Note.id == note_id, Application.user_id == user_id)
+        .first()
+    )
+    if not note:
+        raise HTTPException(status_code=404, detail="Note not found")
+    return note
+
+
+@notes_router.patch("/{id}", response_model=NoteResponse)
+def update_note(
+    id: int,
+    note_update: NoteUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """Update a specific note by ID."""
+    note = _get_user_note(db, id, current_user.id)
+    if note_update.content is not None:
+        note.content = note_update.content
+    db.commit()
+    db.refresh(note)
+    return note
+
+
+@notes_router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_note(
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """Delete a note by ID."""
+    note = _get_user_note(db, id, current_user.id)
+    db.delete(note)
+    db.commit()
+    return None
 
 
 # ---------------------------------------------------------
