@@ -14,7 +14,7 @@
 Copy `.env.example` to `.env` for local dev. In production, set these as platform environment variables:
 
 | Variable | Required | Description |
-|---|---|---|
+| --- | --- | --- |
 | `SECRET_KEY` | **Yes** | Min 32-char random secret. Generate: `openssl rand -hex 32` |
 | `ALGORITHM` | No | JWT algorithm. Default: `HS256` |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | No | Token TTL. Default: `11520` (8 days) |
@@ -22,11 +22,13 @@ Copy `.env.example` to `.env` for local dev. In production, set these as platfor
 | `BACKEND_CORS_ORIGINS` | For web clients | Comma-separated list of allowed origins, e.g. `https://app.resumepilot.com` |
 
 ### Generate SECRET_KEY (PowerShell)
+
 ```powershell
 -join ((65..90) + (97..122) + (48..57) | Get-Random -Count 64 | ForEach-Object {[char]$_})
 ```
 
 ### Generate SECRET_KEY (bash / macOS / Linux)
+
 ```bash
 openssl rand -hex 32
 ```
@@ -37,18 +39,22 @@ openssl rand -hex 32
 
 1. Create a project at [console.neon.tech](https://console.neon.tech)
 2. Copy the **Connection string** — it looks like:
-   ```
+
+   ```text
    postgresql://user:password@ep-xxx.us-east-2.aws.neon.tech/neondb?sslmode=require
    ```
+
 3. Set it as `DATABASE_URL` in your environment
 
 ### Run migrations
+
 ```bash
 cd backend
 alembic upgrade head
 ```
 
 ### Verify
+
 ```bash
 python verify_db.py
 ```
@@ -84,7 +90,8 @@ Health check: `http://localhost:8000/api/v1/health`
 5. Deploy
 
 Procfile is:
-```
+
+```text
 web: gunicorn app.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
 ```
 
@@ -107,7 +114,7 @@ Or open a Railway shell and run `alembic upgrade head`.
 For most MVP loads, 2 Gunicorn workers is fine. Formula: `(2 × CPU cores) + 1`.  
 Scale up by changing `--workers` in the Procfile **or** setting a `WEB_CONCURRENCY` env var:
 
-```
+```text
 web: gunicorn app.main:app --workers ${WEB_CONCURRENCY:-2} --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
 ```
 
@@ -116,7 +123,7 @@ web: gunicorn app.main:app --workers ${WEB_CONCURRENCY:-2} --worker-class uvicor
 ## 5. Database Migrations (Alembic)
 
 | Task | Command |
-|---|---|
+| --- | --- |
 | Apply all pending migrations | `alembic upgrade head` |
 | Roll back one migration | `alembic downgrade -1` |
 | Check current revision | `alembic current` |
@@ -130,7 +137,7 @@ web: gunicorn app.main:app --workers ${WEB_CONCURRENCY:-2} --worker-class uvicor
 Base URL: `https://<your-domain>/api/v1`
 
 | Route | Description |
-|---|---|
+| --- | --- |
 | `GET /health` | Liveness probe |
 | `GET /health/db` | DB connectivity probe |
 | `POST /auth/register` | Create account |
@@ -161,7 +168,8 @@ Configure your platform to use `GET /api/v1/health` as the health check path.
 For native Android/iOS clients CORS is **not relevant** — mobile apps don't send `Origin` headers.
 
 For web clients or tools like Swagger UI, set:
-```
+
+```text
 BACKEND_CORS_ORIGINS=https://app.resumepilot.com,https://www.resumepilot.com
 ```
 
@@ -189,7 +197,7 @@ Maximum practical file size: ~5 MB (web server default). No explicit size limit 
 ## 11. Troubleshooting
 
 | Symptom | Likely cause | Fix |
-|---|---|---|
+| --- | --- | --- |
 | `500` on login | `SECRET_KEY` not set | Set `SECRET_KEY` env var |
 | `SSL connection error` | Wrong DB URL format | Ensure `?sslmode=require` in DATABASE_URL |
 | `relation "users" does not exist` | Migrations not run | Run `alembic upgrade head` |

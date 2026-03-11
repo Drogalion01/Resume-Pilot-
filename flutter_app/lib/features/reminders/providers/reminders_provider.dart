@@ -48,7 +48,9 @@ class RemindersNotifier extends AsyncNotifier<List<ReminderResponse>> {
         .read(reminderServiceProvider)
         .updateReminder(reminderId, {'completed': true});
     state = AsyncData(
-      (state.valueOrNull ?? []).map((r) => r.id == reminderId ? updated : r).toList(),
+      (state.valueOrNull ?? [])
+          .map((r) => r.id == reminderId ? updated : r)
+          .toList(),
     );
   }
 

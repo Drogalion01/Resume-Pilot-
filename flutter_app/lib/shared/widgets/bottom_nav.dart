@@ -26,10 +26,22 @@ class AppBottomNav extends StatelessWidget {
   final ValueChanged<int> onDestinationSelected;
 
   static const _tabs = <_NavTab>[
-    _NavTab(label: 'Home', icon: Icons.home_rounded, activeIcon: Icons.home_rounded),
-    _NavTab(label: 'Resumes', icon: Icons.description_outlined, activeIcon: Icons.description_rounded),
-    _NavTab(label: 'Applications', icon: Icons.work_outline_rounded, activeIcon: Icons.work_rounded),
-    _NavTab(label: 'Settings', icon: Icons.tune_outlined, activeIcon: Icons.tune_rounded),
+    _NavTab(
+        label: 'Home',
+        icon: Icons.home_rounded,
+        activeIcon: Icons.home_rounded),
+    _NavTab(
+        label: 'Resumes',
+        icon: Icons.description_outlined,
+        activeIcon: Icons.description_rounded),
+    _NavTab(
+        label: 'Applications',
+        icon: Icons.work_outline_rounded,
+        activeIcon: Icons.work_rounded),
+    _NavTab(
+        label: 'Settings',
+        icon: Icons.tune_outlined,
+        activeIcon: Icons.tune_rounded),
   ];
 
   @override
@@ -140,7 +152,8 @@ class _NavItem extends StatelessWidget {
           AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 200),
             style: (isActive
-                    ? textTheme.labelMedium!.copyWith(fontWeight: FontWeight.w700)
+                    ? textTheme.labelMedium!
+                        .copyWith(fontWeight: FontWeight.w700)
                     : textTheme.labelSmall!)
                 .copyWith(color: color),
             child: Text(tab.label),
@@ -165,4 +178,3 @@ class _NavTab {
   final IconData icon;
   final IconData activeIcon;
 }
-

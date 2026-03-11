@@ -16,8 +16,11 @@ abstract class _K {
 ///   On any 401 outside the auth endpoints, [clearAll] is called and the user
 ///   is redirected to /login.
 ///
-/// Uses [AndroidOptions(encryptedSharedPreferences: true)] for AES-256
-/// hardware-backed storage on Android 6+.
+/// On web, flutter_secure_storage uses WebCrypto (AES-GCM).  If the stored
+/// data is incompatible with the current key (e.g. data from a previous version
+/// or a cleared IndexedDB key), reads throw a JS OperationError.  All read
+/// helpers therefore catch exceptions, clear potentially-corrupted storage, and
+/// return null — forcing the user back to the login screen cleanly.
 class TokenStorage {
   TokenStorage(this._storage);
   final FlutterSecureStorage _storage;
@@ -30,24 +33,49 @@ class TokenStorage {
     required String email,
     required String initials,
   }) async {
-    await Future.wait([
-      _storage.write(key: _K.accessToken,  value: accessToken),
-      _storage.write(key: _K.userId,       value: userId.toString()),
-      _storage.write(key: _K.userEmail,    value: email),
-      _storage.write(key: _K.userInitials, value: initials),
-    ]);
+    // Always evict stale/incompatible WebCrypto key+data before writing.
+    // On web, flutter_secure_storage_web uses AES-GCM via the browser's
+    // WebCrypto API.  Stale encrypted values from a previous session (with a
+    // different AES key) cause crypto.subtle.decrypt() to throw a
+    // DOMException(OperationError) — which is NOT a Dart Exception and
+    // therefore escapes the library's own catch clause.
+    await _tryClearAll();
+
+    // Write ONE AT A TIME — never in parallel.
+    //
+    // flutter_secure_storage_web generates a shared AES key the first time
+    // it sees empty storage, stores it under `publicKey` in localStorage,
+    // then encrypts the value with it.  If multiple writes fire concurrently
+    // (e.g. via Future.wait), they ALL race through the "no key yet" branch,
+    // each generating its own key and clobbering `publicKey`.  Only the last
+    // writer's key survives; all earlier writes become permanently unreadable.
+    await _storage.write(key: _K.accessToken,  value: accessToken);
+    await _storage.write(key: _K.userId,       value: userId.toString());
+    await _storage.write(key: _K.userEmail,    value: email);
+    await _storage.write(key: _K.userInitials, value: initials);
   }
 
-  Future<void> clearAll() => _storage.deleteAll();
+  Future<void> clearAll() => _tryClearAll();
+
+  Future<void> _tryClearAll() async {
+    try {
+      await _storage.deleteAll();
+    } catch (_) {
+      // Ignore errors during clear — nothing we can do.
+    }
+  }
 
   // ── Read ─────────────────────────────────────────────────────────────────
 
-  Future<String?> getAccessToken()  => _storage.read(key: _K.accessToken);
-  Future<String?> getUserEmail()    => _storage.read(key: _K.userEmail);
-  Future<String?> getUserInitials() => _storage.read(key: _K.userInitials);
+  /// Returns the stored access token, or null if missing or storage is corrupt.
+  /// On WebCrypto OperationError, clears all storage so future writes succeed.
+  Future<String?> getAccessToken() => _safeRead(_K.accessToken);
+
+  Future<String?> getUserEmail()    => _safeRead(_K.userEmail);
+  Future<String?> getUserInitials() => _safeRead(_K.userInitials);
 
   Future<int?> getUserId() async {
-    final raw = await _storage.read(key: _K.userId);
+    final raw = await _safeRead(_K.userId);
     return raw != null ? int.tryParse(raw) : null;
   }
 
@@ -56,13 +84,25 @@ class TokenStorage {
     final token = await getAccessToken();
     return token != null && token.isNotEmpty;
   }
+
+  /// Wraps [FlutterSecureStorage.read] with error handling.
+  /// On any exception (e.g. WebCrypto OperationError on web), clears all
+  /// storage and returns null so the caller treats the state as unauthenticated.
+  Future<String?> _safeRead(String key) async {
+    try {
+      return await _storage.read(key: key);
+    } catch (_) {
+      await _tryClearAll();
+      return null;
+    }
+  }
 }
 
 // ── Providers ────────────────────────────────────────────────────────────────
 
 final flutterSecureStorageProvider = Provider<FlutterSecureStorage>((_) {
   return const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(),
     iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
   );
 });

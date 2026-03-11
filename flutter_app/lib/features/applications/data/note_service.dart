@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/error/app_exception.dart';
 import '../../../core/network/api_client.dart';
 import '../models/reminder_note.dart';
 
@@ -15,15 +16,26 @@ class NoteService {
 
   final Dio _dio;
 
+  Future<T> _run<T>(Future<T> Function() call) async {
+    try {
+      return await call();
+    } on DioException catch (e) {
+      if (e.error is AppException) throw e.error as AppException;
+      rethrow;
+    }
+  }
+
   // ── Read ───────────────────────────────────────────────────────────────────
 
   /// GET /applications/{applicationId}/notes  → List<NoteResponse>
   Future<List<NoteResponse>> getNotes(int applicationId) async {
-    final res = await _dio
-        .get<List<dynamic>>('/applications/$applicationId/notes');
-    return res.data!
-        .map((e) => NoteResponse.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return _run(() async {
+      final res = await _dio
+          .get<List<dynamic>>('/applications/$applicationId/notes');
+      return res.data!
+          .map((e) => NoteResponse.fromJson(e as Map<String, dynamic>))
+          .toList();
+    });
   }
 
   // ── Create ─────────────────────────────────────────────────────────────────
@@ -34,11 +46,13 @@ class NoteService {
     required int applicationId,
     required String content,
   }) async {
-    final res = await _dio.post<Map<String, dynamic>>(
-      '/applications/$applicationId/notes',
-      data: {'content': content},
-    );
-    return NoteResponse.fromJson(res.data!);
+    return _run(() async {
+      final res = await _dio.post<Map<String, dynamic>>(
+        '/applications/$applicationId/notes',
+        data: {'content': content},
+      );
+      return NoteResponse.fromJson(res.data!);
+    });
   }
 
   // ── Update ─────────────────────────────────────────────────────────────────
@@ -49,18 +63,22 @@ class NoteService {
     required int noteId,
     required String content,
   }) async {
-    final res = await _dio.patch<Map<String, dynamic>>(
-      '/notes/$noteId',
-      data: {'content': content},
-    );
-    return NoteResponse.fromJson(res.data!);
+    return _run(() async {
+      final res = await _dio.patch<Map<String, dynamic>>(
+        '/notes/$noteId',
+        data: {'content': content},
+      );
+      return NoteResponse.fromJson(res.data!);
+    });
   }
 
   // ── Delete ─────────────────────────────────────────────────────────────────
 
   /// DELETE /notes/{noteId}  → void (204)
   Future<void> deleteNote(int noteId) async {
-    await _dio.delete('/notes/$noteId');
+    return _run(() async {
+      await _dio.delete('/notes/$noteId');
+    });
   }
 }
 

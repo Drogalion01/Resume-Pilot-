@@ -1,5 +1,7 @@
-// Assets directory — place image assets here.
-// Formats: PNG, WebP, SVG (via flutter_svg if added later)
+# Images
+
+Place image assets here. Formats: PNG, WebP, SVG (via `flutter_svg` if added).
+
 //
 // Planned assets:
 //   onboarding_1.png     — illustration for onboarding slide 1 (AI analysis)

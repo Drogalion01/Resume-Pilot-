@@ -1,14 +1,16 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, TargetPlatform;
+
 /// Static constants for the ResumePilot FastAPI backend.
 ///
 /// ─── ENVIRONMENT SWITCHING ──────────────────────────────────────────────────
 /// Pass `--dart-define=API_BASE_URL=http://...` to override at build / run time.
 ///
-/// Defaults:
-///   Android emulator → http://10.0.2.2:8000/api/v1   (10.0.2.2 = host localhost)
-///   iOS simulator    → http://localhost:8000/api/v1
-///   Physical device  → http://<LAN-IP>:8000/api/v1
+/// Defaults (when dart-define is NOT passed):
+///   Web (browser)        → http://localhost:8000/api/v1
+///   Android emulator     → http://10.0.2.2:8000/api/v1   (10.0.2.2 = host localhost)
+///   Windows / macOS / Linux / iOS → http://localhost:8000/api/v1
 ///
 /// VS Code launch.json examples — see .vscode/launch.json.
 ///
@@ -18,11 +20,17 @@ abstract final class ApiConstants {
   // ── Base URL ───────────────────────────────────────────────────────────────
 
   /// Resolved at compile time via `--dart-define=API_BASE_URL=<url>`.
-  /// Falls back to the Android-emulator address for local dev.
-  static const baseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'http://10.0.2.2:8000/api/v1',
-  );
+  /// Falls back to a platform-appropriate localhost address when not set.
+  static final String baseUrl = () {
+    const env = String.fromEnvironment('API_BASE_URL', defaultValue: '');
+    if (env.isNotEmpty) return env;
+    // Android emulator needs 10.0.2.2 to reach host localhost.
+    // Web and all desktop targets (Windows/macOS/Linux) use localhost directly.
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      return 'http://10.0.2.2:8000/api/v1';
+    }
+    return 'http://localhost:8000/api/v1';
+  }();
 
   // ── Auth ───────────────────────────────────────────────────────────────────
   //   POST  /auth/register    → AuthResponse (token + user inline)

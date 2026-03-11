@@ -1,9 +1,13 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.requests import Request
 from sqlalchemy.orm import Session
 from sqlalchemy import text
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from app.config import settings
 from app.database import get_db
+from app.limiter import limiter
 
 def get_application() -> FastAPI:
     """
@@ -21,15 +25,21 @@ def get_application() -> FastAPI:
     if isinstance(origins, str):
         origins = [o.strip() for o in origins.split(",") if o.strip()]
 
-    # Configured CORS for Flutter web and native clients, plus local tooling
-    if origins:
-        _app.add_middleware(
-            CORSMiddleware,
-            allow_origins=origins,
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )
+    # Wire up rate-limiter state and its 429 exception handler
+    _app.state.limiter = limiter
+    _app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+    # CORS — use the origins list from settings (set BACKEND_CORS_ORIGINS in .env / host env vars).
+    # In local dev the defaults cover all common Flutter web ports.
+    # In production set BACKEND_CORS_ORIGINS to your deployed frontend domain(s).
+    # JWT is sent in Authorization header — no cookie/credentials mode needed.
+    _app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     # Register standard routers correctly
     from app.routes import auth, user, dashboard, resumes, applications, interviews, reminders

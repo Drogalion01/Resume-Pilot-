@@ -12,6 +12,7 @@ from app.schemas.analysis import AnalysisResultResponse
 from app.utils.file_extractors import extract_text_from_file, FileExtractionError
 from app.services.resume_parser import parse_resume_text
 from app.services.analysis_service import analyze_resume
+from app.services.storage_service import cloudinary_storage
 
 # Two routers mapped to separate prefixes in main.py
 router = APIRouter()
@@ -136,6 +137,8 @@ async def analyze_and_store_resume(
     file_type = "txt"
     title = f"{target_role or 'New'} Resume"
 
+    file_bytes: Optional[bytes] = None
+
     if file:
         file_type = file.filename.split('.')[-1].lower() if '.' in file.filename else 'txt'
         title = file.filename
@@ -150,19 +153,30 @@ async def analyze_and_store_resume(
     if not raw_text:
         raise HTTPException(status_code=400, detail="Could not extract any understandable text from the input provided.")
 
-    # 1. Structural Parse
+    # 1. Upload original file to Cloudinary (if a file was provided)
+    #    This is done before DB writes so a failed upload doesn't leave orphan DB rows.
+    original_file_url: Optional[str] = None
+    if file_bytes and file and file.filename:
+        original_file_url = await cloudinary_storage.upload(
+            file_bytes=file_bytes,
+            filename=file.filename,
+            user_id=current_user.id,
+        )
+
+    # 2. Structural Parse
     parsed_data = parse_resume_text(raw_text)
 
-    # 2. Logic Scoring
+    # 3. Logic Scoring
     analysis_dict = analyze_resume(parsed_data, raw_text, target_role, jd_text)
     
-    # 3. Store the artifacts to the tracking database natively
+    # 4. Store the artifacts to the tracking database natively
     new_resume = Resume(
         user_id=current_user.id,
         title=title,
         file_type=file_type,
         raw_text=raw_text,
-        parsed_json=parsed_data
+        parsed_json=parsed_data,
+        original_file_path=original_file_url,  # Cloudinary HTTPS URL, or None if pasted text
     )
     db.add(new_resume)
     db.flush() # Yields the new_resume.id inline

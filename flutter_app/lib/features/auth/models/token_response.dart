@@ -42,7 +42,7 @@ class AuthUserPayload with _$AuthUserPayload {
     required int id,
     @JsonKey(name: 'full_name') required String fullName,
     required String email,
-    String? initials,
+    required String initials,
   }) = _AuthUserPayload;
 
   factory AuthUserPayload.fromJson(Map<String, dynamic> json) =>

@@ -188,7 +188,7 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
               children: [
                 // ── AppBar ─────────────────────────────────────────────
                 Padding(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.pageH, vertical: 8),
                   child: Row(
                     children: [
@@ -240,7 +240,7 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
     AppColors colors,
   ) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.pageH, vertical: 24),
       child: Form(
         key: _formKey,
@@ -418,7 +418,7 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
                           strokeWidth: 2.5, color: Colors.white))
                   : Text(_isEdit ? 'Save Changes' : 'Schedule Interview'),
             ),
-            SizedBox(height: AppSpacing.bottomNavH + AppSpacing.cardPad),
+            const SizedBox(height: AppSpacing.bottomNavH + AppSpacing.cardPad),
           ],
         ),
       ),

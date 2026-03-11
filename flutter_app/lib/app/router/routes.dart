@@ -23,7 +23,7 @@
 ///     /resumes/:id/versions
 ///     /resumes/:id/analysis
 ///     /upload
-///     /applications/add
+///     /add-application
 ///     /applications/:id
 ///     /applications/:id/interviews/add
 ///     /profile
@@ -47,7 +47,7 @@ abstract class AppRoutes {
   // ── Push destinations (no tab bar) ─────────────────────────────────
 
   static const upload           = '/upload';
-  static const addApplication   = '/applications/add';
+  static const addApplication   = '/add-application';
   static const profile          = '/profile';
 
   // ── Dynamic route paths (param templates) ───────────────────────────

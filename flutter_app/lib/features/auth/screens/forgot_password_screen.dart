@@ -157,6 +157,36 @@ class _EmailForm extends StatelessWidget {
             onPressed: loading ? null : onSubmit,
             loading: loading,
           ),
+          const SizedBox(height: 12),
+
+          // NOTE: Password reset emails are not yet enabled.
+          // The form submits successfully but no email will be delivered.
+          // This will be wired to a real email provider in a future update.
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.orange.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.orange.withValues(alpha: 0.4)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.info_outline, color: Colors.orange, size: 16),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Email delivery is not yet enabled. '
+                    'Please contact support if you need account access.',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.orange.shade800,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 20),
 
           AuthFooterLink(

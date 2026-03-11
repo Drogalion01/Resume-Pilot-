@@ -22,6 +22,12 @@ class Settings(BaseSettings):
     # Database — override with Neon connection string in .env
     DATABASE_URL: str = "postgresql://postgres:1234@localhost:5433/resumepilot"
 
+    # Cloudinary file storage — set all three to enable file uploads.
+    # If any are empty, uploads are skipped (text extraction still works).
+    CLOUDINARY_CLOUD_NAME: str = ""
+    CLOUDINARY_API_KEY: str = ""
+    CLOUDINARY_API_SECRET: str = ""
+
     model_config = SettingsConfigDict(
         case_sensitive=True,
         env_file=".env",

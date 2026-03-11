@@ -4,7 +4,7 @@ The Flutter mobile client for ResumePilot. Targets Android (primary), with web a
 
 ## Structure
 
-```
+```text
 lib/
 ├── main.dart
 ├── app/                   # Bootstrap: router, theme, app widget
@@ -46,7 +46,7 @@ flutter build apk --release
 The base URL is configured in `lib/core/constants/api_constants.dart`.
 
 | Environment | Default URL |
-|---|---|
+| --- | --- |
 | Android emulator | `http://10.0.2.2:8000` |
 | Physical device | Your machine's local IP, e.g. `http://192.168.x.x:8000` |
 | Production | Set `baseUrl` to your deployed backend URL |
@@ -56,7 +56,7 @@ The base URL is configured in `lib/core/constants/api_constants.dart`.
 Design tokens live in `lib/core/theme/`:
 
 | File | Contents |
-|---|---|
+| --- | --- |
 | `app_colors.dart` | Brand palette, semantic color aliases |
 | `app_spacing.dart` | 4 px base grid spacing + radius tokens |
 | `app_typography.dart` | Text styles — display through label |

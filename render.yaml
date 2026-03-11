@@ -1,0 +1,36 @@
+# Render deployment configuration — https://render.com
+# Commit this file to the repo root. Render auto-detects it on first deploy.
+#
+# Deploy steps:
+#   1. Push code to GitHub
+#   2. New → Web Service → connect repo → Render auto-reads this file
+#   3. Set SECRET_KEY, DATABASE_URL, BACKEND_CORS_ORIGINS,
+#      CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET
+#      in the Render dashboard → Environment tab (never commit real values)
+
+services:
+  - type: web
+    name: resumepilot-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt && alembic upgrade head
+    startCommand: gunicorn app.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
+    envVars:
+      - key: SECRET_KEY
+        sync: false          # Mark as secret — fill in Render dashboard
+      - key: DATABASE_URL
+        sync: false
+      - key: BACKEND_CORS_ORIGINS
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "30"
+    healthCheckPath: /api/v1/health
+    autoDeploy: true         # Re-deploy automatically on every git push

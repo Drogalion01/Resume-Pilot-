@@ -13,9 +13,10 @@ import '../../../core/auth/auth_state.dart';
 class AuthNotifier extends Notifier<AuthState> {
   @override
   AuthState build() {
-    // Return initial synchronously; begin async bootstrap immediately.
-    // build() is called once at ProviderScope initialization.
-    _bootstrap();
+    // Defer bootstrap until AFTER build() returns.
+    // Calling _bootstrap() directly would execute `state = checking` synchronously
+    // inside build(), which Riverpod silently drops — leaving the app on splash forever.
+    Future.microtask(_bootstrap);
     return const AuthState.initial();
   }
 
@@ -24,8 +25,14 @@ class AuthNotifier extends Notifier<AuthState> {
   Future<void> _bootstrap() async {
     state = const AuthState.checking();
     try {
-      final resolved = await ref.read(authRepositoryProvider).checkAuthStatus();
+      final resolved = await ref
+          .read(authRepositoryProvider)
+          .checkAuthStatus()
+          .timeout(const Duration(seconds: 8));
       state = resolved;
+    } on TimeoutException {
+      // Backend unreachable — fall through to welcome screen immediately.
+      state = const AuthState.unauthenticated();
     } catch (_) {
       state = const AuthState.unauthenticated();
     }

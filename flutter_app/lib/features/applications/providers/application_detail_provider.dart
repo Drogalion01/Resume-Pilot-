@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/error/app_exception.dart';
 import '../data/application_service.dart';
 import '../models/application.dart';
 import '../models/application_detail.dart';
@@ -136,7 +137,13 @@ class AddApplicationNotifier extends AutoDisposeNotifier<AddApplicationState> {
           await ref.read(applicationServiceProvider).createApplication(body);
       ref.invalidate(applicationsProvider);
       return result;
-    } catch (e) {
+    } on AppException catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: e.userMessage,
+      );
+      return null;
+    } catch (_) {
       state = state.copyWith(
         isLoading: false,
         errorMessage: 'Failed to add application. Please try again.',

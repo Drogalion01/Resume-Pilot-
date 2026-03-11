@@ -28,14 +28,14 @@ class AuthRepository {
   Future<AuthStateAuthenticated> login({
     required String email,
     required String password,
-  }) async {
+  }) => _run(() async {
     final body = LoginRequest(email: email, password: password);
     final res = await _dio.post<Map<String, dynamic>>(
       '/auth/login',
       data: body.toJson(),
     );
     return _processResponse(res.data!);
-  }
+  });
 
   // â”€â”€ Register â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -45,27 +45,27 @@ class AuthRepository {
     required String fullName,
     required String email,
     required String password,
-  }) async {
+  }) => _run(() async {
     final body = SignupRequest(fullName: fullName, email: email, password: password);
     final res = await _dio.post<Map<String, dynamic>>(
       '/auth/register',
       data: body.toJson(),
     );
     return _processResponse(res.data!);
-  }
+  });
 
   // â”€â”€ Forgot password â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   /// POST /auth/forgot-password.
   /// Always returns a message string â€” never throws for unknown email.
-  Future<String> forgotPassword(String email) async {
+  Future<String> forgotPassword(String email) => _run(() async {
     final res = await _dio.post<Map<String, dynamic>>(
       '/auth/forgot-password',
       data: {'email': email},
     );
     return (res.data?['message'] as String?) ??
         'If an account with that email exists, a reset link has been sent.';
-  }
+  });
 
   // â”€â”€ Current user â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -110,6 +110,18 @@ class AuthRepository {
   }
 
   // â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+  /// Unwraps [DioException.error] → [AppException] so callers only need to
+  /// catch [AppException]. Without this, Dio wraps every interceptor-thrown
+  /// error in a DioException, swallowing the typed exception.
+  Future<T> _run<T>(Future<T> Function() call) async {
+    try {
+      return await call();
+    } on DioException catch (e) {
+      if (e.error is AppException) throw e.error as AppException;
+      rethrow;
+    }
+  }
 
   Future<AuthStateAuthenticated> _processResponse(Map<String, dynamic> data) async {
     final response = TokenResponse.fromJson(data);

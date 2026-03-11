@@ -30,10 +30,10 @@ import 'shell_scaffold.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 
 final routerProvider = Provider<GoRouter>((ref) {
-  // Bridge Riverpod auth stream → GoRouter refreshListenable
-  final refreshNotifier = GoRouterRefreshNotifier(
-    ref.watch(authNotifierProvider.stream),
-  );
+  // Bridge Riverpod auth state changes → GoRouter refreshListenable.
+  // NotifierProvider has no .stream in Riverpod 2.x — use ref.listen instead.
+  final refreshNotifier = _RouterRefreshNotifier();
+  ref.listen<AuthState>(authNotifierProvider, (_, __) => refreshNotifier.notify());
   ref.onDispose(refreshNotifier.dispose);
 
   return GoRouter(
@@ -47,9 +47,10 @@ final routerProvider = Provider<GoRouter>((ref) {
     //   ────────────────┼──────────────────┼────────────────────────────────
     //   initial         │  any             │  → /splash (bootstrap pending)
     //   checking        │  any             │  → /splash
-    //   unauthenticated │  yes             │  allow  (already on auth flow)
-    //   unauthenticated │  no              │  → /welcome
-    //   authenticated   │  yes             │  → /  (redirect away from auth)
+    //   unauthenticated │  /splash         │  → /welcome  (bootstrap done)
+    //   unauthenticated │  other auth route│  allow
+    //   unauthenticated │  non-auth route  │  → /welcome
+    //   authenticated   │  /splash or auth │  → /  (redirect away from auth)
     //   authenticated   │  no              │  allow
     //
     redirect: (BuildContext context, GoRouterState state) {
@@ -63,6 +64,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           return AppRoutes.splash;
 
         case AuthStateUnauthenticated():
+          // Splash must always exit once bootstrap resolves — even though
+          // isAuthRoute('/splash') == true, staying there is never correct.
+          if (state.matchedLocation == AppRoutes.splash) return AppRoutes.welcome;
           if (!onAuthRoute) return AppRoutes.welcome;
           return null;
 
@@ -140,6 +144,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                     ),
                   ),
                   GoRoute(
+                    path: ':id/versions',
+                    name: 'resume-versions',
+                    builder: (_, state) => ResumeVersionDetailScreen(
+                      resumeId: int.parse(state.pathParameters['id']!),
+                    ),
+                  ),
+                  GoRoute(
                     path: ':id/analysis',
                     name: 'resume-analysis',
                     builder: (_, state) => ResumeAnalysisScreen(
@@ -170,18 +181,16 @@ final routerProvider = Provider<GoRouter>((ref) {
                         path: 'interviews/add',
                         name: 'add-interview',
                         builder: (_, state) => AddInterviewScreen(
-                          applicationId:
-                              int.parse(state.pathParameters['id']!),
+                          applicationId: int.parse(state.pathParameters['id']!),
                         ),
                       ),
                       GoRoute(
                         path: 'interviews/:interviewId/edit',
                         name: 'edit-interview',
                         builder: (_, state) => AddInterviewScreen(
-                          applicationId:
-                              int.parse(state.pathParameters['id']!),
-                          interviewId: int.parse(
-                              state.pathParameters['interviewId']!),
+                          applicationId: int.parse(state.pathParameters['id']!),
+                          interviewId:
+                              int.parse(state.pathParameters['interviewId']!),
                         ),
                       ),
                     ],
@@ -230,6 +239,12 @@ final routerProvider = Provider<GoRouter>((ref) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Internal error screen
 // ─────────────────────────────────────────────────────────────────────────────
+
+// Minimal ChangeNotifier bridge so GoRouter re-evaluates the redirect
+// whenever auth state changes.
+class _RouterRefreshNotifier extends ChangeNotifier {
+  void notify() => notifyListeners();
+}
 
 class _RouterErrorScreen extends StatelessWidget {
   const _RouterErrorScreen({this.error});

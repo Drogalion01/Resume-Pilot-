@@ -1,19 +1,21 @@
 from datetime import datetime, timedelta, timezone
-from passlib.context import CryptContext
-from jose import jwt, JWTError
-from pydantic import ValidationError
+import bcrypt as _bcrypt
+from jose import jwt
 from app.config import settings
-
-# Password hashing context configuration
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verifies a plain text password against a hashed one."""
-    return pwd_context.verify(plain_password, hashed_password)
+    return _bcrypt.checkpw(
+        plain_password.encode("utf-8"),
+        hashed_password.encode("utf-8"),
+    )
 
 def get_password_hash(password: str) -> str:
-    """Hashes a plain text password."""
-    return pwd_context.hash(password)
+    """Hashes a plain text password using bcrypt."""
+    return _bcrypt.hashpw(
+        password.encode("utf-8"),
+        _bcrypt.gensalt(),
+    ).decode("utf-8")
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     """Creates a JWT access token."""
