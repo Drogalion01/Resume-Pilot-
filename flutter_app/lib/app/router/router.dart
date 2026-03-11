@@ -66,8 +66,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         case AuthStateUnauthenticated():
           // Splash must always exit once bootstrap resolves — even though
           // isAuthRoute('/splash') == true, staying there is never correct.
-          if (state.matchedLocation == AppRoutes.splash) return AppRoutes.welcome;
-          if (!onAuthRoute) return AppRoutes.welcome;
+          if (state.matchedLocation == AppRoutes.splash) return AppRoutes.login;
+          if (!onAuthRoute) return AppRoutes.login;
           return null;
 
         case AuthStateAuthenticated():
