@@ -18,7 +18,9 @@ sealed class AppException implements Exception {
 
 /// Thrown on connection timeout, receive timeout, or no internet.
 class NetworkException extends AppException {
-  const NetworkException([this.message = 'No internet connection. Check your network and try again.']);
+  const NetworkException(
+      [this.message =
+          'No internet connection. Check your network and try again.']);
   final String message;
   @override
   String get userMessage => message;
@@ -26,14 +28,15 @@ class NetworkException extends AppException {
 
 /// Thrown on 5xx server responses.
 class ServerException extends AppException {
-  const ServerException(this.statusCode, [this.message = 'Something went wrong on our end. Please try again.']);
+  const ServerException(this.statusCode,
+      [this.message = 'Something went wrong on our end. Please try again.']);
   final int statusCode;
   final String message;
   @override
   String get userMessage => message;
 }
 
-/// Thrown on 401 responses outside /auth/login and /auth/register.
+/// Thrown on 401 responses outside /auth/phone/* endpoints.
 /// The auth guard + router handle redirect; screens don't need to catch this.
 class UnauthorizedException extends AppException {
   const UnauthorizedException();
@@ -45,7 +48,8 @@ class UnauthorizedException extends AppException {
 class ForbiddenException extends AppException {
   const ForbiddenException();
   @override
-  String get userMessage => 'You don\'t have permission to perform that action.';
+  String get userMessage =>
+      'You don\'t have permission to perform that action.';
 }
 
 /// Thrown on 404 responses.
@@ -74,6 +78,6 @@ class ParseException extends AppException {
   const ParseException([this.detail]);
   final String? detail;
   @override
-  String get userMessage => 'Received an unexpected response. Please try again.';
+  String get userMessage =>
+      'Received an unexpected response. Please try again.';
 }
-

@@ -45,11 +45,23 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     });
 
     try {
-      await ref.read(authNotifierProvider.notifier).verifyOtp(
-            phone: widget.subscriberId,
-            referenceNo: widget.referenceNo,
-            otp: _otpCtrl.text.trim(),
-          );
+      final notifier = ref.read(authNotifierProvider.notifier);
+      final authenticated =
+          await ref.read(authNotifierProvider.notifier).verifyOtp(
+                phone: widget.subscriberId,
+                referenceNo: widget.referenceNo,
+                otp: _otpCtrl.text.trim(),
+                applyState: false,
+              );
+
+      final synced = await _waitForSubscriptionSync();
+
+      if (!mounted) return;
+      if (!synced) {
+        _showWarning('সাবস্ক্রিপশন চলছে। অনুগ্রহ করে কিছুক্ষণ পর চেক করুন।');
+      }
+
+      notifier.completePhoneLogin(authenticated);
       _showMessage('যাচাই সফল হয়েছে', isError: false);
       // GoRouter redirect handles navigation on success (auth state changes).
     } on AppException catch (e) {
@@ -59,14 +71,33 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
       }
     } catch (e) {
       if (mounted) {
-        setState(() =>
-            _error = const ServerException(500, 'Unexpected error'));
+        setState(() => _error = const ServerException(500, 'Unexpected error'));
         _showMessage('নেটওয়ার্ক সমস্যা হয়েছে: ${e.toString()}',
             isError: true);
       }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  Future<bool> _waitForSubscriptionSync() async {
+    for (var i = 0; i < 5; i++) {
+      await Future.delayed(const Duration(seconds: 1));
+
+      try {
+        final result = await ref
+            .read(authNotifierProvider.notifier)
+            .checkSubscription(widget.subscriberId);
+        final status = (result['status']?.toString() ?? '').trim();
+        if (status == 'subscribed') {
+          return true;
+        }
+      } catch (_) {
+        // Continue polling and allow graceful fallback.
+      }
+    }
+
+    return false;
   }
 
   void _showMessage(String text, {required bool isError}) {
@@ -78,6 +109,18 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
         backgroundColor: isError ? Colors.redAccent : Colors.green,
         duration:
             isError ? const Duration(seconds: 4) : const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _showWarning(String text) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.orange,
+        duration: const Duration(seconds: 4),
       ),
     );
   }

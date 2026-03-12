@@ -56,10 +56,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           .read(authNotifierProvider.notifier)
           .checkSubscription(phone);
       final status = (res['status']?.toString() ?? '').trim();
-      final referenceNo = (res['referenceNo']?.toString() ?? '').trim();
       final loginUrl = (res['loginUrl']?.toString() ?? '').trim();
+      final statusDetail = (res['statusDetail']?.toString() ?? '').trim();
 
-      if (status == 'subscribed' && referenceNo.isNotEmpty) {
+      if (status == 'subscribed' || status == 'requires_subscription') {
+        if (status == 'requires_subscription' && statusDetail.isNotEmpty) {
+          _showMessage(statusDetail, isError: false);
+        }
+        final otpRes =
+            await ref.read(authNotifierProvider.notifier).sendOtp(phone);
+        final referenceNo = (otpRes['referenceNo']?.toString() ?? '').trim();
+        if (referenceNo.isEmpty) {
+          _showMessage('OTP রেফারেন্স পাওয়া যায়নি। আবার চেষ্টা করুন।',
+              isError: true);
+          return;
+        }
         _showMessage('OTP পাঠানো হয়েছে', isError: false);
         if (!mounted) return;
         context.push(
@@ -72,19 +83,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         return;
       }
 
-      if (status == 'requires_subscription') {
-        _showMessage(
-          loginUrl.isNotEmpty
-              ? 'সাবস্ক্রিপশন দরকার। লিংক: $loginUrl'
-              : 'প্রথমে সাবস্ক্রাইব করুন (dial *213#) তারপর আবার চেষ্টা করুন।',
-          isError: true,
-        );
-        return;
-      }
-
-      if (status == 'subscribed' && referenceNo.isEmpty) {
-        _showMessage('OTP রেফারেন্স পাওয়া যায়নি। আবার চেষ্টা করুন।',
-            isError: true);
+      if (loginUrl.isNotEmpty) {
+        _showMessage('সাবস্ক্রিপশন দরকার। লিংক: $loginUrl', isError: true);
         return;
       }
 

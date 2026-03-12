@@ -15,9 +15,18 @@ class AuthRepository {
   final Dio _dio;
   final TokenStorage _storage;
 
-  Future<Map<String, dynamic>> checkSubscription(String phone) => _run(() async {
+  Future<Map<String, dynamic>> checkSubscription(String phone) =>
+      _run(() async {
         final res = await _dio.post<Map<String, dynamic>>(
           'auth/phone/check',
+          data: {'phone': phone},
+        );
+        return res.data!;
+      });
+
+  Future<Map<String, dynamic>> sendOtp(String phone) => _run(() async {
+        final res = await _dio.post<Map<String, dynamic>>(
+          'auth/phone/send-otp',
           data: {'phone': phone},
         );
         return res.data!;

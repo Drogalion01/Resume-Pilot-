@@ -19,7 +19,8 @@ class ErrorInterceptor extends Interceptor {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return const NetworkException('Connection timed out. Please try again.');
+        return const NetworkException(
+            'Connection timed out. Please try again.');
       case DioExceptionType.connectionError:
         return const NetworkException();
       case DioExceptionType.cancel:
@@ -33,14 +34,14 @@ class ErrorInterceptor extends Interceptor {
 
   AppException _mapResponse(DioException err) {
     final status = err.response?.statusCode ?? 0;
-    final data   = err.response?.data;
+    final data = err.response?.data;
 
     switch (status) {
       case 400:
         return ValidationException(_extractDetail(data));
       case 401:
         final path = err.requestOptions.path;
-        if (path.contains('/auth/login') || path.contains('/auth/register')) {
+        if (path.contains('/auth/phone/')) {
           return ValidationException(_extractDetail(data));
         }
         return const UnauthorizedException();

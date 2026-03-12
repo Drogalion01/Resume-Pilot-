@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 import requests
-import uuid
 from app.schemas.auth import PhoneCheckRequest, PhoneVerifyRequest
 
 from app.database import get_db
@@ -21,63 +20,88 @@ def read_current_user(current_user: User = Depends(get_current_active_user)):
     return current_user
 
 
-BDAPPS_APP_ID = "APP_135994"
-BDAPPS_PASSWORD = "f3aa7cfcf99bfe00c0174e9bd5517fbf"
+BDAPPS_PHP_BASE_URL = "https://www.flicksize.com/resumepilot/"
+
+
+def _normalize_phone(phone: str) -> str:
+    value = phone.strip()
+    if value.startswith("tel:880") and len(value) >= 14:
+        return f"0{value[7:]}"
+    if value.startswith("+880") and len(value) >= 13:
+        return f"0{value[4:]}"
+    if value.startswith("880") and len(value) >= 12:
+        return f"0{value[3:]}"
+    return value
+
+
+def _post_php(endpoint: str, data: dict) -> dict:
+    url = f"{BDAPPS_PHP_BASE_URL}{endpoint}"
+    response = requests.post(url, data=data, timeout=15)
+    try:
+        payload = response.json()
+    except Exception:
+        raise HTTPException(
+            status_code=502,
+            detail=f"PHP BDApps API returned non-JSON from {endpoint} (HTTP {response.status_code})"
+        )
+
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=502, detail=f"Unexpected payload from {endpoint}")
+
+    return payload
+
+
+def _send_bdapps_otp(phone: str) -> str:
+    otp_data = _post_php("send_otp.php", {"user_mobile": phone})
+
+    if otp_data.get("success") is not True:
+        detail = otp_data.get("message") or otp_data.get("statusDetail") or "Failed to send OTP"
+        raise HTTPException(status_code=400, detail=detail)
+
+    reference_no = (otp_data.get("referenceNo") or "").strip()
+    if not reference_no:
+        raise HTTPException(status_code=502, detail="OTP send succeeded but referenceNo was empty")
+
+    return reference_no
 
 @router.post("/phone/check")
 @limiter.limit("5/minute")
 def phone_check(request: Request, body: PhoneCheckRequest, db: Session = Depends(get_db)):
     """
-    Check subscription status or send OTP.
+    Check subscription status using PHP BDApps API.
     """
-    phone = body.phone
-    if not phone.startswith("tel:"):
-        phone = f"tel:{phone}"
-        
-    url = "https://developer.bdapps.com/caas/direct/debit"
-    payload = {
-        "applicationId": BDAPPS_APP_ID,
-        "password": BDAPPS_PASSWORD,
-        "externalTrxId": str(uuid.uuid4()),
-        "subscriberId": phone,
-        "paymentInstrumentName": "MobileAccount"
-    }
-    
-    headers = {"Content-Type": "application/json"}
+    phone = _normalize_phone(body.phone)
+
     try:
-        r = requests.post(url, json=payload, headers=headers, timeout=10)
-        try:
-            data = r.json()
-        except Exception:
-            raise HTTPException(status_code=502, detail=f"BDApps returned non-JSON response (HTTP {r.status_code})")
-        
-        status_code = data.get("statusCode")
-        
-        if status_code == "S1000":
-            # Direct debit successful
-            return {"status": "subscribed", "referenceNo": data.get("referenceNo", "")}
-        elif status_code == "E1351":
-            # Need OTP
-            otp_url = "https://developer.bdapps.com/sms/otp/send"
-            otp_payload = {
-                "applicationId": BDAPPS_APP_ID,
-                "password": BDAPPS_PASSWORD,
-                "subscriberId": phone,
-                "applicationHash": "YOUR_HASH" # can be empty
-            }
-            res_otp = requests.post(otp_url, json=otp_payload, headers=headers, timeout=10)
-            try:
-                otp_data = res_otp.json()
-            except Exception:
-                raise HTTPException(status_code=502, detail=f"BDApps OTP send returned non-JSON (HTTP {res_otp.status_code})")
-            if otp_data.get("statusCode") == "S1000":
-                return {"status": "subscribed", "referenceNo": otp_data.get("referenceNo", "")}
-            else:
-                raise HTTPException(status_code=400, detail=f"Failed to send OTP: {otp_data.get('statusDetail')}")
-        else:
-            return {"status": "requires_subscription", "loginUrl": data.get("loginUrl", "")}
+        data = _post_php("check_subscription.php", {"user_mobile": phone})
+
+        subscription_status = (data.get("subscriptionStatus") or "").strip().upper()
+        is_subscribed = data.get("isSubscribed") is True or subscription_status == "REGISTERED"
+
+        if is_subscribed:
+            return {"status": "subscribed"}
+
+        return {
+            "status": "requires_subscription",
+            "loginUrl": "",
+            "statusCode": data.get("statusCode", ""),
+            "statusDetail": data.get("statusDetail", "")
+        }
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/phone/send-otp")
+@limiter.limit("5/minute")
+def phone_send_otp(request: Request, body: PhoneCheckRequest):
+    """
+    Explicit OTP send endpoint to support check -> send OTP -> verify OTP flow.
+    """
+    phone = _normalize_phone(body.phone)
+    reference_no = _send_bdapps_otp(phone)
+    return {"status": "otp_sent", "referenceNo": reference_no}
 
 @router.post("/phone/verify-otp")
 @limiter.limit("10/minute")
@@ -85,27 +109,20 @@ def phone_verify_otp(request: Request, body: PhoneVerifyRequest, db: Session = D
     """
     Verify OTP and return JWT token.
     """
-    phone = body.phone
-    if not phone.startswith("tel:"):
-        phone = f"tel:{phone}"
-        
-    url = "https://developer.bdapps.com/sms/otp/verify"
-    payload = {
-        "applicationId": BDAPPS_APP_ID,
-        "password": BDAPPS_PASSWORD,
-        "referenceNo": body.referenceNo,
-        "otp": body.otp
-    }
-    
-    headers = {"Content-Type": "application/json"}
+    phone = _normalize_phone(body.phone)
+
     try:
-        r = requests.post(url, json=payload, headers=headers, timeout=10)
-        try:
-            data = r.json()
-        except Exception:
-            raise HTTPException(status_code=502, detail=f"BDApps returned non-JSON response (HTTP {r.status_code})")
+        data = _post_php("verify_otp.php", {
+            "Otp": body.otp,
+            "referenceNo": body.referenceNo,
+            "user_mobile": phone,
+        })
+
         if data.get("statusCode") != "S1000":
-            raise HTTPException(status_code=400, detail=data.get("statusDetail", "Invalid OTP"))
+            raise HTTPException(
+                status_code=400,
+                detail=data.get("message") or data.get("statusDetail", "Invalid OTP")
+            )
             
         # OTP verified — login or register user
         user = db.query(User).filter(User.phone == body.phone).first()

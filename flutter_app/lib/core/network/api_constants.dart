@@ -38,17 +38,14 @@ abstract final class ApiConstants {
   }();
 
   // ── Auth ───────────────────────────────────────────────────────────────────
-  //   POST  /auth/register    → AuthResponse (token + user inline)
-  //   POST  /auth/login       → AuthResponse
-  //   POST  /auth/forgot-password → {message: String}
+  //   POST  /auth/phone/check      → {status, ...}
+  //   POST  /auth/phone/send-otp   → {status, referenceNo}
+  //   POST  /auth/phone/verify-otp → AuthResponse (token + user inline)
   //   GET   /auth/me          → UserResponse
-  //
-  //   ⚠ JSON body login (NOT OAuth2 form).  Token lifetime = 8 days (11520 min).
-  //     No refresh token — 401 anywhere triggers forceUnauthenticated() + re-login.
 
-  static const authRegister = '/auth/register';
-  static const authLogin = '/auth/login';
-  static const authForgotPw = '/auth/forgot-password';
+  static const authPhoneCheck = '/auth/phone/check';
+  static const authPhoneSendOtp = '/auth/phone/send-otp';
+  static const authPhoneVerifyOtp = '/auth/phone/verify-otp';
   static const authMe = '/auth/me';
 
   // ── User / Profile ─────────────────────────────────────────────────────────

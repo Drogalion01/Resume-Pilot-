@@ -44,17 +44,29 @@ class AuthNotifier extends Notifier<AuthState> {
     return ref.read(authRepositoryProvider).checkSubscription(phoneNumber);
   }
 
-  Future<void> verifyOtp({
+  Future<Map<String, dynamic>> sendOtp(String phoneNumber) async {
+    return ref.read(authRepositoryProvider).sendOtp(phoneNumber);
+  }
+
+  Future<AuthStateAuthenticated> verifyOtp({
     required String phone,
     required String referenceNo,
     required String otp,
+    bool applyState = true,
   }) async {
     final result = await ref.read(authRepositoryProvider).verifyOtp(
           phone: phone,
           referenceNo: referenceNo,
           otp: otp,
         );
-    state = result;
+    if (applyState) {
+      state = result;
+    }
+    return result;
+  }
+
+  void completePhoneLogin(AuthStateAuthenticated authenticated) {
+    state = authenticated;
   }
 
   // ── Logout ────────────────────────────────────────────────────────────
@@ -69,8 +81,6 @@ class AuthNotifier extends Notifier<AuthState> {
   void forceUnauthenticated() {
     state = const AuthState.unauthenticated();
   }
-
-  
 }
 
 // ── Providers ────────────────────────────────────────────────────────────────
