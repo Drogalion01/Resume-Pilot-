@@ -23,14 +23,12 @@ abstract final class ApiConstants {
   /// Resolved at compile time via `--dart-define=API_BASE_URL=<url>`.
   /// Falls back to a platform-appropriate localhost address when not set.
   static final String baseUrl = () {
-    const env = String.fromEnvironment('API_BASE_URL', defaultValue: '');
-    if (env.isNotEmpty) return env;
-    // Android emulator needs 10.0.2.2 to reach host localhost.
-    // Web and all desktop targets (Windows/macOS/Linux) use localhost directly.
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2:8000/api/v1';
-    }
-    return 'http://localhost:8000/api/v1';
+    const env = String.fromEnvironment('API_BASE_URL',
+        defaultValue: 'https://resume-pilot-lc1i.onrender.com/api/v1');
+    if (env.isNotEmpty &&
+        env != 'https://resume-pilot-lc1i.onrender.com/api/v1' &&
+        !env.contains('localhost')) return env;
+    return 'https://resume-pilot-lc1i.onrender.com/api/v1';
   }();
 
   // ── Auth ───────────────────────────────────────────────────────────────────
