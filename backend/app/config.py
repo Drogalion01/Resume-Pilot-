@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     # CORS — covers Flutter web dev server and common localhost ports.
     # Override via BACKEND_CORS_ORIGINS env var (comma-separated or JSON list).
     BACKEND_CORS_ORIGINS: List[str] | str = [
+        "*",
         "http://localhost:3000",
         "http://localhost:5173",
         "http://localhost:8080",
