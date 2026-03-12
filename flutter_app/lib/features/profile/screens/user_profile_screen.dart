@@ -171,7 +171,7 @@ class _ProfileLoadedState extends ConsumerState<_ProfileLoaded> {
                         // Email chip (read-only)
                         Center(
                           child: _EmailChip(
-                            email: profile.email,
+                            email: profile.email ?? profile.phone ?? '',
                             colors: colors,
                           ),
                         ),

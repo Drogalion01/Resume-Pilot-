@@ -18,3 +18,11 @@ class RegisterRequest(BaseModel):
 
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
+
+class PhoneCheckRequest(BaseModel):
+    phone: str
+
+class PhoneVerifyRequest(BaseModel):
+    phone: str
+    otp: str
+    referenceNo: str

@@ -40,9 +40,10 @@ class TokenResponse with _$TokenResponse {
 class AuthUserPayload with _$AuthUserPayload {
   const factory AuthUserPayload({
     required int id,
-    @JsonKey(name: 'full_name') required String fullName,
-    required String email,
-    required String initials,
+    @JsonKey(name: 'full_name') String? fullName,
+    String? email,
+    String? phone,
+    String? initials,
   }) = _AuthUserPayload;
 
   factory AuthUserPayload.fromJson(Map<String, dynamic> json) =>

@@ -223,9 +223,10 @@ AuthUserPayload _$AuthUserPayloadFromJson(Map<String, dynamic> json) {
 mixin _$AuthUserPayload {
   int get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'full_name')
-  String get fullName => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
-  String get initials => throw _privateConstructorUsedError;
+  String? get fullName => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
+  String? get phone => throw _privateConstructorUsedError;
+  String? get initials => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -241,9 +242,10 @@ abstract class $AuthUserPayloadCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      @JsonKey(name: 'full_name') String fullName,
-      String email,
-      String initials});
+      @JsonKey(name: 'full_name') String? fullName,
+      String? email,
+      String? phone,
+      String? initials});
 }
 
 /// @nodoc
@@ -260,27 +262,32 @@ class _$AuthUserPayloadCopyWithImpl<$Res, $Val extends AuthUserPayload>
   @override
   $Res call({
     Object? id = null,
-    Object? fullName = null,
-    Object? email = null,
-    Object? initials = null,
+    Object? fullName = freezed,
+    Object? email = freezed,
+    Object? phone = freezed,
+    Object? initials = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      fullName: null == fullName
+      fullName: freezed == fullName
           ? _value.fullName
           : fullName // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: null == email
+              as String?,
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      initials: null == initials
+              as String?,
+      phone: freezed == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as String?,
+      initials: freezed == initials
           ? _value.initials
           : initials // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -295,9 +302,10 @@ abstract class _$$AuthUserPayloadImplCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
-      @JsonKey(name: 'full_name') String fullName,
-      String email,
-      String initials});
+      @JsonKey(name: 'full_name') String? fullName,
+      String? email,
+      String? phone,
+      String? initials});
 }
 
 /// @nodoc
@@ -312,27 +320,32 @@ class __$$AuthUserPayloadImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? fullName = null,
-    Object? email = null,
-    Object? initials = null,
+    Object? fullName = freezed,
+    Object? email = freezed,
+    Object? phone = freezed,
+    Object? initials = freezed,
   }) {
     return _then(_$AuthUserPayloadImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      fullName: null == fullName
+      fullName: freezed == fullName
           ? _value.fullName
           : fullName // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: null == email
+              as String?,
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      initials: null == initials
+              as String?,
+      phone: freezed == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as String?,
+      initials: freezed == initials
           ? _value.initials
           : initials // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -342,9 +355,10 @@ class __$$AuthUserPayloadImplCopyWithImpl<$Res>
 class _$AuthUserPayloadImpl implements _AuthUserPayload {
   const _$AuthUserPayloadImpl(
       {required this.id,
-      @JsonKey(name: 'full_name') required this.fullName,
-      required this.email,
-      required this.initials});
+      @JsonKey(name: 'full_name') this.fullName,
+      this.email,
+      this.phone,
+      this.initials});
 
   factory _$AuthUserPayloadImpl.fromJson(Map<String, dynamic> json) =>
       _$$AuthUserPayloadImplFromJson(json);
@@ -353,15 +367,17 @@ class _$AuthUserPayloadImpl implements _AuthUserPayload {
   final int id;
   @override
   @JsonKey(name: 'full_name')
-  final String fullName;
+  final String? fullName;
   @override
-  final String email;
+  final String? email;
   @override
-  final String initials;
+  final String? phone;
+  @override
+  final String? initials;
 
   @override
   String toString() {
-    return 'AuthUserPayload(id: $id, fullName: $fullName, email: $email, initials: $initials)';
+    return 'AuthUserPayload(id: $id, fullName: $fullName, email: $email, phone: $phone, initials: $initials)';
   }
 
   @override
@@ -373,13 +389,15 @@ class _$AuthUserPayloadImpl implements _AuthUserPayload {
             (identical(other.fullName, fullName) ||
                 other.fullName == fullName) &&
             (identical(other.email, email) || other.email == email) &&
+            (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.initials, initials) ||
                 other.initials == initials));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, fullName, email, initials);
+  int get hashCode =>
+      Object.hash(runtimeType, id, fullName, email, phone, initials);
 
   @JsonKey(ignore: true)
   @override
@@ -399,9 +417,10 @@ class _$AuthUserPayloadImpl implements _AuthUserPayload {
 abstract class _AuthUserPayload implements AuthUserPayload {
   const factory _AuthUserPayload(
       {required final int id,
-      @JsonKey(name: 'full_name') required final String fullName,
-      required final String email,
-      required final String initials}) = _$AuthUserPayloadImpl;
+      @JsonKey(name: 'full_name') final String? fullName,
+      final String? email,
+      final String? phone,
+      final String? initials}) = _$AuthUserPayloadImpl;
 
   factory _AuthUserPayload.fromJson(Map<String, dynamic> json) =
       _$AuthUserPayloadImpl.fromJson;
@@ -410,11 +429,13 @@ abstract class _AuthUserPayload implements AuthUserPayload {
   int get id;
   @override
   @JsonKey(name: 'full_name')
-  String get fullName;
+  String? get fullName;
   @override
-  String get email;
+  String? get email;
   @override
-  String get initials;
+  String? get phone;
+  @override
+  String? get initials;
   @override
   @JsonKey(ignore: true)
   _$$AuthUserPayloadImplCopyWith<_$AuthUserPayloadImpl> get copyWith =>

@@ -38,28 +38,21 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  // ── Login ────────────────────────────────────────────────────────────
+  // ── BDApps Auth ────────────────────────────────────────────────────────────
 
-  /// Throws [AppException] subtype on failure — screens must catch and display.
-  Future<void> login({required String email, required String password}) async {
-    final result = await ref.read(authRepositoryProvider).login(
-          email: email,
-          password: password,
-        );
-    state = result;
+  Future<Map<String, dynamic>> checkSubscription(String phoneNumber) async {
+    return ref.read(authRepositoryProvider).checkSubscription(phoneNumber);
   }
 
-  // ── Signup ───────────────────────────────────────────────────────────
-
-  Future<void> signup({
-    required String fullName,
-    required String email,
-    required String password,
+  Future<void> verifyOtp({
+    required String phone,
+    required String referenceNo,
+    required String otp,
   }) async {
-    final result = await ref.read(authRepositoryProvider).signup(
-          fullName: fullName,
-          email: email,
-          password: password,
+    final result = await ref.read(authRepositoryProvider).verifyOtp(
+          phone: phone,
+          referenceNo: referenceNo,
+          otp: otp,
         );
     state = result;
   }
@@ -77,11 +70,7 @@ class AuthNotifier extends Notifier<AuthState> {
     state = const AuthState.unauthenticated();
   }
 
-  // ── Forgot password ─────────────────────────────────────────────────────
-
-  /// No state change — purely fire-and-return. Screens show the returned message.
-  Future<String> forgotPassword(String email) =>
-      ref.read(authRepositoryProvider).forgotPassword(email);
+  
 }
 
 // ── Providers ────────────────────────────────────────────────────────────────

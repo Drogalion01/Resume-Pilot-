@@ -47,7 +47,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      context.go(AppRoutes.signup);
+      context.go(AppRoutes.login);
     }
   }
 
@@ -64,7 +64,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         elevation: 0,
         actions: [
           TextButton(
-            onPressed: () => context.go(AppRoutes.signup),
+            onPressed: () => context.go(AppRoutes.login),
             child: const Text('Skip'),
           ),
         ],

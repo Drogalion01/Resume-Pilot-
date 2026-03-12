@@ -22,8 +22,9 @@ UserProfile _$UserProfileFromJson(Map<String, dynamic> json) {
 mixin _$UserProfile {
   int get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'full_name')
-  String get fullName => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
+  String? get fullName => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
+  String? get phone => throw _privateConstructorUsedError;
   String? get initials => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -44,8 +45,9 @@ abstract class $UserProfileCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      @JsonKey(name: 'full_name') String fullName,
-      String email,
+      @JsonKey(name: 'full_name') String? fullName,
+      String? email,
+      String? phone,
       String? initials,
       @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(name: 'updated_at') DateTime updatedAt});
@@ -65,8 +67,9 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
   @override
   $Res call({
     Object? id = null,
-    Object? fullName = null,
-    Object? email = null,
+    Object? fullName = freezed,
+    Object? email = freezed,
+    Object? phone = freezed,
     Object? initials = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -76,14 +79,18 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      fullName: null == fullName
+      fullName: freezed == fullName
           ? _value.fullName
           : fullName // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: null == email
+              as String?,
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      phone: freezed == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as String?,
       initials: freezed == initials
           ? _value.initials
           : initials // ignore: cast_nullable_to_non_nullable
@@ -110,8 +117,9 @@ abstract class _$$UserProfileImplCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
-      @JsonKey(name: 'full_name') String fullName,
-      String email,
+      @JsonKey(name: 'full_name') String? fullName,
+      String? email,
+      String? phone,
       String? initials,
       @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(name: 'updated_at') DateTime updatedAt});
@@ -129,8 +137,9 @@ class __$$UserProfileImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? fullName = null,
-    Object? email = null,
+    Object? fullName = freezed,
+    Object? email = freezed,
+    Object? phone = freezed,
     Object? initials = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -140,14 +149,18 @@ class __$$UserProfileImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      fullName: null == fullName
+      fullName: freezed == fullName
           ? _value.fullName
           : fullName // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: null == email
+              as String?,
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      phone: freezed == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as String?,
       initials: freezed == initials
           ? _value.initials
           : initials // ignore: cast_nullable_to_non_nullable
@@ -169,8 +182,9 @@ class __$$UserProfileImplCopyWithImpl<$Res>
 class _$UserProfileImpl implements _UserProfile {
   const _$UserProfileImpl(
       {required this.id,
-      @JsonKey(name: 'full_name') required this.fullName,
-      required this.email,
+      @JsonKey(name: 'full_name') this.fullName,
+      this.email,
+      this.phone,
       this.initials,
       @JsonKey(name: 'created_at') required this.createdAt,
       @JsonKey(name: 'updated_at') required this.updatedAt});
@@ -182,9 +196,11 @@ class _$UserProfileImpl implements _UserProfile {
   final int id;
   @override
   @JsonKey(name: 'full_name')
-  final String fullName;
+  final String? fullName;
   @override
-  final String email;
+  final String? email;
+  @override
+  final String? phone;
   @override
   final String? initials;
   @override
@@ -196,7 +212,7 @@ class _$UserProfileImpl implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, fullName: $fullName, email: $email, initials: $initials, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'UserProfile(id: $id, fullName: $fullName, email: $email, phone: $phone, initials: $initials, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -208,6 +224,7 @@ class _$UserProfileImpl implements _UserProfile {
             (identical(other.fullName, fullName) ||
                 other.fullName == fullName) &&
             (identical(other.email, email) || other.email == email) &&
+            (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.initials, initials) ||
                 other.initials == initials) &&
             (identical(other.createdAt, createdAt) ||
@@ -219,7 +236,7 @@ class _$UserProfileImpl implements _UserProfile {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, fullName, email, initials, createdAt, updatedAt);
+      runtimeType, id, fullName, email, phone, initials, createdAt, updatedAt);
 
   @JsonKey(ignore: true)
   @override
@@ -238,8 +255,9 @@ class _$UserProfileImpl implements _UserProfile {
 abstract class _UserProfile implements UserProfile {
   const factory _UserProfile(
           {required final int id,
-          @JsonKey(name: 'full_name') required final String fullName,
-          required final String email,
+          @JsonKey(name: 'full_name') final String? fullName,
+          final String? email,
+          final String? phone,
           final String? initials,
           @JsonKey(name: 'created_at') required final DateTime createdAt,
           @JsonKey(name: 'updated_at') required final DateTime updatedAt}) =
@@ -252,9 +270,11 @@ abstract class _UserProfile implements UserProfile {
   int get id;
   @override
   @JsonKey(name: 'full_name')
-  String get fullName;
+  String? get fullName;
   @override
-  String get email;
+  String? get email;
+  @override
+  String? get phone;
   @override
   String? get initials;
   @override

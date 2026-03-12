@@ -1,34 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/error/app_exception.dart';
-import '../../../core/utils/validators.dart';
-import '../../../app/router/routes.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/auth_widgets.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// LoginScreen
+// OTPVerificationScreen
 // ─────────────────────────────────────────────────────────────────────────────
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class OTPVerificationScreen extends ConsumerStatefulWidget {
+  final String subscriberId;
+  final String referenceNo;
+
+  const OTPVerificationScreen({
+    super.key,
+    required this.subscriberId,
+    required this.referenceNo,
+  });
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<OTPVerificationScreen> createState() => _OTPVerificationScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _phoneCtrl = TextEditingController();
+  final _otpCtrl = TextEditingController();
 
   bool _loading = false;
   AppException? _error;
 
   @override
   void dispose() {
-    _phoneCtrl.dispose();
+    _otpCtrl.dispose();
     super.dispose();
   }
 
@@ -40,29 +44,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      final phone = _phoneCtrl.text.trim();
-      final res = await ref.read(authNotifierProvider.notifier).checkSubscription(phone);
-      
-      if (res['status'] == 'subscribed') {
-        // Need OTP
-        if (mounted) {
-          context.push(
-            AppRoutes.otpVerification, 
-            extra: {
-              'subscriberId': phone,
-              'referenceNo': res['referenceNo'],
-            },
+      await ref.read(authNotifierProvider.notifier).verifyOtp(
+            phone: widget.subscriberId,
+            referenceNo: widget.referenceNo,
+            otp: _otpCtrl.text.trim(),
           );
-        }
-      } else if (res['status'] == 'requires_subscription') {
-        // Just inform them or you could redirect them to an external browser for carrier double opt-in
-        final loginUrl = res['loginUrl'];
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Please subscribe first using the carrier portal. Link: ')),
-          );
-        }
-      }
+      // GoRouter redirect handles navigation on success (auth state changes).
     } on AppException catch (e) {
       if (mounted) setState(() => _error = e);
     } catch (e) {
@@ -75,11 +62,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return AuthScreenShell(
-      showBack: context.canPop(),
-      hero: const AuthHero(
-        icon: Icons.phone_android_rounded,
-        title: 'Welcome',
-        subtitle: 'Enter your phone number to sign in or subscribe',
+      showBack: true,
+      hero: AuthHero(
+        icon: Icons.message_rounded,
+        title: 'Verify OTP',
+        subtitle: 'Enter the 6-digit pin sent to ',
       ),
       form: AuthFormSheet(
         child: Form(
@@ -94,22 +81,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
 
               TextFormField(
-                controller: _phoneCtrl,
-                keyboardType: TextInputType.phone,
+                controller: _otpCtrl,
+                keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _submit(),
                 autocorrect: false,
                 decoration: const InputDecoration(
-                  labelText: 'Phone Number',
-                  hintText: '01XXXXXXXXX',
-                  prefixIcon: Icon(Icons.phone_outlined),
+                  labelText: 'OTP',
+                  hintText: '123456',
+                  prefixIcon: Icon(Icons.password_outlined),
                 ),
-                validator: Validators.phone,
+                validator: (val) {
+                  if (val == null || val.isEmpty) return 'OTP is required';
+                  if (val.length != 6) return 'OTP must be 6 digits';
+                  return null;
+                },
               ),
               const SizedBox(height: 24),
 
               AuthSubmitButton(
-                label: 'Continue',
+                label: 'Verify & Login',
                 onPressed: _loading ? null : _submit,
                 loading: _loading,
               ),

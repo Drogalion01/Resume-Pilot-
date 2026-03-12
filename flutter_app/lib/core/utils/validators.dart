@@ -1,6 +1,15 @@
 /// Pure form-field validators — signature: String? Function(String?).
 /// Use directly as `TextFormField.validator`.
 abstract class Validators {
+  static String? phone(String? value) {
+    if (value == null || value.trim().isEmpty)
+      return 'Phone number is required.';
+    final trimmed = value.trim();
+    final re = RegExp(r'^\+?[0-9]{10,15}$');
+    if (!re.hasMatch(trimmed)) return 'Enter a valid phone number.';
+    return null;
+  }
+
   // ── Email ──────────────────────────────────────────────────────────────────
 
   static String? email(String? value) {
@@ -33,7 +42,8 @@ abstract class Validators {
   /// Confirm-password factory: call with the primary password value.
   static String? Function(String?) confirmPassword(String primary) {
     return (value) {
-      if (value == null || value.isEmpty) return 'Please confirm your password.';
+      if (value == null || value.isEmpty)
+        return 'Please confirm your password.';
       if (value != primary) return 'Passwords do not match.';
       return null;
     };
@@ -45,7 +55,7 @@ abstract class Validators {
   static String? name(String? value) {
     if (value == null || value.trim().isEmpty) return 'Name is required.';
     final trimmed = value.trim();
-    if (trimmed.length < 2)  return 'Name must be at least 2 characters.';
+    if (trimmed.length < 2) return 'Name must be at least 2 characters.';
     if (trimmed.length > 60) return 'Name must be 60 characters or fewer.';
     return null;
   }
@@ -54,7 +64,8 @@ abstract class Validators {
 
   static String? Function(String?) required(String fieldName) {
     return (value) {
-      if (value == null || value.trim().isEmpty) return '$fieldName is required.';
+      if (value == null || value.trim().isEmpty)
+        return '$fieldName is required.';
       return null;
     };
   }

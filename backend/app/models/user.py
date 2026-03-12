@@ -6,9 +6,10 @@ class User(Base, TimestampMixin):
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True, index=True)
-    full_name = Column(String, index=True, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=False)
-    password_hash = Column(String, nullable=False)
+    full_name = Column(String, index=True, nullable=True)
+    email = Column(String, unique=True, index=True, nullable=True)
+    phone = Column(String, unique=True, index=True, nullable=True)
+    password_hash = Column(String, nullable=True)
     initials = Column(String)
 
     # Relationships

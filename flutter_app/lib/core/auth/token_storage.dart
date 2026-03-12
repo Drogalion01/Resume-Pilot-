@@ -30,8 +30,9 @@ class TokenStorage {
   Future<void> saveAuth({
     required String accessToken,
     required int userId,
-    required String email,
-    required String initials,
+    String? email,
+    String? initials,
+    String? phone,
   }) async {
     // Always evict stale/incompatible WebCrypto key+data before writing.
     // On web, flutter_secure_storage_web uses AES-GCM via the browser's

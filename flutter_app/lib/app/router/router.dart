@@ -8,8 +8,7 @@ import '../../features/auth/providers/auth_provider.dart';
 import '../../features/auth/screens/welcome_screen.dart';
 import '../../features/auth/screens/onboarding_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
-import '../../features/auth/screens/signup_screen.dart';
-import '../../features/auth/screens/forgot_password_screen.dart';
+import '../../features/auth/screens/otp_verification_screen.dart';
 import '../../features/dashboard/screens/dashboard_screen.dart';
 import '../../features/resume/screens/resume_versions_screen.dart';
 import '../../features/applications/screens/applications_tracker_screen.dart';
@@ -103,14 +102,22 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, __) => const LoginScreen(),
       ),
       GoRoute(
-        path: AppRoutes.signup,
-        name: 'signup',
-        builder: (_, __) => const SignUpScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.forgotPassword,
-        name: 'forgot-password',
-        builder: (_, __) => const ForgotPasswordScreen(),
+        path: AppRoutes.otpVerification,
+        name: 'otp-verification',
+        pageBuilder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: OTPVerificationScreen(
+              subscriberId: extra?['subscriberId'] as String? ?? '',
+              referenceNo: extra?['referenceNo'] as String? ?? '',
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          );
+        },
       ),
 
       // ── Authenticated shell (bottom nav tabs) ──────────────────────────────

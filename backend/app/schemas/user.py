@@ -2,8 +2,9 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr, ConfigDict
 
 class UserBase(BaseModel):
-    email: EmailStr
-    full_name: str
+    email: EmailStr | None = None
+    full_name: str | None = None
+    phone: str | None = None
     initials: str | None = None
 
 class UserUpdate(BaseModel):

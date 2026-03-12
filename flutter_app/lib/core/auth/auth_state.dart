@@ -28,8 +28,9 @@ sealed class AuthState with _$AuthState {
   const factory AuthState.authenticated({
     required int userId,
     required String accessToken,
-    required String email,
-    required String initials,
+    String? email,
+    String? initials,
+    String? phone,
   }) = AuthStateAuthenticated;
 
   /// No token, expired session, or explicit logout.

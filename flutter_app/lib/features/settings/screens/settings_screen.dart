@@ -155,7 +155,7 @@ class _ProfileSummaryCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      profile.fullName,
+                      profile.fullName ?? 'User',
                       style: AppTextStyles.title
                           .copyWith(color: colors.foreground),
                       maxLines: 1,
@@ -163,7 +163,7 @@ class _ProfileSummaryCard extends ConsumerWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      profile.email,
+                      profile.email ?? profile.phone ?? '',
                       style: AppTextStyles.caption.copyWith(
                         color: colors.foregroundSecondary,
                       ),

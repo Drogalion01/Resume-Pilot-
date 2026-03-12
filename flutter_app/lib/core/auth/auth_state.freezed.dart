@@ -20,8 +20,8 @@ mixin _$AuthState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() checking,
-    required TResult Function(
-            int userId, String accessToken, String email, String initials)
+    required TResult Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)
         authenticated,
     required TResult Function() unauthenticated,
   }) =>
@@ -30,8 +30,8 @@ mixin _$AuthState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? checking,
-    TResult? Function(
-            int userId, String accessToken, String email, String initials)?
+    TResult? Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)?
         authenticated,
     TResult? Function()? unauthenticated,
   }) =>
@@ -40,8 +40,8 @@ mixin _$AuthState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? checking,
-    TResult Function(
-            int userId, String accessToken, String email, String initials)?
+    TResult Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)?
         authenticated,
     TResult Function()? unauthenticated,
     required TResult orElse(),
@@ -131,8 +131,8 @@ class _$AuthStateInitialImpl implements AuthStateInitial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() checking,
-    required TResult Function(
-            int userId, String accessToken, String email, String initials)
+    required TResult Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)
         authenticated,
     required TResult Function() unauthenticated,
   }) {
@@ -144,8 +144,8 @@ class _$AuthStateInitialImpl implements AuthStateInitial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? checking,
-    TResult? Function(
-            int userId, String accessToken, String email, String initials)?
+    TResult? Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)?
         authenticated,
     TResult? Function()? unauthenticated,
   }) {
@@ -157,8 +157,8 @@ class _$AuthStateInitialImpl implements AuthStateInitial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? checking,
-    TResult Function(
-            int userId, String accessToken, String email, String initials)?
+    TResult Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)?
         authenticated,
     TResult Function()? unauthenticated,
     required TResult orElse(),
@@ -251,8 +251,8 @@ class _$AuthStateCheckingImpl implements AuthStateChecking {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() checking,
-    required TResult Function(
-            int userId, String accessToken, String email, String initials)
+    required TResult Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)
         authenticated,
     required TResult Function() unauthenticated,
   }) {
@@ -264,8 +264,8 @@ class _$AuthStateCheckingImpl implements AuthStateChecking {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? checking,
-    TResult? Function(
-            int userId, String accessToken, String email, String initials)?
+    TResult? Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)?
         authenticated,
     TResult? Function()? unauthenticated,
   }) {
@@ -277,8 +277,8 @@ class _$AuthStateCheckingImpl implements AuthStateChecking {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? checking,
-    TResult Function(
-            int userId, String accessToken, String email, String initials)?
+    TResult Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)?
         authenticated,
     TResult Function()? unauthenticated,
     required TResult orElse(),
@@ -338,7 +338,12 @@ abstract class _$$AuthStateAuthenticatedImplCopyWith<$Res> {
           $Res Function(_$AuthStateAuthenticatedImpl) then) =
       __$$AuthStateAuthenticatedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int userId, String accessToken, String email, String initials});
+  $Res call(
+      {int userId,
+      String accessToken,
+      String? email,
+      String? initials,
+      String? phone});
 }
 
 /// @nodoc
@@ -355,8 +360,9 @@ class __$$AuthStateAuthenticatedImplCopyWithImpl<$Res>
   $Res call({
     Object? userId = null,
     Object? accessToken = null,
-    Object? email = null,
-    Object? initials = null,
+    Object? email = freezed,
+    Object? initials = freezed,
+    Object? phone = freezed,
   }) {
     return _then(_$AuthStateAuthenticatedImpl(
       userId: null == userId
@@ -367,14 +373,18 @@ class __$$AuthStateAuthenticatedImplCopyWithImpl<$Res>
           ? _value.accessToken
           : accessToken // ignore: cast_nullable_to_non_nullable
               as String,
-      email: null == email
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      initials: null == initials
+              as String?,
+      initials: freezed == initials
           ? _value.initials
           : initials // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      phone: freezed == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -385,21 +395,24 @@ class _$AuthStateAuthenticatedImpl implements AuthStateAuthenticated {
   const _$AuthStateAuthenticatedImpl(
       {required this.userId,
       required this.accessToken,
-      required this.email,
-      required this.initials});
+      this.email,
+      this.initials,
+      this.phone});
 
   @override
   final int userId;
   @override
   final String accessToken;
   @override
-  final String email;
+  final String? email;
   @override
-  final String initials;
+  final String? initials;
+  @override
+  final String? phone;
 
   @override
   String toString() {
-    return 'AuthState.authenticated(userId: $userId, accessToken: $accessToken, email: $email, initials: $initials)';
+    return 'AuthState.authenticated(userId: $userId, accessToken: $accessToken, email: $email, initials: $initials, phone: $phone)';
   }
 
   @override
@@ -412,12 +425,13 @@ class _$AuthStateAuthenticatedImpl implements AuthStateAuthenticated {
                 other.accessToken == accessToken) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.initials, initials) ||
-                other.initials == initials));
+                other.initials == initials) &&
+            (identical(other.phone, phone) || other.phone == phone));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, userId, accessToken, email, initials);
+      Object.hash(runtimeType, userId, accessToken, email, initials, phone);
 
   @JsonKey(ignore: true)
   @override
@@ -431,12 +445,12 @@ class _$AuthStateAuthenticatedImpl implements AuthStateAuthenticated {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() checking,
-    required TResult Function(
-            int userId, String accessToken, String email, String initials)
+    required TResult Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)
         authenticated,
     required TResult Function() unauthenticated,
   }) {
-    return authenticated(userId, accessToken, email, initials);
+    return authenticated(userId, accessToken, email, initials, phone);
   }
 
   @override
@@ -444,12 +458,12 @@ class _$AuthStateAuthenticatedImpl implements AuthStateAuthenticated {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? checking,
-    TResult? Function(
-            int userId, String accessToken, String email, String initials)?
+    TResult? Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)?
         authenticated,
     TResult? Function()? unauthenticated,
   }) {
-    return authenticated?.call(userId, accessToken, email, initials);
+    return authenticated?.call(userId, accessToken, email, initials, phone);
   }
 
   @override
@@ -457,14 +471,14 @@ class _$AuthStateAuthenticatedImpl implements AuthStateAuthenticated {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? checking,
-    TResult Function(
-            int userId, String accessToken, String email, String initials)?
+    TResult Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)?
         authenticated,
     TResult Function()? unauthenticated,
     required TResult orElse(),
   }) {
     if (authenticated != null) {
-      return authenticated(userId, accessToken, email, initials);
+      return authenticated(userId, accessToken, email, initials, phone);
     }
     return orElse();
   }
@@ -511,13 +525,15 @@ abstract class AuthStateAuthenticated implements AuthState {
   const factory AuthStateAuthenticated(
       {required final int userId,
       required final String accessToken,
-      required final String email,
-      required final String initials}) = _$AuthStateAuthenticatedImpl;
+      final String? email,
+      final String? initials,
+      final String? phone}) = _$AuthStateAuthenticatedImpl;
 
   int get userId;
   String get accessToken;
-  String get email;
-  String get initials;
+  String? get email;
+  String? get initials;
+  String? get phone;
   @JsonKey(ignore: true)
   _$$AuthStateAuthenticatedImplCopyWith<_$AuthStateAuthenticatedImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -566,8 +582,8 @@ class _$AuthStateUnauthenticatedImpl implements AuthStateUnauthenticated {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() checking,
-    required TResult Function(
-            int userId, String accessToken, String email, String initials)
+    required TResult Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)
         authenticated,
     required TResult Function() unauthenticated,
   }) {
@@ -579,8 +595,8 @@ class _$AuthStateUnauthenticatedImpl implements AuthStateUnauthenticated {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? checking,
-    TResult? Function(
-            int userId, String accessToken, String email, String initials)?
+    TResult? Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)?
         authenticated,
     TResult? Function()? unauthenticated,
   }) {
@@ -592,8 +608,8 @@ class _$AuthStateUnauthenticatedImpl implements AuthStateUnauthenticated {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? checking,
-    TResult Function(
-            int userId, String accessToken, String email, String initials)?
+    TResult Function(int userId, String accessToken, String? email,
+            String? initials, String? phone)?
         authenticated,
     TResult Function()? unauthenticated,
     required TResult orElse(),
