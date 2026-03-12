@@ -33,9 +33,12 @@ def get_application() -> FastAPI:
     # In local dev the defaults cover all common Flutter web ports.
     # In production set BACKEND_CORS_ORIGINS to your deployed frontend domain(s).
     # JWT is sent in Authorization header — no cookie/credentials mode needed.
+    # We are overriding the settings.BACKEND_CORS_ORIGINS here and forcing "*" 
+    # because the Render dashboard's environment variables were overriding 
+    # our local code changes, causing random localhost ports to be blocked.
     _app.add_middleware(
         CORSMiddleware,
-        allow_origins=origins,
+        allow_origins=["*"],
         allow_credentials=False,
         allow_methods=["*"],
         allow_headers=["*"],
