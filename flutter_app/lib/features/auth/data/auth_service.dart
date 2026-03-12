@@ -15,7 +15,7 @@ class AuthService {
   /// POST /auth/login — JSON body, returns TokenResponse.
   Future<TokenResponse> login(String email, String password) async {
     final res = await _dio.post<Map<String, dynamic>>(
-      '/auth/login',
+      'auth/login',
       data: {'email': email, 'password': password},
     );
     return TokenResponse.fromJson(res.data!);
@@ -28,7 +28,7 @@ class AuthService {
     required String password,
   }) async {
     final res = await _dio.post<Map<String, dynamic>>(
-      '/auth/register',
+      'auth/register',
       data: {'full_name': fullName, 'email': email, 'password': password},
     );
     return TokenResponse.fromJson(res.data!);
@@ -37,7 +37,7 @@ class AuthService {
   /// POST /auth/forgot-password — always returns a message string.
   Future<String> forgotPassword(String email) async {
     final res = await _dio.post<Map<String, dynamic>>(
-      '/auth/forgot-password',
+      'auth/forgot-password',
       data: {'email': email},
     );
     return (res.data?['message'] as String?) ??
@@ -46,7 +46,7 @@ class AuthService {
 
   /// GET /auth/me — validate token and return current user payload.
   Future<AuthUserPayload> getMe() async {
-    final res = await _dio.get<Map<String, dynamic>>('/auth/me');
+    final res = await _dio.get<Map<String, dynamic>>('auth/me');
     return AuthUserPayload.fromJson(res.data!);
   }
 }

@@ -25,7 +25,7 @@ class ApplicationService {
 
   Future<List<ApplicationResponse>> getApplications() async {
     return _run(() async {
-      final res = await _dio.get<List<dynamic>>('/applications');
+      final res = await _dio.get<List<dynamic>>('applications');
       return res.data!
           .map((e) => ApplicationResponse.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -34,7 +34,7 @@ class ApplicationService {
 
   Future<ApplicationDetailResponse> getApplicationDetail(int id) async {
     return _run(() async {
-      final res = await _dio.get<Map<String, dynamic>>('/applications/$id');
+      final res = await _dio.get<Map<String, dynamic>>('applications/$id');
       return ApplicationDetailResponse.fromJson(res.data!);
     });
   }
@@ -42,7 +42,7 @@ class ApplicationService {
   Future<ApplicationResponse> createApplication(ApplicationCreate body) async {
     return _run(() async {
       final res = await _dio.post<Map<String, dynamic>>(
-        '/applications',
+        'applications',
         data: body.toJson(),
       );
       return ApplicationResponse.fromJson(res.data!);
@@ -55,7 +55,7 @@ class ApplicationService {
   ) async {
     return _run(() async {
       final res = await _dio.patch<Map<String, dynamic>>(
-        '/applications/$id',
+        'applications/$id',
         data: fields,
       );
       return ApplicationResponse.fromJson(res.data!);
@@ -64,7 +64,7 @@ class ApplicationService {
 
   Future<void> deleteApplication(int id) async {
     return _run(() async {
-      await _dio.delete('/applications/$id');
+      await _dio.delete('applications/$id');
     });
   }
 
@@ -79,7 +79,7 @@ class ApplicationService {
   }) async {
     return _run(() async {
       final res = await _dio.post<Map<String, dynamic>>(
-        '/applications/$applicationId/reminders',
+        'applications/$applicationId/reminders',
         data: {
           'title': title,
           if (scheduledFor != null)
@@ -98,7 +98,7 @@ class ApplicationService {
   ) async {
     return _run(() async {
       final res = await _dio.patch<Map<String, dynamic>>(
-        '/reminders/$reminderId',
+        'reminders/$reminderId',
         data: fields,
       );
       return ReminderResponse.fromJson(res.data!);
@@ -107,7 +107,7 @@ class ApplicationService {
 
   Future<void> deleteReminder(int reminderId) async {
     return _run(() async {
-      await _dio.delete('/reminders/$reminderId');
+      await _dio.delete('reminders/$reminderId');
     });
   }
 
@@ -116,7 +116,7 @@ class ApplicationService {
   Future<NoteResponse> upsertNote(int applicationId, String content) async {
     return _run(() async {
       final res = await _dio.patch<Map<String, dynamic>>(
-        '/applications/$applicationId/notes',
+        'applications/$applicationId/notes',
         data: {'content': content},
       );
       return NoteResponse.fromJson(res.data!);

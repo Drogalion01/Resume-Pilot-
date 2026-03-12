@@ -24,11 +24,18 @@ abstract final class ApiConstants {
   /// Falls back to a platform-appropriate localhost address when not set.
   static final String baseUrl = () {
     const env = String.fromEnvironment('API_BASE_URL',
-        defaultValue: 'https://resume-pilot-lc1i.onrender.com/api/v1');
-    if (env.isNotEmpty &&
-        env != 'https://resume-pilot-lc1i.onrender.com/api/v1' &&
-        !env.contains('localhost')) return env;
-    return 'https://resume-pilot-lc1i.onrender.com/api/v1';
+        defaultValue: 'https://resume-pilot-lc1i.onrender.com/api/v1/');
+    var result = env;
+    if (env.isNotEmpty && env != 'https://resume-pilot-lc1i.onrender.com/api/v1/' && !env.contains('localhost')) {
+      result = env;
+    } else {
+      result = 'https://resume-pilot-lc1i.onrender.com/api/v1/';
+    }
+    
+    if (!result.endsWith('/')) {
+      result += '/';
+    }
+    return result;
   }();
 
   // ── Auth ───────────────────────────────────────────────────────────────────

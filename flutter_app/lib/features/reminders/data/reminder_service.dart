@@ -27,7 +27,7 @@ class ReminderService {
   /// ordered by scheduled_for asc (backend handles sort).
   Future<List<ReminderResponse>> getReminders() async {
     return _run(() async {
-      final res = await _dio.get<List<dynamic>>('/reminders');
+      final res = await _dio.get<List<dynamic>>('reminders');
       return res.data!
           .map((e) => ReminderResponse.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -47,7 +47,7 @@ class ReminderService {
   }) async {
     return _run(() async {
       final res = await _dio.post<Map<String, dynamic>>(
-        '/applications/$applicationId/reminders',
+        'applications/$applicationId/reminders',
         data: {
           'title': title,
           if (scheduledFor != null)
@@ -69,7 +69,7 @@ class ReminderService {
   ) async {
     return _run(() async {
       final res = await _dio.patch<Map<String, dynamic>>(
-        '/reminders/$reminderId',
+        'reminders/$reminderId',
         data: fields,
       );
       return ReminderResponse.fromJson(res.data!);
@@ -81,7 +81,7 @@ class ReminderService {
   /// DELETE /reminders/{id}
   Future<void> deleteReminder(int reminderId) async {
     return _run(() async {
-      await _dio.delete('/reminders/$reminderId');
+      await _dio.delete('reminders/$reminderId');
     });
   }
 }

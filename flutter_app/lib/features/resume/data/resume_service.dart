@@ -24,7 +24,7 @@ class ResumeService {
 
   Future<List<ResumeResponse>> getResumes() async {
     return _run(() async {
-      final res = await _dio.get<List<dynamic>>('/resumes');
+      final res = await _dio.get<List<dynamic>>('resumes');
       return res.data!
           .map((e) => ResumeResponse.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -33,7 +33,7 @@ class ResumeService {
 
   Future<ResumeResponse> getResumeById(int id) async {
     return _run(() async {
-      final res = await _dio.get<Map<String, dynamic>>('/resumes/$id');
+      final res = await _dio.get<Map<String, dynamic>>('resumes/$id');
       return ResumeResponse.fromJson(res.data!);
     });
   }
@@ -42,7 +42,7 @@ class ResumeService {
 
   Future<List<ResumeVersionResponse>> getResumeVersions(int resumeId) async {
     return _run(() async {
-      final res = await _dio.get<List<dynamic>>('/resumes/$resumeId/versions');
+      final res = await _dio.get<List<dynamic>>('resumes/$resumeId/versions');
       return res.data!
           .map((e) => ResumeVersionResponse.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -59,7 +59,7 @@ class ResumeService {
   }) async {
     return _run(() async {
       final res = await _dio.post<Map<String, dynamic>>(
-        '/resumes/$resumeId/versions',
+        'resumes/$resumeId/versions',
         data: {
           if (versionName != null) 'version_name': versionName,
           if (targetRole != null) 'target_role': targetRole,
@@ -82,7 +82,7 @@ class ResumeService {
   }) async {
     return _run(() async {
       final res = await _dio.patch<Map<String, dynamic>>(
-        '/resume-versions/$versionId',
+        'resume-versions/$versionId',
         data: {
           if (versionName != null) 'version_name': versionName,
           if (targetRole != null) 'target_role': targetRole,
@@ -98,7 +98,7 @@ class ResumeService {
   Future<ResumeVersionResponse> duplicateResumeVersion(int versionId) async {
     return _run(() async {
       final res = await _dio.post<Map<String, dynamic>>(
-        '/resume-versions/$versionId/duplicate',
+        'resume-versions/$versionId/duplicate',
       );
       return ResumeVersionResponse.fromJson(res.data!);
     });
@@ -109,7 +109,7 @@ class ResumeService {
   Future<AnalysisResultResponse> getResumeAnalysis(int resumeId) async {
     return _run(() async {
       final res =
-          await _dio.get<Map<String, dynamic>>('/resumes/$resumeId/analysis');
+          await _dio.get<Map<String, dynamic>>('resumes/$resumeId/analysis');
       return AnalysisResultResponse.fromJson(res.data!);
     });
   }
@@ -146,7 +146,7 @@ class ResumeService {
       if (jdText != null) form.fields.add(MapEntry('jd_text', jdText));
 
       final res = await _dio.post<Map<String, dynamic>>(
-        '/resumes/analyze',
+        'resumes/analyze',
         data: form,
       );
       return AnalysisResultResponse.fromJson(res.data!);

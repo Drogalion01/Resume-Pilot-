@@ -19,7 +19,7 @@ class DashboardService {
   }
 
   Future<DashboardResponse> getDashboard() => _run(() async {
-        final response = await _dio.get<Map<String, dynamic>>('/dashboard');
+        final response = await _dio.get<Map<String, dynamic>>('dashboard');
         return DashboardResponse.fromJson(response.data!);
       });
 }

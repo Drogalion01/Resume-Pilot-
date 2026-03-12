@@ -32,7 +32,7 @@ class AuthRepository {
       _run(() async {
         final body = LoginRequest(email: email, password: password);
         final res = await _dio.post<Map<String, dynamic>>(
-          '/auth/login',
+          'auth/login',
           data: body.toJson(),
         );
         return _processResponse(res.data!);
@@ -51,7 +51,7 @@ class AuthRepository {
         final body =
             SignupRequest(fullName: fullName, email: email, password: password);
         final res = await _dio.post<Map<String, dynamic>>(
-          '/auth/register',
+          'auth/register',
           data: body.toJson(),
         );
         return _processResponse(res.data!);
@@ -63,7 +63,7 @@ class AuthRepository {
   /// Always returns a message string â€” never throws for unknown email.
   Future<String> forgotPassword(String email) => _run(() async {
         final res = await _dio.post<Map<String, dynamic>>(
-          '/auth/forgot-password',
+          'auth/forgot-password',
           data: {'email': email},
         );
         return (res.data?['message'] as String?) ??
@@ -76,7 +76,7 @@ class AuthRepository {
   /// Returns null when the token is missing or the server returns 401.
   Future<AuthStateAuthenticated?> getCurrentUser() async {
     try {
-      final res = await _dio.get<Map<String, dynamic>>('/auth/me');
+      final res = await _dio.get<Map<String, dynamic>>('auth/me');
       final user = AuthUserPayload.fromJson(res.data!);
       final token = await _storage.getAccessToken();
       if (token == null) return null;

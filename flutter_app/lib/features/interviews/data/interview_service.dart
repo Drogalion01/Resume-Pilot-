@@ -22,7 +22,7 @@ class InterviewService {
   /// GET /interviews/{id}
   Future<InterviewResponse> getInterview(int id) async {
     return _run(() async {
-      final res = await _dio.get<Map<String, dynamic>>('/interviews/$id');
+      final res = await _dio.get<Map<String, dynamic>>('interviews/$id');
       return InterviewResponse.fromJson(res.data!);
     });
   }
@@ -44,7 +44,7 @@ class InterviewService {
   }) async {
     return _run(() async {
       final res = await _dio.post<Map<String, dynamic>>(
-        '/applications/$applicationId/interviews',
+        'applications/$applicationId/interviews',
         data: {
           'round_name': roundName,
           'interview_type': interviewType.name,
@@ -69,7 +69,7 @@ class InterviewService {
   ) async {
     return _run(() async {
       final res = await _dio.patch<Map<String, dynamic>>(
-        '/interviews/$id',
+        'interviews/$id',
         data: fields,
       );
       return InterviewResponse.fromJson(res.data!);
@@ -79,7 +79,7 @@ class InterviewService {
   /// DELETE /interviews/{id}
   Future<void> deleteInterview(int id) async {
     return _run(() async {
-      await _dio.delete('/interviews/$id');
+      await _dio.delete('interviews/$id');
     });
   }
 

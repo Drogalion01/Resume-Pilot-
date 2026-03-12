@@ -20,7 +20,7 @@ class UserService {
 
   /// GET /user/me  →  UserProfile
   Future<UserProfile> getProfile() => _run(() async {
-        final res = await _dio.get<Map<String, dynamic>>('/user/me');
+        final res = await _dio.get<Map<String, dynamic>>('user/me');
         return UserProfile.fromJson(res.data!);
       });
 
@@ -28,7 +28,7 @@ class UserService {
   Future<UserProfile> updateProfile(Map<String, dynamic> fields) =>
       _run(() async {
         final res = await _dio.put<Map<String, dynamic>>(
-          '/user/me',
+          'user/me',
           data: fields,
         );
         return UserProfile.fromJson(res.data!);

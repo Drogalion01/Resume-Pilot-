@@ -20,7 +20,7 @@ class SettingsService {
 
   /// GET /user/settings  →  UserSettings
   Future<UserSettings> getSettings() => _run(() async {
-        final res = await _dio.get<Map<String, dynamic>>('/user/settings');
+        final res = await _dio.get<Map<String, dynamic>>('user/settings');
         return UserSettings.fromJson(res.data!);
       });
 
@@ -28,7 +28,7 @@ class SettingsService {
   Future<UserSettings> updateSettings(Map<String, dynamic> fields) =>
       _run(() async {
         final res = await _dio.patch<Map<String, dynamic>>(
-          '/user/settings',
+          'user/settings',
           data: fields,
         );
         return UserSettings.fromJson(res.data!);

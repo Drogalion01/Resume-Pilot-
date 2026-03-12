@@ -31,7 +31,7 @@ class NoteService {
   Future<List<NoteResponse>> getNotes(int applicationId) async {
     return _run(() async {
       final res =
-          await _dio.get<List<dynamic>>('/applications/$applicationId/notes');
+          await _dio.get<List<dynamic>>('applications/$applicationId/notes');
       return res.data!
           .map((e) => NoteResponse.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -48,7 +48,7 @@ class NoteService {
   }) async {
     return _run(() async {
       final res = await _dio.post<Map<String, dynamic>>(
-        '/applications/$applicationId/notes',
+        'applications/$applicationId/notes',
         data: {'content': content},
       );
       return NoteResponse.fromJson(res.data!);
@@ -65,7 +65,7 @@ class NoteService {
   }) async {
     return _run(() async {
       final res = await _dio.patch<Map<String, dynamic>>(
-        '/notes/$noteId',
+        'notes/$noteId',
         data: {'content': content},
       );
       return NoteResponse.fromJson(res.data!);
@@ -77,7 +77,7 @@ class NoteService {
   /// DELETE /notes/{noteId}  → void (204)
   Future<void> deleteNote(int noteId) async {
     return _run(() async {
-      await _dio.delete('/notes/$noteId');
+      await _dio.delete('notes/$noteId');
     });
   }
 }
