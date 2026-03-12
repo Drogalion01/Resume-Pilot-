@@ -1,0 +1,34 @@
+﻿Analyzing flutter_app...
+
+warning - dio_test.dart:9:7 - The value of the local variable 'uri' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - zz2.dart:9:39 - This 'onError' handler must return a value assignable to 'Response<dynamic>', but ends without returning a value. Try adding a return statement. - body_might_complete_normally_catch_error
+warning - zz3.dart:9:39 - This 'onError' handler must return a value assignable to 'Response<dynamic>', but ends without returning a value. Try adding a return statement. - body_might_complete_normally_catch_error
+   info - dio_test.dart:6:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - dio_test.dart:9:13 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - dio_test.dart:14:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - dio_test3.dart:13:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - dio_test3.dart:16:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - dio_test3.dart:17:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - dio_test3.dart:18:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\utils\validators.dart:6:7 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - lib\core\utils\validators.dart:29:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - lib\features\auth\screens\login_screen.dart:71:44 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\features\auth\screens\otp_verification_screen.dart:56:44 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\features\resume\data\resume_service.dart:140:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - lib\features\resume\data\resume_service.dart:142:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - test_env.dart:1:92 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_env.dart:1:98 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - test_env2.dart:1:92 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_env2.dart:1:98 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - zz.dart:1:129 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - zz2.dart:5:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - zz2.dart:5:11 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - zz3.dart:5:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - zz3.dart:5:11 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - zz4.dart:1:15 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - zz5.dart:1:193 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - zz5.dart:1:199 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - zz5.dart:1:319 - Empty catch block. Try adding statements to the block, adding a comment to the block, or removing the 'catch' clause. - empty_catches
+   info - zz5.dart:1:365 - Empty catch block. Try adding statements to the block, adding a comment to the block, or removing the 'catch' clause. - empty_catches
+
+30 issues found.

@@ -1,6 +1,18 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  exclude:
+    - dio_test.dart
+    - dio_test3.dart
+    - test_env.dart
+    - test_env2.dart
+    - test_uri.dart
+    - test3.dart
+    - zz.dart
+    - zz2.dart
+    - zz3.dart
+    - zz4.dart
+    - zz5.dart
   errors:
     # Suppresses false-positive warnings from the outdated analyzer (3.4.0)
     # misidentifying @JsonKey on Freezed factory constructor parameters.

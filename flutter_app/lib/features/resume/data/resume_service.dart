@@ -136,14 +136,18 @@ class ResumeService {
           MultipartFile.fromBytes(fileBytes, filename: fileName),
         ));
       }
-      if (pastedText != null)
+      if (pastedText != null) {
         form.fields.add(MapEntry('pasted_text', pastedText));
-      if (targetRole != null)
+      }
+      if (targetRole != null) {
         form.fields.add(MapEntry('target_role', targetRole));
+      }
       if (companyName != null) {
         form.fields.add(MapEntry('company_name', companyName));
       }
-      if (jdText != null) form.fields.add(MapEntry('jd_text', jdText));
+      if (jdText != null) {
+        form.fields.add(MapEntry('jd_text', jdText));
+      }
 
       final res = await _dio.post<Map<String, dynamic>>(
         'resumes/analyze',

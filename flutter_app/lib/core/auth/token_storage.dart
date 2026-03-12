@@ -7,6 +7,7 @@ abstract class _K {
   static const userId = 'user_id';
   static const userEmail = 'user_email';
   static const userInitials = 'user_initials';
+  static const userPhone = 'user_phone';
 }
 
 /// flutter_secure_storage wrapper — single access point for token persistence.
@@ -54,6 +55,7 @@ class TokenStorage {
     await _storage.write(key: _K.userId, value: userId.toString());
     await _storage.write(key: _K.userEmail, value: email);
     await _storage.write(key: _K.userInitials, value: initials);
+    await _storage.write(key: _K.userPhone, value: phone);
   }
 
   Future<void> clearAll() => _tryClearAll();
@@ -66,6 +68,7 @@ class TokenStorage {
       await _storage.delete(key: _K.userId);
       await _storage.delete(key: _K.userEmail);
       await _storage.delete(key: _K.userInitials);
+      await _storage.delete(key: _K.userPhone);
     } catch (_) {
       // Ignore errors during clear — nothing we can do.
     }
@@ -79,6 +82,7 @@ class TokenStorage {
 
   Future<String?> getUserEmail() => _safeRead(_K.userEmail);
   Future<String?> getUserInitials() => _safeRead(_K.userInitials);
+  Future<String?> getUserPhone() => _safeRead(_K.userPhone);
 
   Future<int?> getUserId() async {
     final raw = await _safeRead(_K.userId);

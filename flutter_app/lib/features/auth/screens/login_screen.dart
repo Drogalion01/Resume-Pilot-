@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/error/app_exception.dart';
-import '../../../core/utils/validators.dart';
 import '../../../app/router/routes.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/auth_widgets.dart';
+
+bool _isSupportedRobiAirtelNumber(String phone) {
+  return RegExp(r'^01(?:6|8)\d{8}$').hasMatch(phone);
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LoginScreen
@@ -20,7 +23,6 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
   final _phoneCtrl = TextEditingController();
 
   bool _loading = false;
@@ -33,43 +35,88 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _submit() async {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
+    final phone = _phoneCtrl.text.trim();
+
+    if (phone.isEmpty) {
+      _showMessage('মোবাইল নম্বর দাও', isError: true);
+      return;
+    }
+    if (!_isSupportedRobiAirtelNumber(phone)) {
+      _showMessage('সঠিক Robi/Airtel নম্বর দাও', isError: true);
+      return;
+    }
+
     setState(() {
       _loading = true;
       _error = null;
     });
 
     try {
-      final phone = _phoneCtrl.text.trim();
-      final res = await ref.read(authNotifierProvider.notifier).checkSubscription(phone);
-      
-      if (res['status'] == 'subscribed') {
-        // Need OTP
-        if (mounted) {
-          context.push(
-            AppRoutes.otpVerification, 
-            extra: {
-              'subscriberId': phone,
-              'referenceNo': res['referenceNo'],
-            },
-          );
-        }
-      } else if (res['status'] == 'requires_subscription') {
-        // Just inform them or you could redirect them to an external browser for carrier double opt-in
-        final loginUrl = res['loginUrl'];
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Please subscribe first using the carrier portal. Link: ')),
-          );
-        }
+      final res = await ref
+          .read(authNotifierProvider.notifier)
+          .checkSubscription(phone);
+      final status = (res['status']?.toString() ?? '').trim();
+      final referenceNo = (res['referenceNo']?.toString() ?? '').trim();
+      final loginUrl = (res['loginUrl']?.toString() ?? '').trim();
+
+      if (status == 'subscribed' && referenceNo.isNotEmpty) {
+        _showMessage('OTP পাঠানো হয়েছে', isError: false);
+        if (!mounted) return;
+        context.push(
+          AppRoutes.otpVerification,
+          extra: {
+            'subscriberId': phone,
+            'referenceNo': referenceNo,
+          },
+        );
+        return;
       }
+
+      if (status == 'requires_subscription') {
+        _showMessage(
+          loginUrl.isNotEmpty
+              ? 'সাবস্ক্রিপশন দরকার। লিংক: $loginUrl'
+              : 'প্রথমে সাবস্ক্রাইব করুন (dial *213#) তারপর আবার চেষ্টা করুন।',
+          isError: true,
+        );
+        return;
+      }
+
+      if (status == 'subscribed' && referenceNo.isEmpty) {
+        _showMessage('OTP রেফারেন্স পাওয়া যায়নি। আবার চেষ্টা করুন।',
+            isError: true);
+        return;
+      }
+
+      _showMessage('লগইন প্রক্রিয়া সম্পন্ন করা যায়নি। আবার চেষ্টা করুন।',
+          isError: true);
     } on AppException catch (e) {
-      if (mounted) setState(() => _error = e);
+      if (mounted) {
+        setState(() => _error = e);
+        _showMessage(e.userMessage, isError: true);
+      }
     } catch (e) {
-      if (mounted) setState(() => _error = ServerException(500, 'Unexpected error: '));
+      if (mounted) {
+        setState(() => _error = const ServerException(500, 'Unexpected error'));
+        _showMessage('নেটওয়ার্ক সমস্যা হয়েছে: ${e.toString()}',
+            isError: true);
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  void _showMessage(String text, {required bool isError}) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: isError ? Colors.redAccent : Colors.green,
+        duration:
+            isError ? const Duration(seconds: 4) : const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -82,39 +129,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         subtitle: 'Enter your phone number to sign in or subscribe',
       ),
       form: AuthFormSheet(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AuthErrorBanner(
-                error: _error,
-                onDismiss: () => setState(() => _error = null),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AuthErrorBanner(
+              error: _error,
+              onDismiss: () => setState(() => _error = null),
+            ),
+            TextField(
+              controller: _phoneCtrl,
+              keyboardType: TextInputType.phone,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => _submit(),
+              enabled: !_loading,
+              autocorrect: false,
+              decoration: const InputDecoration(
+                labelText: 'মোবাইল নম্বর',
+                hintText: '018********',
+                prefixIcon: Icon(Icons.phone_outlined),
               ),
-
-              TextFormField(
-                controller: _phoneCtrl,
-                keyboardType: TextInputType.phone,
-                textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) => _submit(),
-                autocorrect: false,
-                decoration: const InputDecoration(
-                  labelText: 'Phone Number',
-                  hintText: '01XXXXXXXXX',
-                  prefixIcon: Icon(Icons.phone_outlined),
-                ),
-                validator: Validators.phone,
-              ),
-              const SizedBox(height: 24),
-
-              AuthSubmitButton(
-                label: 'Continue',
-                onPressed: _loading ? null : _submit,
-                loading: _loading,
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 24),
+            AuthSubmitButton(
+              label: 'পরবর্তী',
+              onPressed: _loading ? null : _submit,
+              loading: _loading,
+            ),
+          ],
         ),
       ),
     );

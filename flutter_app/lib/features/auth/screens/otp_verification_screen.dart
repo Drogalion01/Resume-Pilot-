@@ -20,7 +20,8 @@ class OTPVerificationScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<OTPVerificationScreen> createState() => _OTPVerificationScreenState();
+  ConsumerState<OTPVerificationScreen> createState() =>
+      _OTPVerificationScreenState();
 }
 
 class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
@@ -49,14 +50,36 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
             referenceNo: widget.referenceNo,
             otp: _otpCtrl.text.trim(),
           );
+      _showMessage('যাচাই সফল হয়েছে', isError: false);
       // GoRouter redirect handles navigation on success (auth state changes).
     } on AppException catch (e) {
-      if (mounted) setState(() => _error = e);
+      if (mounted) {
+        setState(() => _error = e);
+        _showMessage(e.userMessage, isError: true);
+      }
     } catch (e) {
-      if (mounted) setState(() => _error = ServerException(500, 'Unexpected error: '));
+      if (mounted) {
+        setState(() =>
+            _error = const ServerException(500, 'Unexpected error'));
+        _showMessage('নেটওয়ার্ক সমস্যা হয়েছে: ${e.toString()}',
+            isError: true);
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  void _showMessage(String text, {required bool isError}) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: isError ? Colors.redAccent : Colors.green,
+        duration:
+            isError ? const Duration(seconds: 4) : const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -65,8 +88,8 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
       showBack: true,
       hero: AuthHero(
         icon: Icons.message_rounded,
-        title: 'Verify OTP',
-        subtitle: 'Enter the 6-digit pin sent to ',
+        title: 'OTP দিন',
+        subtitle: '${widget.subscriberId} নম্বরে কোড পাঠানো হয়েছে',
       ),
       form: AuthFormSheet(
         child: Form(
@@ -79,7 +102,6 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
                 error: _error,
                 onDismiss: () => setState(() => _error = null),
               ),
-
               TextFormField(
                 controller: _otpCtrl,
                 keyboardType: TextInputType.number,
@@ -88,21 +110,31 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
                 autocorrect: false,
                 decoration: const InputDecoration(
                   labelText: 'OTP',
-                  hintText: '123456',
+                  hintText: '******',
                   prefixIcon: Icon(Icons.password_outlined),
                 ),
                 validator: (val) {
                   if (val == null || val.isEmpty) return 'OTP is required';
-                  if (val.length != 6) return 'OTP must be 6 digits';
+                  if (val.length < 4) return 'OTP সঠিকভাবে দাও';
                   return null;
                 },
               ),
+              const SizedBox(height: 8),
+              Text(
+                'RefNo: ${widget.referenceNo}',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+              ),
               const SizedBox(height: 24),
-
               AuthSubmitButton(
-                label: 'Verify & Login',
+                label: 'যাচাই করুন',
                 onPressed: _loading ? null : _submit,
                 loading: _loading,
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: _loading ? null : () => Navigator.pop(context),
+                child: const Text('ভুল নম্বর? পিছনে যাও'),
               ),
             ],
           ),

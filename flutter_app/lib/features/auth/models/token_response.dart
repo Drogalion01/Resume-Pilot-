@@ -4,18 +4,19 @@ part 'token_response.freezed.dart';
 part 'token_response.g.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// TokenResponse — shape of POST /auth/login and POST /auth/register
+// TokenResponse — shape of POST /auth/phone/verify-otp
 // ─────────────────────────────────────────────────────────────────────────────
 //
-// Backend response shape (verified against auth.py):
+// Backend response shape (auth.py /phone/verify-otp):
 // {
 //   "access_token": "<jwt_string>",
 //   "token_type":   "bearer",
 //   "user": {
 //     "id":        int,
-//     "full_name": String,
-//     "email":     String,
-//     "initials":  String
+//     "full_name": String?,
+//     "email":     String?,
+//     "phone":     String?,
+//     "initials":  String?
 //   }
 // }
 
