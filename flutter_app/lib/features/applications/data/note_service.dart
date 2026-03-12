@@ -30,8 +30,8 @@ class NoteService {
   /// GET /applications/{applicationId}/notes  → List<NoteResponse>
   Future<List<NoteResponse>> getNotes(int applicationId) async {
     return _run(() async {
-      final res = await _dio
-          .get<List<dynamic>>('/applications/$applicationId/notes');
+      final res =
+          await _dio.get<List<dynamic>>('/applications/$applicationId/notes');
       return res.data!
           .map((e) => NoteResponse.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -85,4 +85,3 @@ class NoteService {
 final noteServiceProvider = Provider<NoteService>(
   (ref) => NoteService(ref.watch(dioProvider)),
 );
-

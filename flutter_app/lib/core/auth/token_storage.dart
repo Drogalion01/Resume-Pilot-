@@ -3,9 +3,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Keys stored in flutter_secure_storage.
 abstract class _K {
-  static const accessToken  = 'access_token';
-  static const userId       = 'user_id';
-  static const userEmail    = 'user_email';
+  static const accessToken = 'access_token';
+  static const userId = 'user_id';
+  static const userEmail = 'user_email';
   static const userInitials = 'user_initials';
 }
 
@@ -29,7 +29,7 @@ class TokenStorage {
 
   Future<void> saveAuth({
     required String accessToken,
-    required int    userId,
+    required int userId,
     required String email,
     required String initials,
   }) async {
@@ -49,9 +49,9 @@ class TokenStorage {
     // (e.g. via Future.wait), they ALL race through the "no key yet" branch,
     // each generating its own key and clobbering `publicKey`.  Only the last
     // writer's key survives; all earlier writes become permanently unreadable.
-    await _storage.write(key: _K.accessToken,  value: accessToken);
-    await _storage.write(key: _K.userId,       value: userId.toString());
-    await _storage.write(key: _K.userEmail,    value: email);
+    await _storage.write(key: _K.accessToken, value: accessToken);
+    await _storage.write(key: _K.userId, value: userId.toString());
+    await _storage.write(key: _K.userEmail, value: email);
     await _storage.write(key: _K.userInitials, value: initials);
   }
 
@@ -77,7 +77,7 @@ class TokenStorage {
   /// On WebCrypto OperationError, clears all storage so future writes succeed.
   Future<String?> getAccessToken() => _safeRead(_K.accessToken);
 
-  Future<String?> getUserEmail()    => _safeRead(_K.userEmail);
+  Future<String?> getUserEmail() => _safeRead(_K.userEmail);
   Future<String?> getUserInitials() => _safeRead(_K.userInitials);
 
   Future<int?> getUserId() async {
@@ -116,4 +116,3 @@ final flutterSecureStorageProvider = Provider<FlutterSecureStorage>((_) {
 final tokenStorageProvider = Provider<TokenStorage>((ref) {
   return TokenStorage(ref.watch(flutterSecureStorageProvider));
 });
-

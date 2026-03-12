@@ -24,7 +24,8 @@ class ApplicationDetailNotifier
   Future<void> updateStatus(ApplicationStatus newStatus) async {
     final current = state.valueOrNull;
     if (current == null) return;
-    final updated = await ref.read(applicationServiceProvider).updateApplication(
+    final updated =
+        await ref.read(applicationServiceProvider).updateApplication(
       current.application.id,
       {'status': newStatus.apiValue},
     );
@@ -42,10 +43,10 @@ class ApplicationDetailNotifier
     final current = state.valueOrNull;
     if (current == null) return;
     final reminder = await ref.read(applicationServiceProvider).createReminder(
-      current.application.id,
-      title: title,
-      scheduledFor: scheduledFor,
-    );
+          current.application.id,
+          title: title,
+          scheduledFor: scheduledFor,
+        );
     state = AsyncData(current.copyWith(
       reminders: [...current.reminders, reminder],
     ));
@@ -81,12 +82,9 @@ class ApplicationDetailNotifier
     final note = await ref
         .read(applicationServiceProvider)
         .upsertNote(current.application.id, content);
-    final existingIdx =
-        current.notes.indexWhere((n) => n.id == note.id);
+    final existingIdx = current.notes.indexWhere((n) => n.id == note.id);
     final updatedNotes = existingIdx >= 0
-        ? current.notes
-            .map((n) => n.id == note.id ? note : n)
-            .toList()
+        ? current.notes.map((n) => n.id == note.id ? note : n).toList()
         : [...current.notes, note];
     state = AsyncData(current.copyWith(notes: updatedNotes));
   }

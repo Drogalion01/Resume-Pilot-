@@ -24,25 +24,24 @@ class AddInterviewScreen extends ConsumerStatefulWidget {
   final int? interviewId;
 
   @override
-  ConsumerState<AddInterviewScreen> createState() =>
-      _AddInterviewScreenState();
+  ConsumerState<AddInterviewScreen> createState() => _AddInterviewScreenState();
 }
 
 class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final _roundNameCtrl    = TextEditingController();
-  final _interviewerCtrl  = TextEditingController();
-  final _linkCtrl         = TextEditingController();
-  final _timezoneCtrl     = TextEditingController();
-  final _notesCtrl        = TextEditingController();
+  final _roundNameCtrl = TextEditingController();
+  final _interviewerCtrl = TextEditingController();
+  final _linkCtrl = TextEditingController();
+  final _timezoneCtrl = TextEditingController();
+  final _notesCtrl = TextEditingController();
 
-  InterviewType    _type     = InterviewType.video;
-  InterviewStatus  _status   = InterviewStatus.scheduled;
-  DateTime?        _date;
-  TimeOfDay?       _time;
-  bool             _reminder = false;
-  bool             _initialised = false;
+  InterviewType _type = InterviewType.video;
+  InterviewStatus _status = InterviewStatus.scheduled;
+  DateTime? _date;
+  TimeOfDay? _time;
+  bool _reminder = false;
+  bool _initialised = false;
 
   bool get _isEdit => widget.interviewId != null;
 
@@ -71,15 +70,15 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
   void _prefillFromState(InterviewResponse iv) {
     if (_initialised) return;
     _initialised = true;
-    _roundNameCtrl.text   = iv.roundName;
+    _roundNameCtrl.text = iv.roundName;
     _interviewerCtrl.text = iv.interviewerName ?? '';
-    _linkCtrl.text        = iv.meetingLink ?? '';
-    _timezoneCtrl.text    = iv.timezone ?? '';
-    _notesCtrl.text       = iv.notes ?? '';
-    _type    = iv.interviewType;
-    _status  = iv.status;
-    _date    = iv.date;
-    _time    = iv.parsedTime;
+    _linkCtrl.text = iv.meetingLink ?? '';
+    _timezoneCtrl.text = iv.timezone ?? '';
+    _notesCtrl.text = iv.notes ?? '';
+    _type = iv.interviewType;
+    _status = iv.status;
+    _date = iv.date;
+    _time = iv.parsedTime;
     _reminder = iv.reminderEnabled;
   }
 
@@ -117,9 +116,9 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
     if (_isEdit) {
       // Build partial-update payload
       final fields = <String, dynamic>{
-        'round_name':      _roundNameCtrl.text.trim(),
-        'interview_type':  _type.name,
-        'date':            InterviewService.formatDate(_date!),
+        'round_name': _roundNameCtrl.text.trim(),
+        'interview_type': _type.name,
+        'date': InterviewService.formatDate(_date!),
         if (_time != null) 'time': InterviewService.formatTime(_time!),
         if (_timezoneCtrl.text.trim().isNotEmpty)
           'timezone': _timezoneCtrl.text.trim(),
@@ -127,32 +126,27 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
           'interviewer_name': _interviewerCtrl.text.trim(),
         if (_linkCtrl.text.trim().isNotEmpty)
           'meeting_link': _linkCtrl.text.trim(),
-        'status':           _status.name,
-        'notes':            _notesCtrl.text.trim().isEmpty
-            ? null
-            : _notesCtrl.text.trim(),
+        'status': _status.name,
+        'notes': _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
         'reminder_enabled': _reminder,
       };
       ok = await notifier.update(widget.interviewId!, fields);
     } else {
       ok = await notifier.create(
-        roundName:       _roundNameCtrl.text.trim(),
-        interviewType:   _type,
-        date:            _date!,
-        time:            _time,
-        timezone:        _timezoneCtrl.text.trim().isEmpty
+        roundName: _roundNameCtrl.text.trim(),
+        interviewType: _type,
+        date: _date!,
+        time: _time,
+        timezone: _timezoneCtrl.text.trim().isEmpty
             ? null
             : _timezoneCtrl.text.trim(),
         interviewerName: _interviewerCtrl.text.trim().isEmpty
             ? null
             : _interviewerCtrl.text.trim(),
-        meetingLink:     _linkCtrl.text.trim().isEmpty
-            ? null
-            : _linkCtrl.text.trim(),
-        status:          _status,
-        notes:           _notesCtrl.text.trim().isEmpty
-            ? null
-            : _notesCtrl.text.trim(),
+        meetingLink:
+            _linkCtrl.text.trim().isEmpty ? null : _linkCtrl.text.trim(),
+        status: _status,
+        notes: _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
         reminderEnabled: _reminder,
       );
     }
@@ -162,10 +156,9 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors     = Theme.of(context).appColors;
+    final colors = Theme.of(context).appColors;
     final brightness = Theme.of(context).brightness;
-    final formState  =
-        ref.watch(interviewFormProvider(widget.applicationId));
+    final formState = ref.watch(interviewFormProvider(widget.applicationId));
 
     // Prefill when edit data arrives
     if (_isEdit && formState.prefill != null && !_initialised) {
@@ -179,8 +172,8 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
         children: [
           Positioned.fill(
             child: Container(
-              decoration: BoxDecoration(
-                  gradient: AppGradients.heroBackground(colors)),
+              decoration:
+                  BoxDecoration(gradient: AppGradients.heroBackground(colors)),
             ),
           ),
           SafeArea(
@@ -193,8 +186,8 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.close_rounded,
-                            color: colors.foreground),
+                        icon:
+                            Icon(Icons.close_rounded, color: colors.foreground),
                         onPressed: () => context.pop(),
                       ),
                       const SizedBox(width: 4),
@@ -220,8 +213,7 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
                       borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(AppRadii.xl2)),
                       child: _isEdit && formState.isLoading && !_initialised
-                          ? const Center(
-                              child: CircularProgressIndicator())
+                          ? const Center(child: CircularProgressIndicator())
                           : _buildForm(context, formState, colors),
                     ),
                   ),
@@ -249,8 +241,7 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
           children: [
             // ── Interview type ─────────────────────────────────────────
             Text('Interview Type',
-                style:
-                    AppTextStyles.title.copyWith(color: colors.foreground)),
+                style: AppTextStyles.title.copyWith(color: colors.foreground)),
             const SizedBox(height: 10),
             _TypeSelector(
               selected: _type,
@@ -309,8 +300,7 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
 
             // ── Status ─────────────────────────────────────────────────
             Text('Status',
-                style:
-                    AppTextStyles.title.copyWith(color: colors.foreground)),
+                style: AppTextStyles.title.copyWith(color: colors.foreground)),
             const SizedBox(height: 10),
             _StatusSelector(
               selected: _status,
@@ -321,8 +311,7 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
 
             // ── Optional fields ────────────────────────────────────────
             Text('Details (Optional)',
-                style:
-                    AppTextStyles.title.copyWith(color: colors.foreground)),
+                style: AppTextStyles.title.copyWith(color: colors.foreground)),
             const SizedBox(height: 12),
             TextFormField(
               controller: _interviewerCtrl,
@@ -372,8 +361,8 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
               child: SwitchListTile.adaptive(
                 title: Text(
                   'Enable Reminder',
-                  style:
-                      AppTextStyles.bodyMedium.copyWith(color: colors.foreground),
+                  style: AppTextStyles.bodyMedium
+                      .copyWith(color: colors.foreground),
                 ),
                 subtitle: Text(
                   'Get notified before this interview',
@@ -455,9 +444,7 @@ class _TypeSelector extends StatelessWidget {
                     color: active ? colors.primary : colors.surfaceSecondary,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: active
-                          ? colors.primary
-                          : colors.borderSubtle,
+                      color: active ? colors.primary : colors.borderSubtle,
                     ),
                   ),
                   child: Column(
@@ -465,9 +452,8 @@ class _TypeSelector extends StatelessWidget {
                       Icon(
                         t.icon,
                         size: 20,
-                        color: active
-                            ? Colors.white
-                            : colors.foregroundSecondary,
+                        color:
+                            active ? Colors.white : colors.foregroundSecondary,
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -517,8 +503,7 @@ class _StatusSelector extends StatelessWidget {
               decoration: BoxDecoration(
                 color: active ? fg : bg,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                    color: active ? fg : fg.withAlpha(60)),
+                border: Border.all(color: active ? fg : fg.withAlpha(60)),
               ),
               child: Text(
                 s.displayName,
@@ -532,12 +517,14 @@ class _StatusSelector extends StatelessWidget {
         }).toList(),
       );
 
-  (Color, Color) _statusColors(InterviewStatus s, AppColors c) =>
-      switch (s) {
-        InterviewStatus.scheduled   => (c.statusApplied, c.statusAppliedBg),
-        InterviewStatus.completed   => (c.statusOffer, c.statusOfferBg),
-        InterviewStatus.rescheduled => (c.statusAssessment, c.statusAssessmentBg),
-        InterviewStatus.cancelled   => (c.statusRejected, c.statusRejectedBg),
+  (Color, Color) _statusColors(InterviewStatus s, AppColors c) => switch (s) {
+        InterviewStatus.scheduled => (c.statusApplied, c.statusAppliedBg),
+        InterviewStatus.completed => (c.statusOffer, c.statusOfferBg),
+        InterviewStatus.rescheduled => (
+            c.statusAssessment,
+            c.statusAssessmentBg
+          ),
+        InterviewStatus.cancelled => (c.statusRejected, c.statusRejectedBg),
       };
 }
 

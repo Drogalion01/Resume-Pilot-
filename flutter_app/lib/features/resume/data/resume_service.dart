@@ -42,8 +42,7 @@ class ResumeService {
 
   Future<List<ResumeVersionResponse>> getResumeVersions(int resumeId) async {
     return _run(() async {
-      final res =
-          await _dio.get<List<dynamic>>('/resumes/$resumeId/versions');
+      final res = await _dio.get<List<dynamic>>('/resumes/$resumeId/versions');
       return res.data!
           .map((e) => ResumeVersionResponse.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -137,8 +136,10 @@ class ResumeService {
           MultipartFile.fromBytes(fileBytes, filename: fileName),
         ));
       }
-      if (pastedText != null) form.fields.add(MapEntry('pasted_text', pastedText));
-      if (targetRole != null) form.fields.add(MapEntry('target_role', targetRole));
+      if (pastedText != null)
+        form.fields.add(MapEntry('pasted_text', pastedText));
+      if (targetRole != null)
+        form.fields.add(MapEntry('target_role', targetRole));
       if (companyName != null) {
         form.fields.add(MapEntry('company_name', companyName));
       }

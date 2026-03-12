@@ -34,8 +34,7 @@ class ApplicationService {
 
   Future<ApplicationDetailResponse> getApplicationDetail(int id) async {
     return _run(() async {
-      final res =
-          await _dio.get<Map<String, dynamic>>('/applications/$id');
+      final res = await _dio.get<Map<String, dynamic>>('/applications/$id');
       return ApplicationDetailResponse.fromJson(res.data!);
     });
   }

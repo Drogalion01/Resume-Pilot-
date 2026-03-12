@@ -44,4 +44,3 @@ class ShellScaffold extends StatelessWidget {
     );
   }
 }
-

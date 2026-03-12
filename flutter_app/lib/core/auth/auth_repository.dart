@@ -28,14 +28,15 @@ class AuthRepository {
   Future<AuthStateAuthenticated> login({
     required String email,
     required String password,
-  }) => _run(() async {
-    final body = LoginRequest(email: email, password: password);
-    final res = await _dio.post<Map<String, dynamic>>(
-      '/auth/login',
-      data: body.toJson(),
-    );
-    return _processResponse(res.data!);
-  });
+  }) =>
+      _run(() async {
+        final body = LoginRequest(email: email, password: password);
+        final res = await _dio.post<Map<String, dynamic>>(
+          '/auth/login',
+          data: body.toJson(),
+        );
+        return _processResponse(res.data!);
+      });
 
   // â”€â”€ Register â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -45,27 +46,29 @@ class AuthRepository {
     required String fullName,
     required String email,
     required String password,
-  }) => _run(() async {
-    final body = SignupRequest(fullName: fullName, email: email, password: password);
-    final res = await _dio.post<Map<String, dynamic>>(
-      '/auth/register',
-      data: body.toJson(),
-    );
-    return _processResponse(res.data!);
-  });
+  }) =>
+      _run(() async {
+        final body =
+            SignupRequest(fullName: fullName, email: email, password: password);
+        final res = await _dio.post<Map<String, dynamic>>(
+          '/auth/register',
+          data: body.toJson(),
+        );
+        return _processResponse(res.data!);
+      });
 
   // â”€â”€ Forgot password â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   /// POST /auth/forgot-password.
   /// Always returns a message string â€” never throws for unknown email.
   Future<String> forgotPassword(String email) => _run(() async {
-    final res = await _dio.post<Map<String, dynamic>>(
-      '/auth/forgot-password',
-      data: {'email': email},
-    );
-    return (res.data?['message'] as String?) ??
-        'If an account with that email exists, a reset link has been sent.';
-  });
+        final res = await _dio.post<Map<String, dynamic>>(
+          '/auth/forgot-password',
+          data: {'email': email},
+        );
+        return (res.data?['message'] as String?) ??
+            'If an account with that email exists, a reset link has been sent.';
+      });
 
   // â”€â”€ Current user â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -123,13 +126,14 @@ class AuthRepository {
     }
   }
 
-  Future<AuthStateAuthenticated> _processResponse(Map<String, dynamic> data) async {
+  Future<AuthStateAuthenticated> _processResponse(
+      Map<String, dynamic> data) async {
     final response = TokenResponse.fromJson(data);
     await _storage.saveAuth(
       accessToken: response.accessToken,
-      userId:      response.user.id,
-      email:       response.user.email,
-      initials:    response.user.initials,
+      userId: response.user.id,
+      email: response.user.email,
+      initials: response.user.initials,
     );
     return _toAuthState(token: response.accessToken, user: response.user);
   }
@@ -139,10 +143,10 @@ class AuthRepository {
     required AuthUserPayload user,
   }) {
     return AuthState.authenticated(
-      userId:      user.id,
+      userId: user.id,
       accessToken: token,
-      email:       user.email,
-      initials:    user.initials,
+      email: user.email,
+      initials: user.initials,
     ) as AuthStateAuthenticated;
   }
 }
@@ -151,8 +155,7 @@ class AuthRepository {
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository(
-    dio:     ref.watch(dioProvider),
+    dio: ref.watch(dioProvider),
     storage: ref.watch(tokenStorageProvider),
   );
 });
-

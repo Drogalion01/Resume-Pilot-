@@ -86,14 +86,12 @@ class InterviewService {
   // ── helpers ──────────────────────────────────────────────────────────────
 
   /// "YYYY-MM-DD"
-  static String _fmtDate(DateTime d) =>
-      '${d.year.toString().padLeft(4, '0')}'
+  static String _fmtDate(DateTime d) => '${d.year.toString().padLeft(4, '0')}'
       '-${d.month.toString().padLeft(2, '0')}'
       '-${d.day.toString().padLeft(2, '0')}';
 
   /// "HH:mm:ss"
-  static String _fmtTime(TimeOfDay t) =>
-      '${t.hour.toString().padLeft(2, '0')}'
+  static String _fmtTime(TimeOfDay t) => '${t.hour.toString().padLeft(2, '0')}'
       ':${t.minute.toString().padLeft(2, '0')}'
       ':00';
 

@@ -22,13 +22,13 @@ import '../../features/auth/providers/auth_provider.dart';
 Dio buildDio(Ref ref) {
   final dio = Dio(
     BaseOptions(
-      baseUrl:        ApiConstants.baseUrl,
+      baseUrl: ApiConstants.baseUrl,
       connectTimeout: const Duration(seconds: 5),
       receiveTimeout: const Duration(seconds: 30),
-      sendTimeout:    const Duration(seconds: 10),
+      sendTimeout: const Duration(seconds: 10),
       headers: {
         'Content-Type': 'application/json',
-        'Accept':        'application/json',
+        'Accept': 'application/json',
       },
     ),
   );
@@ -50,5 +50,3 @@ Dio buildDio(Ref ref) {
 
 /// Riverpod provider for the shared Dio instance.
 final dioProvider = Provider<Dio>((ref) => buildDio(ref));
-
-

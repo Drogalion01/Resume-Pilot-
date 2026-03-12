@@ -58,7 +58,7 @@ class AuthNotifier extends Notifier<AuthState> {
   }) async {
     final result = await ref.read(authRepositoryProvider).signup(
           fullName: fullName,
-          email:    email,
+          email: email,
           password: password,
         );
     state = result;
@@ -108,4 +108,3 @@ class GoRouterRefreshNotifier extends ChangeNotifier {
     super.dispose();
   }
 }
-

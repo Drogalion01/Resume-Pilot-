@@ -33,7 +33,8 @@ final routerProvider = Provider<GoRouter>((ref) {
   // Bridge Riverpod auth state changes → GoRouter refreshListenable.
   // NotifierProvider has no .stream in Riverpod 2.x — use ref.listen instead.
   final refreshNotifier = _RouterRefreshNotifier();
-  ref.listen<AuthState>(authNotifierProvider, (_, __) => refreshNotifier.notify());
+  ref.listen<AuthState>(
+      authNotifierProvider, (_, __) => refreshNotifier.notify());
   ref.onDispose(refreshNotifier.dispose);
 
   return GoRouter(

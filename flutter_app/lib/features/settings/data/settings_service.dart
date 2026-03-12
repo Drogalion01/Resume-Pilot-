@@ -19,8 +19,7 @@ class SettingsService {
   }
 
   /// GET /user/settings  →  UserSettings
-  Future<UserSettings> getSettings() =>
-      _run(() async {
+  Future<UserSettings> getSettings() => _run(() async {
         final res = await _dio.get<Map<String, dynamic>>('/user/settings');
         return UserSettings.fromJson(res.data!);
       });

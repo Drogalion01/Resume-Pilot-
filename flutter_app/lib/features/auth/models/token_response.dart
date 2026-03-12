@@ -23,7 +23,7 @@ part 'token_response.g.dart';
 class TokenResponse with _$TokenResponse {
   const factory TokenResponse({
     @JsonKey(name: 'access_token') required String accessToken,
-    @JsonKey(name: 'token_type')   required String tokenType,
+    @JsonKey(name: 'token_type') required String tokenType,
     required AuthUserPayload user,
   }) = _TokenResponse;
 

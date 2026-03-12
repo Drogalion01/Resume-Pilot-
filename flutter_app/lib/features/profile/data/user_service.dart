@@ -19,8 +19,7 @@ class UserService {
   }
 
   /// GET /user/me  →  UserProfile
-  Future<UserProfile> getProfile() =>
-      _run(() async {
+  Future<UserProfile> getProfile() => _run(() async {
         final res = await _dio.get<Map<String, dynamic>>('/user/me');
         return UserProfile.fromJson(res.data!);
       });

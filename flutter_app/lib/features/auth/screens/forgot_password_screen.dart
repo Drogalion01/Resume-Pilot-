@@ -20,11 +20,11 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
-  final _formKey  = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
 
   bool _loading = false;
-  bool _sent    = false;
+  bool _sent = false;
   AppException? _error;
   String _sentEmail = '';
 
@@ -36,7 +36,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    setState(() { _loading = true; _error = null; });
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
       _sentEmail = _emailCtrl.text.trim();
       await ref.read(authNotifierProvider.notifier).forgotPassword(_sentEmail);
@@ -235,13 +238,11 @@ class _SuccessContent extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.px28),
-
         AuthSubmitButton(
           label: 'Back to Sign In',
           onPressed: onBackToLogin,
         ),
         const SizedBox(height: 12),
-
         Center(
           child: TextButton(
             onPressed: onTryAgain,

@@ -62,7 +62,8 @@ abstract class AppTheme {
       scrim: const Color(0xFF000000),
       inverseSurface: isDark ? c.surfacePrimary : const Color(0xFF1C1C24),
       onInverseSurface: isDark ? c.foreground : const Color(0xFFEEEDF4),
-      inversePrimary: isDark ? const Color(0xFF4A3975) : const Color(0xFF8A6DC2),
+      inversePrimary:
+          isDark ? const Color(0xFF4A3975) : const Color(0xFF8A6DC2),
     );
 
     // ── TextTheme ────────────────────────────────────────────────────────
@@ -277,8 +278,7 @@ abstract class AppTheme {
       selectedColor: c.primaryLight,
       disabledColor: c.surfaceSunken,
       labelStyle: AppTextStyles.caption.copyWith(color: c.foregroundSecondary),
-      secondaryLabelStyle:
-          AppTextStyles.caption.copyWith(color: c.primary),
+      secondaryLabelStyle: AppTextStyles.caption.copyWith(color: c.primary),
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.px12,
         vertical: AppSpacing.px6,
@@ -307,7 +307,8 @@ abstract class AppTheme {
         borderRadius: BorderRadius.circular(AppRadii.dialog),
       ),
       titleTextStyle: AppTextStyles.headline.copyWith(color: c.foreground),
-      contentTextStyle: AppTextStyles.body.copyWith(color: c.foregroundSecondary),
+      contentTextStyle:
+          AppTextStyles.body.copyWith(color: c.foregroundSecondary),
     );
 
     final bottomSheetTheme = BottomSheetThemeData(
@@ -325,8 +326,8 @@ abstract class AppTheme {
     // ── Snackbar ──────────────────────────────────────────────────────────
     final snackBarTheme = SnackBarThemeData(
       backgroundColor: isDark
-          ? const Color(0xFFEEEDF4)   // light surface on dark
-          : const Color(0xFF181820),  // dark surface on light
+          ? const Color(0xFFEEEDF4) // light surface on dark
+          : const Color(0xFF181820), // dark surface on light
       contentTextStyle: AppTextStyles.bodyMedium.copyWith(
         color: isDark ? const Color(0xFF111117) : const Color(0xFFEEEDF4),
       ),
@@ -521,8 +522,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
 
 extension AppThemeX on ThemeData {
   AppColors get appColors =>
-      extension<AppColorsExtension>()?.colors ??
-      const AppColorsLight();
+      extension<AppColorsExtension>()?.colors ?? const AppColorsLight();
 }
 
 extension _ThemeDataAppColors on ThemeData {

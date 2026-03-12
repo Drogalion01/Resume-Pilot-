@@ -24,11 +24,11 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors     = Theme.of(context).appColors;
+    final colors = Theme.of(context).appColors;
     final brightness = Theme.of(context).brightness;
-    final isDark     = brightness == Brightness.dark;
+    final isDark = brightness == Brightness.dark;
 
-    final profileAsync  = ref.watch(profileProvider);
+    final profileAsync = ref.watch(profileProvider);
     final settingsAsync = ref.watch(settingsProvider);
 
     return Scaffold(
@@ -57,7 +57,7 @@ class SettingsScreen extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: profileAsync.when(
                     data: (p) => _ProfileSummaryCard(
-                      profile: p, colors: colors, isDark: isDark),
+                        profile: p, colors: colors, isDark: isDark),
                     loading: () => const _ProfileSummaryShimmer(),
                     error: (_, __) => const SizedBox.shrink(),
                   ),
@@ -71,10 +71,10 @@ class SettingsScreen extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: settingsAsync.when(
                     data: (s) => _SettingsBody(
-                      settings: s, colors: colors, isDark: isDark),
+                        settings: s, colors: colors, isDark: isDark),
                     loading: () => const _SettingsBodyShimmer(),
                     error: (e, _) => _SettingsErrorBanner(
-                      message: e.toString(), colors: colors),
+                        message: e.toString(), colors: colors),
                   ),
                 ),
 
@@ -102,8 +102,10 @@ class _SettingsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-        AppSpacing.pageH, AppSpacing.px20,
-        AppSpacing.pageH, AppSpacing.px8,
+        AppSpacing.pageH,
+        AppSpacing.px20,
+        AppSpacing.pageH,
+        AppSpacing.px8,
       ),
       child: Text(
         'Settings',
@@ -125,8 +127,8 @@ class _ProfileSummaryCard extends ConsumerWidget {
   });
 
   final UserProfile profile;
-  final AppColors   colors;
-  final bool        isDark;
+  final AppColors colors;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -182,8 +184,8 @@ class _ProfileSummaryCard extends ConsumerWidget {
                 ),
                 label: Text(
                   'Edit',
-                  style: AppTextStyles.buttonLabel
-                      .copyWith(color: colors.primary),
+                  style:
+                      AppTextStyles.buttonLabel.copyWith(color: colors.primary),
                 ),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -216,8 +218,8 @@ class _SettingsBody extends ConsumerWidget {
   });
 
   final UserSettings settings;
-  final AppColors    colors;
-  final bool         isDark;
+  final AppColors colors;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -405,8 +407,7 @@ class _SettingsBody extends ConsumerWidget {
               // Placeholder â€” full delete-account flow in a future sprint
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content:
-                      Text('Account deletion is not yet available.'),
+                  content: Text('Account deletion is not yet available.'),
                 ),
               );
             },
@@ -435,8 +436,8 @@ class _ThemeSegmentControl extends StatelessWidget {
 
   static const _options = [
     ('system', Icons.brightness_auto_outlined, 'System'),
-    ('light',  Icons.light_mode_outlined,      'Light'),
-    ('dark',   Icons.dark_mode_outlined,        'Dark'),
+    ('light', Icons.light_mode_outlined, 'Light'),
+    ('dark', Icons.dark_mode_outlined, 'Dark'),
   ];
 
   @override
@@ -477,8 +478,7 @@ class _ThemeSegmentControl extends StatelessWidget {
                       color: selected
                           ? colors.primaryForeground
                           : colors.foregroundSecondary,
-                      fontWeight:
-                          selected ? FontWeight.w600 : FontWeight.w400,
+                      fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
                     ),
                   ),
                 ],
@@ -522,7 +522,7 @@ class _SettingsCard extends StatelessWidget {
 
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel({required this.label, required this.colors});
-  final String    label;
+  final String label;
   final AppColors colors;
 
   @override
@@ -544,8 +544,8 @@ class _TileLabel extends StatelessWidget {
     required this.title,
     required this.colors,
   });
-  final IconData  icon;
-  final String    title;
+  final IconData icon;
+  final String title;
   final AppColors colors;
 
   @override
@@ -571,11 +571,11 @@ class _ToggleTile extends StatelessWidget {
     this.subtitle,
   });
 
-  final IconData   icon;
-  final String     title;
-  final String?    subtitle;
-  final bool       value;
-  final AppColors  colors;
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final bool value;
+  final AppColors colors;
   final ValueChanged<bool> onChanged;
 
   @override
@@ -631,14 +631,14 @@ class _NavTile extends StatelessWidget {
     this.enabled = true,
   });
 
-  final IconData   icon;
-  final String     title;
-  final String?    subtitle;
-  final AppColors  colors;
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final AppColors colors;
   final VoidCallback onTap;
-  final Color?     iconColor;
-  final Color?     titleColor;
-  final bool       enabled;
+  final Color? iconColor;
+  final Color? titleColor;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) => Opacity(
@@ -710,7 +710,7 @@ class _Divider extends StatelessWidget {
 
 class _AvatarCircle extends StatelessWidget {
   const _AvatarCircle({required this.initials, required this.colors});
-  final String    initials;
+  final String initials;
   final AppColors colors;
 
   @override
@@ -793,7 +793,7 @@ class _SettingsErrorBanner extends StatelessWidget {
     required this.message,
     required this.colors,
   });
-  final String    message;
+  final String message;
   final AppColors colors;
 
   @override
