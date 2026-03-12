@@ -66,7 +66,10 @@ def phone_check(request: Request, body: PhoneCheckRequest, db: Session = Depends
                 "applicationHash": "YOUR_HASH" # can be empty
             }
             res_otp = requests.post(otp_url, json=otp_payload, headers=headers, timeout=10)
-            otp_data = res_otp.json()
+            try:
+                otp_data = res_otp.json()
+            except Exception:
+                raise HTTPException(status_code=502, detail=f"BDApps OTP send returned non-JSON (HTTP {res_otp.status_code})")
             if otp_data.get("statusCode") == "S1000":
                 return {"status": "subscribed", "referenceNo": otp_data.get("referenceNo", "")}
             else:
