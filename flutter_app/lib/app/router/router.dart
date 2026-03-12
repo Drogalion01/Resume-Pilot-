@@ -56,18 +56,18 @@ final routerProvider = Provider<GoRouter>((ref) {
     //
     redirect: (BuildContext context, GoRouterState state) {
       final authState = ref.read(authNotifierProvider);
-      final onAuthRoute = AppRoutes.isAuthRoute(state.matchedLocation);
+      final onAuthRoute = AppRoutes.isAuthRoute(state.uri.path);
 
       switch (authState) {
         case AuthStateInitial():
         case AuthStateChecking():
-          if (state.matchedLocation == AppRoutes.splash) return null;
+          if (state.uri.path == AppRoutes.splash) return null;
           return AppRoutes.splash;
 
         case AuthStateUnauthenticated():
           // Splash must always exit once bootstrap resolves — even though
           // isAuthRoute('/splash') == true, staying there is never correct.
-          if (state.matchedLocation == AppRoutes.splash) return AppRoutes.login;
+          if (state.uri.path == AppRoutes.splash) return AppRoutes.login;
           if (!onAuthRoute) return AppRoutes.login;
           return null;
 

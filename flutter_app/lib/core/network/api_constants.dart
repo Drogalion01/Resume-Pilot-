@@ -1,8 +1,5 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, kIsWeb, TargetPlatform;
-
 /// Static constants for the ResumePilot FastAPI backend.
 ///
 /// ─── ENVIRONMENT SWITCHING ──────────────────────────────────────────────────
@@ -26,12 +23,14 @@ abstract final class ApiConstants {
     const env = String.fromEnvironment('API_BASE_URL',
         defaultValue: 'https://resume-pilot-lc1i.onrender.com/api/v1/');
     var result = env;
-    if (env.isNotEmpty && env != 'https://resume-pilot-lc1i.onrender.com/api/v1/' && !env.contains('localhost')) {
+    if (env.isNotEmpty &&
+        env != 'https://resume-pilot-lc1i.onrender.com/api/v1/' &&
+        !env.contains('localhost')) {
       result = env;
     } else {
       result = 'https://resume-pilot-lc1i.onrender.com/api/v1/';
     }
-    
+
     if (!result.endsWith('/')) {
       result += '/';
     }

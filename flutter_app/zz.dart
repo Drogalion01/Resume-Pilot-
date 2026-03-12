@@ -1,0 +1,1 @@
+import 'package:dio/dio.dart'; void main() { var d = Dio(BaseOptions(baseUrl:'https://resume-pilot-lc1i.onrender.com/api/v1')); print(Uri.parse(d.options.baseUrl).resolve('auth/register').toString()); }

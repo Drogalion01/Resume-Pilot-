@@ -60,12 +60,11 @@ class TokenStorage {
   Future<void> _tryClearAll() async {
     try {
       // On web sometimes deleteAll throws or fails silently.
-      // Explicitly delete known keys before attempting deleteAll.
+      // Explicitly delete known keys. On Android occasionally deleteAll() hangs.
       await _storage.delete(key: _K.accessToken);
       await _storage.delete(key: _K.userId);
       await _storage.delete(key: _K.userEmail);
       await _storage.delete(key: _K.userInitials);
-      await _storage.deleteAll();
     } catch (_) {
       // Ignore errors during clear — nothing we can do.
     }
