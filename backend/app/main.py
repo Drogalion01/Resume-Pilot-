@@ -60,7 +60,7 @@ def get_application() -> FastAPI:
     async def root():
         return {"message": "Welcome to the Resume Pilot API"}
 
-    @_app.get(f"{settings.API_V1_STR}/health", tags=["health"])
+    @_app.api_route(f"{settings.API_V1_STR}/health", methods=["GET", "HEAD"], tags=["health"])
     async def health_check():
         """Ping endpoint to verify server is up."""
         return {"status": "healthy", "version": "1.0.0"}
