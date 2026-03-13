@@ -38,9 +38,9 @@ abstract final class ApiConstants {
   }();
 
   // ── Auth ───────────────────────────────────────────────────────────────────
-  //   POST  /auth/phone/check      → {status, ...}
-  //   POST  /auth/phone/send-otp   → {status, referenceNo}
-  //   POST  /auth/phone/verify-otp → AuthResponse (token + user inline)
+  //   POST  /auth/phone/check      → {status: subscribed|not_subscribed}
+  //   POST  /auth/phone/send-otp   → {status: otp_sent, referenceNo}
+  //   POST  /auth/phone/verify-otp → TokenResponse (token + user inline)
   //   GET   /auth/me          → UserResponse
 
   static const authPhoneCheck = '/auth/phone/check';

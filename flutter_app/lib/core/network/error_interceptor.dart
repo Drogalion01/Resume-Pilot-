@@ -2,84 +2,104 @@
 
 import '../error/app_exception.dart';
 
-/// Dio interceptor — converts DioException → typed AppException.
-///
-/// Must be the LAST interceptor in the chain so it catches errors
-/// from all upstream interceptors.
 class ErrorInterceptor extends Interceptor {
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    handler.reject(
-      err.copyWith(error: _map(err)),
-    );
-  }
+	@override
+	void onError(DioException err, ErrorInterceptorHandler handler) {
+		handler.reject(_map(err));
+	}
 
-  AppException _map(DioException err) {
-    switch (err.type) {
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-        return const NetworkException(
-            'Connection timed out. Please try again.');
-      case DioExceptionType.connectionError:
-        return const NetworkException();
-      case DioExceptionType.cancel:
-        return const NetworkException('Request was cancelled.');
-      case DioExceptionType.badResponse:
-        return _mapResponse(err);
-      default:
-        return ParseException(err.message);
-    }
-  }
+	DioException _map(DioException err) {
+		final mapped = switch (err.type) {
+			DioExceptionType.connectionTimeout ||
+			DioExceptionType.receiveTimeout ||
+			DioExceptionType.sendTimeout =>
+				const NetworkException('Connection timed out. Please try again.'),
+			DioExceptionType.connectionError =>
+				const NetworkException('No internet connection. Check your network and try again.'),
+			DioExceptionType.cancel => const NetworkException('Request cancelled.'),
+			DioExceptionType.badResponse => _mapByStatus(err),
+			_ => const ParseException(),
+		};
 
-  AppException _mapResponse(DioException err) {
-    final status = err.response?.statusCode ?? 0;
-    final data = err.response?.data;
+		return DioException(
+			requestOptions: err.requestOptions,
+			response: err.response,
+			type: err.type,
+			error: mapped,
+			stackTrace: err.stackTrace,
+			message: err.message,
+		);
+	}
 
-    switch (status) {
-      case 400:
-        return ValidationException(_extractDetail(data));
-      case 401:
-        final path = err.requestOptions.path;
-        if (path.contains('/auth/phone/')) {
-          return ValidationException(_extractDetail(data));
-        }
-        return const UnauthorizedException();
-      case 403:
-        return const ForbiddenException();
-      case 404:
-        return NotFoundException('Resource', _extractDetail(data));
-      case 422:
-        return ValidationException(_extract422(data));
-      default:
-        if (status >= 500) {
-          return ServerException(status);
-        }
-        return ParseException(_extractDetail(data));
-    }
-  }
+	AppException _mapByStatus(DioException err) {
+		final statusCode = err.response?.statusCode ?? 0;
+		final data = err.response?.data;
 
-  String _extractDetail(dynamic data) {
-    if (data == null) return 'An unexpected error occurred.';
-    if (data is Map) {
-      final d = data['detail'];
-      if (d is String) return d;
-    }
-    return 'An unexpected error occurred.';
-  }
+		switch (statusCode) {
+			case 400:
+				return ValidationException(_extractDetail(data) ?? 'Invalid request.');
+			case 401:
+				return const UnauthorizedException();
+			case 403:
+				return const ForbiddenException();
+			case 404:
+				return NotFoundException('Resource', _extractDetail(data));
+			case 422:
+				return ValidationException(_extract422Detail(data) ?? 'Validation failed.');
+			default:
+				if (statusCode >= 500) {
+					return ServerException(statusCode, _extractDetail(data) ?? 'Server error. Please try again.');
+				}
+				return ParseException(_extractDetail(data));
+		}
+	}
 
-  String _extract422(dynamic data) {
-    if (data is Map) {
-      final detail = data['detail'];
-      if (detail is List) {
-        final parts = detail.map((e) {
-          final loc = (e['loc'] as List?)?.last?.toString() ?? 'field';
-          final msg = e['msg'] as String? ?? 'invalid';
-          return '$loc: $msg';
-        }).join(', ');
-        if (parts.isNotEmpty) return parts;
-      }
-    }
-    return 'Please check your input and try again.';
-  }
+	String? _extractDetail(dynamic data) {
+		if (data is Map<String, dynamic>) {
+			final detail = data['detail'];
+			if (detail is String && detail.trim().isNotEmpty) {
+				return detail.trim();
+			}
+			final message = data['message'];
+			if (message is String && message.trim().isNotEmpty) {
+				return message.trim();
+			}
+			final statusDetail = data['statusDetail'];
+			if (statusDetail is String && statusDetail.trim().isNotEmpty) {
+				return statusDetail.trim();
+			}
+		}
+		return null;
+	}
+
+	String? _extract422Detail(dynamic data) {
+		if (data is! Map<String, dynamic>) return null;
+		final detail = data['detail'];
+		if (detail is! List) return null;
+
+		final messages = <String>[];
+		for (final item in detail) {
+			if (item is! Map<String, dynamic>) continue;
+			final loc = item['loc'];
+			final msg = item['msg'];
+			if (msg is! String || msg.trim().isEmpty) continue;
+
+			String? field;
+			if (loc is List && loc.length >= 2) {
+				final candidate = loc.last;
+				if (candidate is String && candidate.trim().isNotEmpty) {
+					field = candidate.trim();
+				}
+			}
+
+			if (field != null) {
+				messages.add('$field: ${msg.trim()}');
+			} else {
+				messages.add(msg.trim());
+			}
+		}
+
+		if (messages.isEmpty) return null;
+		return messages.join(', ');
+	}
 }

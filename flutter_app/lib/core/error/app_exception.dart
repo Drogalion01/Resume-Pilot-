@@ -36,7 +36,7 @@ class ServerException extends AppException {
   String get userMessage => message;
 }
 
-/// Thrown on 401 responses outside /auth/phone/* endpoints.
+/// Thrown on 401 responses outside /auth/login and /auth/register.
 /// The auth guard + router handle redirect; screens don't need to catch this.
 class UnauthorizedException extends AppException {
   const UnauthorizedException();

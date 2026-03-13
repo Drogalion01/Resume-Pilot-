@@ -48,25 +48,24 @@ class AuthNotifier extends Notifier<AuthState> {
     return ref.read(authRepositoryProvider).sendOtp(phoneNumber);
   }
 
-  Future<AuthStateAuthenticated> verifyOtp({
+  Future<void> verifyOtp({
     required String phone,
     required String referenceNo,
     required String otp,
-    bool applyState = true,
   }) async {
     final result = await ref.read(authRepositoryProvider).verifyOtp(
           phone: phone,
           referenceNo: referenceNo,
           otp: otp,
         );
-    if (applyState) {
-      state = result;
-    }
-    return result;
+    state = result;
   }
 
-  void completePhoneLogin(AuthStateAuthenticated authenticated) {
-    state = authenticated;
+  Future<void> sessionByPhone({required String phone}) async {
+    final result = await ref.read(authRepositoryProvider).sessionByPhone(
+          phone: phone,
+        );
+    state = result;
   }
 
   // ── Logout ────────────────────────────────────────────────────────────

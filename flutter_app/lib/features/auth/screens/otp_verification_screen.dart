@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../../../core/error/app_exception.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/auth_widgets.dart';
+
+const String _bdappsPhpBaseUrl = 'https://www.flicksize.com/resumepilot/';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // OTPVerificationScreen
@@ -37,6 +41,37 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     super.dispose();
   }
 
+  Future<void> _verifyOtpWithPhp() async {
+    final response = await http
+        .post(
+          Uri.parse('${_bdappsPhpBaseUrl}verify_otp.php'),
+          body: {
+            'Otp': _otpCtrl.text.trim(),
+            'referenceNo': widget.referenceNo,
+            'user_mobile': widget.subscriberId,
+          },
+        )
+        .timeout(const Duration(seconds: 15));
+
+    if (response.statusCode != 200) {
+      throw Exception('OTP verify failed (${response.statusCode})');
+    }
+
+    final decoded = jsonDecode(response.body);
+    if (decoded is! Map<String, dynamic>) {
+      throw Exception('Invalid verify_otp response');
+    }
+
+    final statusCode =
+        (decoded['statusCode']?.toString() ?? '').trim().toUpperCase();
+    if (statusCode != 'S1000') {
+      final detail = decoded['message']?.toString() ??
+          decoded['statusDetail']?.toString() ??
+          'OTP ভুল হয়েছে';
+      throw Exception(detail);
+    }
+  }
+
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() {
@@ -45,23 +80,10 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     });
 
     try {
-      final notifier = ref.read(authNotifierProvider.notifier);
-      final authenticated =
-          await ref.read(authNotifierProvider.notifier).verifyOtp(
-                phone: widget.subscriberId,
-                referenceNo: widget.referenceNo,
-                otp: _otpCtrl.text.trim(),
-                applyState: false,
-              );
-
-      final synced = await _waitForSubscriptionSync();
-
-      if (!mounted) return;
-      if (!synced) {
-        _showWarning('সাবস্ক্রিপশন চলছে। অনুগ্রহ করে কিছুক্ষণ পর চেক করুন।');
-      }
-
-      notifier.completePhoneLogin(authenticated);
+      await _verifyOtpWithPhp();
+      await ref
+          .read(authNotifierProvider.notifier)
+          .sessionByPhone(phone: widget.subscriberId);
       _showMessage('যাচাই সফল হয়েছে', isError: false);
       // GoRouter redirect handles navigation on success (auth state changes).
     } on AppException catch (e) {
@@ -80,26 +102,6 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     }
   }
 
-  Future<bool> _waitForSubscriptionSync() async {
-    for (var i = 0; i < 5; i++) {
-      await Future.delayed(const Duration(seconds: 1));
-
-      try {
-        final result = await ref
-            .read(authNotifierProvider.notifier)
-            .checkSubscription(widget.subscriberId);
-        final status = (result['status']?.toString() ?? '').trim();
-        if (status == 'subscribed') {
-          return true;
-        }
-      } catch (_) {
-        // Continue polling and allow graceful fallback.
-      }
-    }
-
-    return false;
-  }
-
   void _showMessage(String text, {required bool isError}) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -109,18 +111,6 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
         backgroundColor: isError ? Colors.redAccent : Colors.green,
         duration:
             isError ? const Duration(seconds: 4) : const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _showWarning(String text) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(text),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.orange,
-        duration: const Duration(seconds: 4),
       ),
     );
   }

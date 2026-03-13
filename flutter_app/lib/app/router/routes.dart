@@ -9,8 +9,7 @@
 ///     /welcome
 ///     /onboarding
 ///     /login
-///     /signup
-///     /forgot-password
+///     /otp-verification
 ///
 ///   Shell (authenticated bottom-nav tabs):
 ///     /             — Dashboard (tab 0)

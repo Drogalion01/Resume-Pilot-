@@ -49,6 +49,15 @@ class AuthRepository {
         return _processResponse(res.data!);
       });
 
+  Future<AuthStateAuthenticated> sessionByPhone({required String phone}) =>
+      _run(() async {
+        final res = await _dio.post<Map<String, dynamic>>(
+          'auth/phone/session',
+          data: {'phone': phone},
+        );
+        return _processResponse(res.data!);
+      });
+
   Future<AuthStateAuthenticated?> getCurrentUser() async {
     try {
       final res = await _dio.get<Map<String, dynamic>>('auth/me');

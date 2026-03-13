@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../../../core/error/app_exception.dart';
 import '../../../app/router/routes.dart';
-import '../providers/auth_provider.dart';
 import '../widgets/auth_widgets.dart';
+
+const String _bdappsPhpBaseUrl = 'https://www.flicksize.com/resumepilot/';
 
 bool _isSupportedRobiAirtelNumber(String phone) {
   return RegExp(r'^01(?:6|8)\d{8}$').hasMatch(phone);
@@ -34,6 +37,56 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  Future<bool> _checkSubscription(String phone) async {
+    final response = await http
+        .post(
+          Uri.parse('${_bdappsPhpBaseUrl}check_subscription.php'),
+          body: {'user_mobile': phone},
+        )
+        .timeout(const Duration(seconds: 15));
+
+    if (response.statusCode != 200) {
+      throw Exception('Subscription check failed (${response.statusCode})');
+    }
+
+    final decoded = jsonDecode(response.body);
+    if (decoded is! Map<String, dynamic>) {
+      throw Exception('Invalid check_subscription response');
+    }
+
+    final status =
+        (decoded['subscriptionStatus']?.toString() ?? '').trim().toUpperCase();
+    return status == 'REGISTERED';
+  }
+
+  Future<String> _sendOtp(String phone) async {
+    final response = await http
+        .post(
+          Uri.parse('${_bdappsPhpBaseUrl}send_otp.php'),
+          body: {'user_mobile': phone},
+        )
+        .timeout(const Duration(seconds: 15));
+
+    if (response.statusCode != 200) {
+      throw Exception('OTP send failed (${response.statusCode})');
+    }
+
+    final decoded = jsonDecode(response.body);
+    if (decoded is! Map<String, dynamic>) {
+      throw Exception('Invalid send_otp response');
+    }
+
+    final referenceNo = (decoded['referenceNo']?.toString() ?? '').trim();
+    if (referenceNo.isEmpty) {
+      final detail = decoded['message']?.toString() ??
+          decoded['statusDetail']?.toString() ??
+          'OTP পাঠানো যায়নি';
+      throw Exception(detail);
+    }
+
+    return referenceNo;
+  }
+
   Future<void> _submit() async {
     final phone = _phoneCtrl.text.trim();
 
@@ -52,25 +105,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      final res = await ref
-          .read(authNotifierProvider.notifier)
-          .checkSubscription(phone);
-      final status = (res['status']?.toString() ?? '').trim();
-      final loginUrl = (res['loginUrl']?.toString() ?? '').trim();
-      final statusDetail = (res['statusDetail']?.toString() ?? '').trim();
+      final isSubscribed = await _checkSubscription(phone);
+      if (!isSubscribed) {
+        _showMessage('নম্বরটি সাবস্ক্রাইবড নয়। OTP যাচাই চলবে...', isError: false);
+      }
 
-      if (status == 'subscribed' || status == 'requires_subscription') {
-        if (status == 'requires_subscription' && statusDetail.isNotEmpty) {
-          _showMessage(statusDetail, isError: false);
-        }
-        final otpRes =
-            await ref.read(authNotifierProvider.notifier).sendOtp(phone);
-        final referenceNo = (otpRes['referenceNo']?.toString() ?? '').trim();
-        if (referenceNo.isEmpty) {
-          _showMessage('OTP রেফারেন্স পাওয়া যায়নি। আবার চেষ্টা করুন।',
-              isError: true);
-          return;
-        }
+      final referenceNo = await _sendOtp(phone);
+      if (referenceNo.isNotEmpty) {
         _showMessage('OTP পাঠানো হয়েছে', isError: false);
         if (!mounted) return;
         context.push(
@@ -80,11 +121,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             'referenceNo': referenceNo,
           },
         );
-        return;
-      }
-
-      if (loginUrl.isNotEmpty) {
-        _showMessage('সাবস্ক্রিপশন দরকার। লিংক: $loginUrl', isError: true);
         return;
       }
 

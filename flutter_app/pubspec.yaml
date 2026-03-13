@@ -35,6 +35,7 @@ dependencies:
 
   # Network
   dio: ^5.9.2
+  http: ^1.2.2
   connectivity_plus: ^6.0.3
 
   # Secure storage
