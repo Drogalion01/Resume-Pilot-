@@ -397,9 +397,7 @@ class _SettingsBody extends ConsumerWidget {
               title: const Text('Unsubscribe'),
               content: const Text(
                 'This will cancel your premium subscription. You will also be logged out. '
-                'To use this app again, you will need to subscribe again.
-
-'
+                'To use this app again, you will need to subscribe again.\n\n'
                 'Are you sure you want to proceed?',
               ),
               actions: [

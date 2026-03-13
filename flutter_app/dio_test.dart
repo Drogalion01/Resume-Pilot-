@@ -6,7 +6,7 @@ void main() {
   print(dio.options.baseUrl);
 
   // Create a fake request to see the final URI
-  var uri = dio.options.baseUrl + '/auth/login';
+  var uri = '${dio.options.baseUrl}/auth/login';
   // Let's actually test how Dio handles it internally via a RequestOptions
   var req = RequestOptions(
       path: '/auth/login',
