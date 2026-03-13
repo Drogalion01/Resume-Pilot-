@@ -1,4 +1,10 @@
-from app.schemas.auth import Token, TokenPayload, LoginRequest, RegisterRequest, ForgotPasswordRequest
+from app.schemas.auth import (
+	Token,
+	TokenPayload,
+	PhoneCheckRequest,
+	PhoneVerifyRequest,
+	PhoneSessionRequest,
+)
 from app.schemas.user import UserBase, UserUpdate, UserResponse
 from app.schemas.settings import SettingsBase, SettingsUpdate, SettingsResponse
 from app.schemas.resume import ResumeBase, ResumeCreate, ResumeResponse, ResumeVersionBase, ResumeVersionCreate, ResumeVersionResponse
