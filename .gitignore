@@ -156,3 +156,5 @@ windows/flutter/generated_plugins.cmake
 
 # Web build artifacts
 web/flutter_service_worker.js
+# BDApps API Scripts
+bdapps_api/
