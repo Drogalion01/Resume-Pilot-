@@ -38,12 +38,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<bool> _checkSubscription(String phone) async {
-    final response = await http
-        .post(
-          Uri.parse('${_bdappsPhpBaseUrl}check_subscription.php'),
-          body: {'user_mobile': phone},
-        )
-        .timeout(const Duration(seconds: 15));
+    final response = await http.post(
+      Uri.parse('${_bdappsPhpBaseUrl}check_subscription.php'),
+      body: {'user_mobile': phone},
+    ).timeout(const Duration(seconds: 15));
 
     if (response.statusCode != 200) {
       throw Exception('Subscription check failed (${response.statusCode})');
@@ -59,32 +57,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return status == 'REGISTERED';
   }
 
-  Future<String> _sendOtp(String phone) async {
-    final response = await http
-        .post(
-          Uri.parse('${_bdappsPhpBaseUrl}send_otp.php'),
-          body: {'user_mobile': phone},
-        )
-        .timeout(const Duration(seconds: 15));
-
-    if (response.statusCode != 200) {
-      throw Exception('OTP send failed (${response.statusCode})');
-    }
+    Future<Map<String, dynamic>> _sendOtp(String phone) async {
+    final response = await http.post(
+      Uri.parse('${_bdappsPhpBaseUrl}send_otp.php'),
+      body: {'user_mobile': phone},
+    ).timeout(const Duration(seconds: 15));
 
     final decoded = jsonDecode(response.body);
     if (decoded is! Map<String, dynamic>) {
-      throw Exception('Invalid send_otp response');
+      throw Exception('সার্ভার থেকে ভুল তথ্য এসেছে');
     }
 
-    final referenceNo = (decoded['referenceNo']?.toString() ?? '').trim();
-    if (referenceNo.isEmpty) {
-      final detail = decoded['message']?.toString() ??
-          decoded['statusDetail']?.toString() ??
-          'OTP পাঠানো যায়নি';
-      throw Exception(detail);
-    }
-
-    return referenceNo;
+    return decoded;
   }
 
   Future<void> _submit() async {
@@ -106,12 +90,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     try {
       final isSubscribed = await _checkSubscription(phone);
-      if (!isSubscribed) {
-        _showMessage('নম্বরটি সাবস্ক্রাইবড নয়। OTP যাচাই চলবে...', isError: false);
+
+      if (isSubscribed) {
+        _showMessage('স্বাগতম! লগইন হচ্ছে...', isError: false);
+        await Future.delayed(const Duration(milliseconds: 800));
+
+        try {
+          await ref.read(authNotifierProvider.notifier).sessionByPhone(phone: phone);
+        } catch (e) {
+          if (mounted) {
+            _showMessage('লগইন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।', isError: true);
+          }
+        }
+        return;
       }
 
-      final referenceNo = await _sendOtp(phone);
-      if (referenceNo.isNotEmpty) {
+      final otpData = await _sendOtp(phone);
+      
+      final success = otpData['success'] == true;
+      final referenceNo = otpData['referenceNo']?.toString().trim() ?? '';
+      final message = otpData['message']?.toString() ?? '';
+      final statusDetail = otpData['statusDetail']?.toString() ?? '';
+      final statusCode = otpData['statusCode']?.toString().trim() ?? '';
+
+      if (success && referenceNo.isNotEmpty) {
         _showMessage('OTP পাঠানো হয়েছে', isError: false);
         if (!mounted) return;
         context.push(
@@ -122,20 +124,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           },
         );
         return;
-      }
+      } else if (statusCode == 'E1351' || message.toLowerCase().contains('already registered')) {
+        _showMessage('ইতিমধ্যে রেজিস্টার করা! লগইন হচ্ছে...', isError: false);
+        await Future.delayed(const Duration(milliseconds: 800));
 
-      _showMessage('লগইন প্রক্রিয়া সম্পন্ন করা যায়নি। আবার চেষ্টা করুন।',
-          isError: true);
-    } on AppException catch (e) {
-      if (mounted) {
-        setState(() => _error = e);
-        _showMessage(e.userMessage, isError: true);
+        try {
+          await ref.read(authNotifierProvider.notifier).sessionByPhone(phone: phone);
+        } catch (e) {
+          if (mounted) {
+            _showMessage('লগইন করতে সমস্যা হয়েছে।', isError: true);
+          }
+        }
+        return;
+      } else {
+        final errorMsg = message.isNotEmpty ? message : (statusDetail.isNotEmpty ? statusDetail : 'OTP পাঠানো যায়নি');
+        _showMessage(errorMsg, isError: true);
       }
     } catch (e) {
       if (mounted) {
         setState(() => _error = const ServerException(500, 'Unexpected error'));
-        _showMessage('নেটওয়ার্ক সমস্যা হয়েছে: ${e.toString()}',
-            isError: true);
+        _showMessage('নেটওয়ার্ক সমস্যা হয়েছে', isError: true);
       }
     } finally {
       if (mounted) setState(() => _loading = false);

@@ -41,17 +41,15 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     super.dispose();
   }
 
-  Future<void> _verifyOtpWithPhp() async {
-    final response = await http
-        .post(
-          Uri.parse('${_bdappsPhpBaseUrl}verify_otp.php'),
-          body: {
-            'Otp': _otpCtrl.text.trim(),
-            'referenceNo': widget.referenceNo,
-            'user_mobile': widget.subscriberId,
-          },
-        )
-        .timeout(const Duration(seconds: 15));
+    Future<void> _verifyOtpWithPhp() async {
+    final response = await http.post(
+      Uri.parse('${_bdappsPhpBaseUrl}verify_otp.php'),
+      body: {
+        'Otp': _otpCtrl.text.trim(),
+        'referenceNo': widget.referenceNo,
+        'user_mobile': widget.subscriberId,
+      },
+    ).timeout(const Duration(seconds: 15));
 
     if (response.statusCode != 200) {
       throw Exception('OTP verify failed (${response.statusCode})');
@@ -72,6 +70,31 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     }
   }
 
+  Future<bool> _waitForSubscriptionSync() async {
+    for (var i = 0; i < 5; i++) {
+      await Future.delayed(const Duration(seconds: 1));
+      try {
+        final response = await http.post(
+          Uri.parse('${_bdappsPhpBaseUrl}check_subscription.php'),
+          body: {'user_mobile': widget.subscriberId},
+        ).timeout(const Duration(seconds: 5));
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          if (data is Map<String, dynamic>) {
+            final status = (data['subscriptionStatus']?.toString() ?? '').trim().toUpperCase();
+            if (status == 'REGISTERED') {
+              return true;
+            }
+          }
+        }
+      } catch (e) {
+        // ignore and retry
+      }
+    }
+    return false;
+  }
+
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() {
@@ -81,11 +104,21 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
 
     try {
       await _verifyOtpWithPhp();
+      
+      final subscribed = await _waitForSubscriptionSync();
+      if (!mounted) return;
+
+      if (!subscribed) {
+        _showMessage('সাবস্ক্রিপশন চলছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।', isError: true);
+        setState(() => _loading = false);
+        return;
+      }
+
       await ref
           .read(authNotifierProvider.notifier)
           .sessionByPhone(phone: widget.subscriberId);
+          
       _showMessage('যাচাই সফল হয়েছে', isError: false);
-      // GoRouter redirect handles navigation on success (auth state changes).
     } on AppException catch (e) {
       if (mounted) {
         setState(() => _error = e);
@@ -94,14 +127,12 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _error = const ServerException(500, 'Unexpected error'));
-        _showMessage('নেটওয়ার্ক সমস্যা হয়েছে: ${e.toString()}',
-            isError: true);
+        _showMessage('নেটওয়ার্ক সমস্যা হয়েছে: ${e.toString()}', isError: true);
       }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
-
   void _showMessage(String text, {required bool isError}) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
