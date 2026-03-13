@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import '../../../core/error/app_exception.dart';
 import '../../../app/router/routes.dart';
+import '../providers/auth_provider.dart';
 import '../widgets/auth_widgets.dart';
 
 const String _bdappsPhpBaseUrl = 'https://www.flicksize.com/resumepilot/';
@@ -57,7 +58,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return status == 'REGISTERED';
   }
 
-    Future<Map<String, dynamic>> _sendOtp(String phone) async {
+  Future<Map<String, dynamic>> _sendOtp(String phone) async {
     final response = await http.post(
       Uri.parse('${_bdappsPhpBaseUrl}send_otp.php'),
       body: {'user_mobile': phone},
@@ -96,17 +97,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         await Future.delayed(const Duration(milliseconds: 800));
 
         try {
-          await ref.read(authNotifierProvider.notifier).sessionByPhone(phone: phone);
+          await ref
+              .read(authNotifierProvider.notifier)
+              .sessionByPhone(phone: phone);
         } catch (e) {
           if (mounted) {
-            _showMessage('লগইন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।', isError: true);
+            _showMessage('লগইন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।',
+                isError: true);
           }
         }
         return;
       }
 
       final otpData = await _sendOtp(phone);
-      
+
       final success = otpData['success'] == true;
       final referenceNo = otpData['referenceNo']?.toString().trim() ?? '';
       final message = otpData['message']?.toString() ?? '';
@@ -124,12 +128,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           },
         );
         return;
-      } else if (statusCode == 'E1351' || message.toLowerCase().contains('already registered')) {
+      } else if (statusCode == 'E1351' ||
+          message.toLowerCase().contains('already registered')) {
         _showMessage('ইতিমধ্যে রেজিস্টার করা! লগইন হচ্ছে...', isError: false);
         await Future.delayed(const Duration(milliseconds: 800));
 
         try {
-          await ref.read(authNotifierProvider.notifier).sessionByPhone(phone: phone);
+          await ref
+              .read(authNotifierProvider.notifier)
+              .sessionByPhone(phone: phone);
         } catch (e) {
           if (mounted) {
             _showMessage('লগইন করতে সমস্যা হয়েছে।', isError: true);
@@ -137,7 +144,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         }
         return;
       } else {
-        final errorMsg = message.isNotEmpty ? message : (statusDetail.isNotEmpty ? statusDetail : 'OTP পাঠানো যায়নি');
+        final errorMsg = message.isNotEmpty
+            ? message
+            : (statusDetail.isNotEmpty ? statusDetail : 'OTP পাঠানো যায়নি');
         _showMessage(errorMsg, isError: true);
       }
     } catch (e) {
