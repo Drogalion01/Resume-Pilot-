@@ -28,8 +28,7 @@ class RefreshInterceptor extends Interceptor {
     if (err.response?.statusCode == 401) {
       final path = err.requestOptions.path;
       // Auth endpoints legitimately return 401 — let ErrorInterceptor handle them.
-      final isAuthEndpoint =
-          path.contains('/auth/phone/check') ||
+      final isAuthEndpoint = path.contains('/auth/phone/check') ||
           path.contains('/auth/phone/send-otp') ||
           path.contains('/auth/phone/verify-otp');
 

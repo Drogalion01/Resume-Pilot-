@@ -33,7 +33,7 @@ abstract class AppRoutes {
   static const welcome = '/welcome';
   static const onboarding = '/onboarding';
   static const login = '/login';
-  
+
   static const otpVerification = '/otp-verification';
 
   // ── Authenticated shell (bottom nav) ──────────────────────────────────
@@ -77,7 +77,8 @@ abstract class AppRoutes {
     welcome,
     onboarding,
     login,
-    otpVerification, };
+    otpVerification,
+  };
 
   /// True when [path] belongs to the unauthenticated flow.
   static bool isAuthRoute(String path) => _authRoutes.contains(path);

@@ -1,0 +1,1 @@
+﻿import requests; print("Check:", requests.post("https://www.flicksize.com/resumepilot/check_subscription.php", data={"user_mobile": "01812345678"}).text); print("Send:", requests.post("https://www.flicksize.com/resumepilot/send_otp.php", data={"user_mobile": "01812345678"}).text)
