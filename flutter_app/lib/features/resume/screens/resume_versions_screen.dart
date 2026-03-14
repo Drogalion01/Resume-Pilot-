@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../shared/widgets/backgrounds/breathing_background.dart';
-import 'dart:ui';
 import '../../../core/theme/app_gradients.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -26,101 +25,115 @@ class ResumeVersionsScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: BreathingBackground(
-        child: Stack(
-          children: [
-            Positioned.fill(
+          child: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: AppGradients.heroBackground(colors),
+              ),
+            ),
+          ),
+          Positioned(
+            top: -60,
+            right: -60,
+            child: IgnorePointer(
               child: Container(
+                width: 220,
+                height: 220,
                 decoration: BoxDecoration(
-                  gradient: AppGradients.heroBackground(colors),
+                  shape: BoxShape.circle,
+                  gradient: AppGradients.heroGlow1(colors),
                 ),
               ),
             ),
-            Positioned(
-              top: -60,
-              right: -60,
-              child: IgnorePointer(
-                child: Container(
-                  width: 220,
-                  height: 220,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: AppGradients.heroGlow1(colors),
-                  ),
+          ),
+          Positioned(
+            top: 30,
+            left: -40,
+            child: IgnorePointer(
+              child: Container(
+                width: 160,
+                height: 160,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: AppGradients.heroGlow2(colors),
                 ),
               ),
             ),
-            Positioned(
-              top: 30,
-              left: -40,
-              child: IgnorePointer(
-                child: Container(
-                  width: 160,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: AppGradients.heroGlow2(colors),
-                  ),
-                ),
-              ),
-            ),
-            SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ── Header ──────────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.pageH, vertical: 16)
-                  .copyWith(bottom: 8),
-              child: Row(
+          ),
+          Positioned.fill(
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      'My Resumes',
-                      style: AppTextStyles.headline
-                          .copyWith(color: colors.foreground),
+                  // ── Header ──────────────────────────────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.pageH, vertical: 16)
+                        .copyWith(bottom: 8),
+                    child: Row(
+                      children: [
+                        if (context.canPop())
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: IconButton(
+                              icon:
+                                  const Icon(Icons.arrow_back_ios_new_rounded),
+                              color: colors.foreground,
+                              onPressed: () => context.pop(),
+                              tooltip: 'Back',
+                            ),
+                          ),
+                        Expanded(
+                          child: Text(
+                            'My Resumes',
+                            style: AppTextStyles.headline
+                                .copyWith(color: colors.foreground),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.upload_file_outlined,
+                              color: colors.primary),
+                          tooltip: 'Upload new resume',
+                          onPressed: () => context.push(AppRoutes.upload),
+                        ),
+                      ],
                     ),
                   ),
-                  IconButton(
-                    icon:
-                        Icon(Icons.upload_file_outlined, color: colors.primary),
-                    tooltip: 'Upload new resume',
-                    onPressed: () => context.push(AppRoutes.upload),
+
+                  // ── List ────────────────────────────────────────────────────
+                  Expanded(
+                    child: resumesAsync.when(
+                      loading: () => const ResumeListSkeleton(),
+                      error: (e, _) => ResumeErrorState(
+                        error: e,
+                        onRetry: () => ref.invalidate(resumeListProvider),
+                      ),
+                      data: (resumes) {
+                        if (resumes.isEmpty) {
+                          return ResumesEmptyState(
+                            onUpload: () => context.push(AppRoutes.upload),
+                          );
+                        }
+                        return RefreshIndicator(
+                          onRefresh: () =>
+                              ref.read(resumeListProvider.notifier).refresh(),
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.pageH, vertical: 8),
+                            itemCount: resumes.length,
+                            itemBuilder: (_, i) =>
+                                _ResumeTile(resume: resumes[i]),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
-
-            // ── List ────────────────────────────────────────────────────
-            Expanded(
-              child: resumesAsync.when(
-                loading: () => const ResumeListSkeleton(),
-                error: (e, _) => ResumeErrorState(
-                  error: e,
-                  onRetry: () => ref.invalidate(resumeListProvider),
-                ),
-                data: (resumes) {
-                  if (resumes.isEmpty) {
-                    return ResumesEmptyState(
-                      onUpload: () => context.push(AppRoutes.upload),
-                    );
-                  }
-                  return RefreshIndicator(
-                    onRefresh: () =>
-                        ref.read(resumeListProvider.notifier).refresh(),
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.pageH, vertical: 8),
-                      itemCount: resumes.length,
-                      itemBuilder: (_, i) => _ResumeTile(resume: resumes[i]),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
         ],
       )),
     );

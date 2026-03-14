@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../shared/widgets/backgrounds/breathing_background.dart';
-import 'dart:ui';
 import '../../../core/theme/app_gradients.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -26,145 +25,161 @@ class ApplicationsTrackerScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: BreathingBackground(
-        child: Stack(
-          children: [
-            Positioned.fill(
+          child: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: AppGradients.heroBackground(colors),
+              ),
+            ),
+          ),
+          Positioned(
+            top: -60,
+            right: -60,
+            child: IgnorePointer(
               child: Container(
+                width: 220,
+                height: 220,
                 decoration: BoxDecoration(
-                  gradient: AppGradients.heroBackground(colors),
+                  shape: BoxShape.circle,
+                  gradient: AppGradients.heroGlow1(colors),
                 ),
               ),
             ),
-            Positioned(
-              top: -60,
-              right: -60,
-              child: IgnorePointer(
-                child: Container(
-                  width: 220,
-                  height: 220,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: AppGradients.heroGlow1(colors),
-                  ),
+          ),
+          Positioned(
+            top: 30,
+            left: -40,
+            child: IgnorePointer(
+              child: Container(
+                width: 160,
+                height: 160,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: AppGradients.heroGlow2(colors),
                 ),
               ),
             ),
-            Positioned(
-              top: 30,
-              left: -40,
-              child: IgnorePointer(
-                child: Container(
-                  width: 160,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: AppGradients.heroGlow2(colors),
-                  ),
-                ),
-              ),
-            ),
-            SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ── Header ──────────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.pageH, vertical: 16)
-                  .copyWith(bottom: 4),
-              child: Row(
+          ),
+          Positioned.fill(
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      'Applications',
-                      style: AppTextStyles.headline
-                          .copyWith(color: colors.foreground),
+                  // ── Header ──────────────────────────────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.pageH, vertical: 16)
+                        .copyWith(bottom: 4),
+                    child: Row(
+                      children: [
+                        if (context.canPop())
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: IconButton(
+                              icon:
+                                  const Icon(Icons.arrow_back_ios_new_rounded),
+                              color: colors.foreground,
+                              onPressed: () => context.pop(),
+                              tooltip: 'Back',
+                            ),
+                          ),
+                        Expanded(
+                          child: Text(
+                            'Applications',
+                            style: AppTextStyles.headline
+                                .copyWith(color: colors.foreground),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add_rounded, color: colors.primary),
+                          onPressed: () =>
+                              context.push(AppRoutes.addApplication),
+                        ),
+                      ],
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.add_rounded, color: colors.primary),
-                    onPressed: () => context.push(AppRoutes.addApplication),
+
+                  // ── Search bar ───────────────────────────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.pageH, vertical: 8),
+                    child: TextField(
+                      onChanged: (q) =>
+                          ref.read(applicationsProvider.notifier).setSearch(q),
+                      decoration: InputDecoration(
+                        hintText: 'Search company or role…',
+                        prefixIcon: const Icon(Icons.search_rounded, size: 20),
+                        filled: true,
+                        fillColor: colors.surfaceSecondary,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
+                      ),
+                    ),
+                  ),
+
+                  // ── Status filter chips ──────────────────────────────────────
+                  stateAsync.when(
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => const SizedBox.shrink(),
+                    data: (s) => _StatusFilterRow(
+                      activeFilter: s.activeFilter,
+                      counts: s.statusCounts,
+                      onSelect: (status) => ref
+                          .read(applicationsProvider.notifier)
+                          .setFilter(status),
+                    ),
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  // ── List ─────────────────────────────────────────────────────
+                  Expanded(
+                    child: stateAsync.when(
+                      loading: () => const ApplicationListSkeleton(),
+                      error: (e, _) => ApplicationErrorState(
+                        error: e,
+                        onRetry: () => ref.invalidate(applicationsProvider),
+                      ),
+                      data: (s) {
+                        final list = s.filtered;
+                        if (list.isEmpty && s.applications.isEmpty) {
+                          return ApplicationsEmptyState(
+                            onAdd: () => context.push(AppRoutes.addApplication),
+                          );
+                        }
+                        if (list.isEmpty) {
+                          return Center(
+                            child: Text(
+                              'No matching applications.',
+                              style: AppTextStyles.caption
+                                  .copyWith(color: colors.foregroundSecondary),
+                            ),
+                          );
+                        }
+                        return RefreshIndicator(
+                          onRefresh: () =>
+                              ref.read(applicationsProvider.notifier).refresh(),
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.pageH, vertical: 8),
+                            itemCount: list.length,
+                            itemBuilder: (_, i) =>
+                                _ApplicationCard(app: list[i]),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
-
-            // ── Search bar ───────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.pageH, vertical: 8),
-              child: TextField(
-                onChanged: (q) =>
-                    ref.read(applicationsProvider.notifier).setSearch(q),
-                decoration: InputDecoration(
-                  hintText: 'Search company or role…',
-                  prefixIcon: const Icon(Icons.search_rounded, size: 20),
-                  filled: true,
-                  fillColor: colors.surfaceSecondary,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                ),
-              ),
-            ),
-
-            // ── Status filter chips ──────────────────────────────────────
-            stateAsync.when(
-              loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
-              data: (s) => _StatusFilterRow(
-                activeFilter: s.activeFilter,
-                counts: s.statusCounts,
-                onSelect: (status) =>
-                    ref.read(applicationsProvider.notifier).setFilter(status),
-              ),
-            ),
-
-            const SizedBox(height: 4),
-
-            // ── List ─────────────────────────────────────────────────────
-            Expanded(
-              child: stateAsync.when(
-                loading: () => const ApplicationListSkeleton(),
-                error: (e, _) => ApplicationErrorState(
-                  error: e,
-                  onRetry: () => ref.invalidate(applicationsProvider),
-                ),
-                data: (s) {
-                  final list = s.filtered;
-                  if (list.isEmpty && s.applications.isEmpty) {
-                    return ApplicationsEmptyState(
-                      onAdd: () => context.push(AppRoutes.addApplication),
-                    );
-                  }
-                  if (list.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'No matching applications.',
-                        style: AppTextStyles.caption
-                            .copyWith(color: colors.foregroundSecondary),
-                      ),
-                    );
-                  }
-                  return RefreshIndicator(
-                    onRefresh: () =>
-                        ref.read(applicationsProvider.notifier).refresh(),
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.pageH, vertical: 8),
-                      itemCount: list.length,
-                      itemBuilder: (_, i) => _ApplicationCard(app: list[i]),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
         ],
       )),
     );

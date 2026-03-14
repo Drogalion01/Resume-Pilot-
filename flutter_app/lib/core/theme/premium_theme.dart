@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'app_theme.dart';
+import 'app_colors.dart';
 
 class FadeSlidePageTransitionsBuilder extends PageTransitionsBuilder {
   const FadeSlidePageTransitionsBuilder();
@@ -31,6 +33,7 @@ class PremiumTheme {
   static ThemeData get lightMode {
     return ThemeData(
       brightness: Brightness.light,
+      extensions: const [AppColorsExtension(AppColorsLight())],
       scaffoldBackgroundColor: const Color(0xFFFCFCFC),
       primaryColor: const Color(0xFF50C878), // Emerald Green
       colorScheme: const ColorScheme.light(
@@ -61,6 +64,8 @@ class PremiumTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: const Color(0xFFEFF2F9),
+        hintStyle: const TextStyle(color: Colors.black54, fontFamily: 'Inter'),
+        labelStyle: const TextStyle(color: Colors.black87, fontFamily: 'Inter'),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -90,6 +95,7 @@ class PremiumTheme {
   static ThemeData get darkMode {
     return ThemeData(
       brightness: Brightness.dark,
+      extensions: const [AppColorsExtension(AppColorsDark())],
       scaffoldBackgroundColor: const Color(0xFF121212),
       primaryColor: const Color(0xFF8E2DE2), // Electric Violet
       colorScheme: const ColorScheme.dark(
@@ -120,6 +126,8 @@ class PremiumTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: const Color(0xFF1E1E1E),
+        hintStyle: const TextStyle(color: Colors.white60, fontFamily: 'Inter'),
+        labelStyle: const TextStyle(color: Colors.white, fontFamily: 'Inter'),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,

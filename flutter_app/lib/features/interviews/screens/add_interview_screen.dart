@@ -176,49 +176,51 @@ class _AddInterviewScreenState extends ConsumerState<AddInterviewScreen> {
                   BoxDecoration(gradient: AppGradients.heroBackground(colors)),
             ),
           ),
-          SafeArea(
-            child: Column(
-              children: [
-                // ── AppBar ─────────────────────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.pageH, vertical: 8),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon:
-                            Icon(Icons.close_rounded, color: colors.foreground),
-                        onPressed: () => context.pop(),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        _isEdit ? 'Edit Interview' : 'Schedule Interview',
-                        style: AppTextStyles.headline
-                            .copyWith(color: colors.foreground),
-                      ),
-                    ],
+          Positioned.fill(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // ── AppBar ─────────────────────────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.pageH, vertical: 8),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.close_rounded,
+                              color: colors.foreground),
+                          onPressed: () => context.pop(),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          _isEdit ? 'Edit Interview' : 'Schedule Interview',
+                          style: AppTextStyles.headline
+                              .copyWith(color: colors.foreground),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
-                // ── Form shell ─────────────────────────────────────────
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colors.surfacePrimary,
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadii.xl2)),
-                      boxShadow: AppShadows.elevated(brightness),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadii.xl2)),
-                      child: _isEdit && formState.isLoading && !_initialised
-                          ? const Center(child: CircularProgressIndicator())
-                          : _buildForm(context, formState, colors),
+                  // ── Form shell ─────────────────────────────────────────
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary,
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2)),
+                        boxShadow: AppShadows.elevated(brightness),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2)),
+                        child: _isEdit && formState.isLoading && !_initialised
+                            ? const Center(child: CircularProgressIndicator())
+                            : _buildForm(context, formState, colors),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

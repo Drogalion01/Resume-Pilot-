@@ -53,65 +53,67 @@ class ResumeAnalysisScreen extends ConsumerWidget {
               ),
             ),
           ),
-          SafeArea(
-            bottom: false,
-            child: Column(
-              children: [
-                // ── AppBar ─────────────────────────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.pageH, vertical: 8),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back_ios_new_rounded,
-                            color: colors.foreground, size: 20),
-                        onPressed: () => context.pop(),
-                      ),
-                      Expanded(
-                        child: Text(
-                          'Analysis Results',
-                          style: AppTextStyles.headline
-                              .copyWith(color: colors.foreground),
+          Positioned.fill(
+            child: SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  // ── AppBar ─────────────────────────────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.pageH, vertical: 8),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.arrow_back_ios_new_rounded,
+                              color: colors.foreground, size: 20),
+                          onPressed: () => context.pop(),
                         ),
-                      ),
-                      IconButton(
-                        icon:
-                            Icon(Icons.save_outlined, color: colors.foreground),
-                        tooltip: 'Save version',
-                        onPressed: () =>
-                            _showSaveVersionSheet(context, ref, resumeId),
-                      ),
-                    ],
+                        Expanded(
+                          child: Text(
+                            'Analysis Results',
+                            style: AppTextStyles.headline
+                                .copyWith(color: colors.foreground),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.save_outlined,
+                              color: colors.foreground),
+                          tooltip: 'Save version',
+                          onPressed: () =>
+                              _showSaveVersionSheet(context, ref, resumeId),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
-                // ── Content ────────────────────────────────────────────────
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colors.surfacePrimary,
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadii.xl2)),
-                      boxShadow: AppShadows.elevated(brightness),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadii.xl2)),
-                      child: analysisAsync.when(
-                        loading: () => const AnalysisSkeleton(),
-                        error: (e, _) => ResumeErrorState(
-                          error: e,
-                          onRetry: () =>
-                              ref.invalidate(resumeAnalysisProvider(resumeId)),
+                  // ── Content ────────────────────────────────────────────────
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary,
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2)),
+                        boxShadow: AppShadows.elevated(brightness),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2)),
+                        child: analysisAsync.when(
+                          loading: () => const AnalysisSkeleton(),
+                          error: (e, _) => ResumeErrorState(
+                            error: e,
+                            onRetry: () => ref
+                                .invalidate(resumeAnalysisProvider(resumeId)),
+                          ),
+                          data: (analysis) => _AnalysisContent(
+                              analysis: analysis, resumeId: resumeId),
                         ),
-                        data: (analysis) => _AnalysisContent(
-                            analysis: analysis, resumeId: resumeId),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

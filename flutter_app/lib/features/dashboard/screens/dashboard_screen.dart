@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/router/routes.dart';
 import '../../../core/theme/app_gradients.dart';
-import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/dashboard_provider.dart';
@@ -130,95 +129,101 @@ class DashboardScreen extends ConsumerWidget {
             ),
 
             // ── Main content ─────────────────────────────────────────────────
-            SafeArea(
-              bottom: false,
-              child: Column(
-                children: [
-                  // Header section (fixed height)
-                  SizedBox(
-                    height: 110,
-                    child: state.whenOrNull(
-                          data: (data) => DashboardHeader(user: data.user),
-                        ) ??
-                        // Skeleton / error: show placeholder row
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                                  horizontal: AppSpacing.pageH)
-                              .copyWith(top: 16, bottom: 12),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      width: 80,
-                                      height: 14,
-                                      decoration: BoxDecoration(
-                                        color: colors.primaryLight,
-                                        borderRadius: BorderRadius.circular(6),
+            Positioned.fill(
+              child: SafeArea(
+                bottom: false,
+                child: Column(
+                  children: [
+                    // Header section (fixed height)
+                    SizedBox(
+                      height: 110,
+                      child: state.whenOrNull(
+                            data: (data) => DashboardHeader(user: data.user),
+                          ) ??
+                          // Skeleton / error: show placeholder row
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.pageH)
+                                .copyWith(top: 16, bottom: 12),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        width: 80,
+                                        height: 14,
+                                        decoration: BoxDecoration(
+                                          color: colors.primaryLight,
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Container(
-                                      width: 140,
-                                      height: 18,
-                                      decoration: BoxDecoration(
-                                        color: colors.primaryMuted,
-                                        borderRadius: BorderRadius.circular(8),
+                                      const SizedBox(height: 6),
+                                      Container(
+                                        width: 140,
+                                        height: 18,
+                                        decoration: BoxDecoration(
+                                          color: colors.primaryMuted,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: colors.primaryLight,
+                                Container(
+                                  width: 44,
+                                  height: 44,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: colors.primaryLight,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                  ),
+                    ),
 
-                  // Content surface
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(AppRadii.xl2),
-                      ),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: colors.surfacePrimary.withOpacity(0.55),
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(AppRadii.xl2),
-                            ),
-                            border: Border(
-                              top: BorderSide(
-                                color: Colors.white.withOpacity(0.2),
-                                width: 1.0,
+                    // Content surface
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(AppRadii.xl2),
+                        ),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: colors.surfacePrimary.withOpacity(0.55),
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(AppRadii.xl2),
+                              ),
+                              border: Border(
+                                top: BorderSide(
+                                  color: Colors.white.withOpacity(0.2),
+                                  width: 1.0,
+                                ),
                               ),
                             ),
-                          ),
-                          child: state.when(
-                            loading: () => const DashboardSkeleton(),
-                            error: (e, _) => DashboardError(
-                              error: e,
-                              onRetry: () => ref.invalidate(dashboardProvider),
+                            child: state.when(
+                              loading: () => const DashboardSkeleton(),
+                              error: (e, _) => DashboardError(
+                                error: e,
+                                onRetry: () =>
+                                    ref.invalidate(dashboardProvider),
+                              ),
+                              data: (data) => _DashboardContent(data: data),
                             ),
-                            data: (data) => _DashboardContent(data: data),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

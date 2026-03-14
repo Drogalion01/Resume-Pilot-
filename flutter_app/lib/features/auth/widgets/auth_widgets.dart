@@ -73,34 +73,36 @@ class AuthScreenShell extends StatelessWidget {
           ),
 
           // ── Content ────────────────────────────────────────────────────
-          SafeArea(
-            bottom: false,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Back button row (always reserved height)
-                SizedBox(
-                  height: 48,
-                  child: showBack
-                      ? Align(
-                          alignment: Alignment.centerLeft,
-                          child: BackButton(color: colors.foreground),
-                        )
-                      : const SizedBox.shrink(),
-                ),
+          Positioned.fill(
+            child: SafeArea(
+              bottom: false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Back button row (always reserved height)
+                  SizedBox(
+                    height: 48,
+                    child: showBack
+                        ? Align(
+                            alignment: Alignment.centerLeft,
+                            child: BackButton(color: colors.foreground),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
 
-                // Hero content inside gradient area
-                Flexible(
-                  flex: 3,
-                  child: hero,
-                ),
+                  // Hero content inside gradient area
+                  Flexible(
+                    flex: 3,
+                    child: hero,
+                  ),
 
-                // Form card — rounded top, expands to fill remaining space
-                Expanded(
-                  flex: 5,
-                  child: form,
-                ),
-              ],
+                  // Form card — rounded top, expands to fill remaining space
+                  Expanded(
+                    flex: 5,
+                    child: form,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

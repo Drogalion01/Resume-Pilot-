@@ -59,74 +59,76 @@ class ApplicationDetailScreen extends ConsumerWidget {
             ),
           ),
 
-          SafeArea(
-            bottom: false,
-            child: Column(
-              children: [
-                // ── AppBar ───────────────────────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.pageH, vertical: 8),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back_ios_new_rounded,
-                            color: colors.foreground, size: 20),
-                        onPressed: () => context.pop(),
-                      ),
-                      Expanded(
-                        child: detailAsync.maybeWhen(
-                          data: (d) => Text(
-                            d.application.companyName,
-                            style: AppTextStyles.headline
-                                .copyWith(color: colors.foreground),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+          Positioned.fill(
+            child: SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  // ── AppBar ───────────────────────────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.pageH, vertical: 8),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.arrow_back_ios_new_rounded,
+                              color: colors.foreground, size: 20),
+                          onPressed: () => context.pop(),
+                        ),
+                        Expanded(
+                          child: detailAsync.maybeWhen(
+                            data: (d) => Text(
+                              d.application.companyName,
+                              style: AppTextStyles.headline
+                                  .copyWith(color: colors.foreground),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            orElse: () => const SizedBox.shrink(),
+                          ),
+                        ),
+                        // Delete button
+                        detailAsync.maybeWhen(
+                          data: (d) => IconButton(
+                            icon: Icon(Icons.delete_outline_rounded,
+                                color: colors.destructive, size: 22),
+                            onPressed: () => _confirmDelete(context, ref),
                           ),
                           orElse: () => const SizedBox.shrink(),
                         ),
-                      ),
-                      // Delete button
-                      detailAsync.maybeWhen(
-                        data: (d) => IconButton(
-                          icon: Icon(Icons.delete_outline_rounded,
-                              color: colors.destructive, size: 22),
-                          onPressed: () => _confirmDelete(context, ref),
-                        ),
-                        orElse: () => const SizedBox.shrink(),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
 
-                // ── Content ──────────────────────────────────────────────
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colors.surfacePrimary,
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadii.xl2)),
-                      boxShadow: AppShadows.elevated(brightness),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadii.xl2)),
-                      child: detailAsync.when(
-                        loading: () => const ApplicationDetailSkeleton(),
-                        error: (e, _) => ApplicationErrorState(
-                          error: e,
-                          onRetry: () => ref.invalidate(
-                              applicationDetailProvider(applicationId)),
-                        ),
-                        data: (detail) => _DetailContent(
-                          detail: detail,
-                          applicationId: applicationId,
+                  // ── Content ──────────────────────────────────────────────
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary,
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2)),
+                        boxShadow: AppShadows.elevated(brightness),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2)),
+                        child: detailAsync.when(
+                          loading: () => const ApplicationDetailSkeleton(),
+                          error: (e, _) => ApplicationErrorState(
+                            error: e,
+                            onRetry: () => ref.invalidate(
+                                applicationDetailProvider(applicationId)),
+                          ),
+                          data: (detail) => _DetailContent(
+                            detail: detail,
+                            applicationId: applicationId,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

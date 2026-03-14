@@ -133,110 +133,112 @@ class _ProfileLoadedState extends ConsumerState<_ProfileLoaded> {
           ),
         ),
 
-        SafeArea(
-          child: Column(
-            children: [
-              // â”€â”€ App bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-              _ProfileAppBar(
-                colors: colors,
-                saving: _saving,
-                onSave: _save,
-              ),
+        Positioned.fill(
+          child: SafeArea(
+            child: Column(
+              children: [
+                // â”€â”€ App bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                _ProfileAppBar(
+                  colors: colors,
+                  saving: _saving,
+                  onSave: _save,
+                ),
 
-              // â”€â”€ Scrollable body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.pageH,
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(height: AppSpacing.px24),
+                // â”€â”€ Scrollable body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.pageH,
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: AppSpacing.px24),
 
-                        // Avatar
-                        Center(
-                          child: _LargeAvatarCircle(
-                            initials: profile.displayInitials,
+                          // Avatar
+                          Center(
+                            child: _LargeAvatarCircle(
+                              initials: profile.displayInitials,
+                              colors: colors,
+                            ),
+                          ),
+
+                          const SizedBox(height: AppSpacing.px12),
+
+                          // Email chip (read-only)
+                          Center(
+                            child: _EmailChip(
+                              email: profile.email ?? profile.phone ?? '',
+                              colors: colors,
+                            ),
+                          ),
+
+                          const SizedBox(height: AppSpacing.px32),
+
+                          // â”€â”€ Form card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                          _FormCard(
+                            isDark: isDark,
+                            colors: colors,
+                            child: Column(
+                              children: [
+                                _FormField(
+                                  controller: _nameCtrl,
+                                  label: 'Full Name',
+                                  hint: 'e.g. Jane Smith',
+                                  colors: colors,
+                                  required: true,
+                                  validator: (v) {
+                                    if (v == null || v.trim().isEmpty) {
+                                      return 'Full name is required';
+                                    }
+                                    if (v.trim().length < 2) {
+                                      return 'Name is too short';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                _FormDivider(colors: colors),
+                                _FormField(
+                                  controller: _initialsCtrl,
+                                  label: 'Initials (optional)',
+                                  hint: 'e.g. JS',
+                                  colors: colors,
+                                  maxLength: 3,
+                                  textCapitalization:
+                                      TextCapitalization.characters,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: AppSpacing.px24),
+
+                          // â”€â”€ Account stats card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                          _AccountStatsCard(
+                            profile: profile,
+                            isDark: isDark,
                             colors: colors,
                           ),
-                        ),
 
-                        const SizedBox(height: AppSpacing.px12),
+                          const SizedBox(height: AppSpacing.px32),
 
-                        // Email chip (read-only)
-                        Center(
-                          child: _EmailChip(
-                            email: profile.email ?? profile.phone ?? '',
+                          // â”€â”€ Save button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                          _SaveButton(
+                            saving: _saving,
                             colors: colors,
+                            onPressed: _save,
                           ),
-                        ),
 
-                        const SizedBox(height: AppSpacing.px32),
-
-                        // â”€â”€ Form card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-                        _FormCard(
-                          isDark: isDark,
-                          colors: colors,
-                          child: Column(
-                            children: [
-                              _FormField(
-                                controller: _nameCtrl,
-                                label: 'Full Name',
-                                hint: 'e.g. Jane Smith',
-                                colors: colors,
-                                required: true,
-                                validator: (v) {
-                                  if (v == null || v.trim().isEmpty) {
-                                    return 'Full name is required';
-                                  }
-                                  if (v.trim().length < 2) {
-                                    return 'Name is too short';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              _FormDivider(colors: colors),
-                              _FormField(
-                                controller: _initialsCtrl,
-                                label: 'Initials (optional)',
-                                hint: 'e.g. JS',
-                                colors: colors,
-                                maxLength: 3,
-                                textCapitalization:
-                                    TextCapitalization.characters,
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: AppSpacing.px24),
-
-                        // â”€â”€ Account stats card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-                        _AccountStatsCard(
-                          profile: profile,
-                          isDark: isDark,
-                          colors: colors,
-                        ),
-
-                        const SizedBox(height: AppSpacing.px32),
-
-                        // â”€â”€ Save button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-                        _SaveButton(
-                          saving: _saving,
-                          colors: colors,
-                          onPressed: _save,
-                        ),
-
-                        const SizedBox(height: AppSpacing.px48),
-                      ],
+                          const SizedBox(height: AppSpacing.px48),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -688,24 +690,26 @@ class _ProfileErrorView extends StatelessWidget {
               ),
             ),
           ),
-          SafeArea(
-            child: Column(
-              children: [
-                _ProfileAppBar(
-                  colors: colors,
-                  saving: false,
-                  onSave: () => context.pop(),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      'Failed to load profile.',
-                      style: AppTextStyles.bodyMedium
-                          .copyWith(color: colors.foregroundSecondary),
+          Positioned.fill(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  _ProfileAppBar(
+                    colors: colors,
+                    saving: false,
+                    onSave: () => context.pop(),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'Failed to load profile.',
+                        style: AppTextStyles.bodyMedium
+                            .copyWith(color: colors.foregroundSecondary),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

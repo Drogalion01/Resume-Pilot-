@@ -70,44 +70,46 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            SafeArea(
-              child: CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                slivers: [
-                  // ── Header ─────────────────────────────────────────────
-                  SliverToBoxAdapter(
-                    child: _SettingsHeader(colors: colors),
-                  ),
-
-                  // ── Profile Summary Card ───────────────────────────────
-                  SliverToBoxAdapter(
-                    child: profileAsync.when(
-                      data: (p) => _ProfileSummaryCard(
-                          profile: p, colors: colors, isDark: isDark),
-                      loading: () => const _ProfileSummaryShimmer(),
-                      error: (_, __) => const SizedBox.shrink(),
+            Positioned.fill(
+              child: SafeArea(
+                child: CustomScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  slivers: [
+                    // ── Header ─────────────────────────────────────────────
+                    SliverToBoxAdapter(
+                      child: _SettingsHeader(colors: colors),
                     ),
-                  ),
 
-                  const SliverToBoxAdapter(
-                    child: SizedBox(height: AppSpacing.px24),
-                  ),
-
-                  // ── Settings body ──────────────────────────────────────
-                  SliverToBoxAdapter(
-                    child: settingsAsync.when(
-                      data: (s) => _SettingsBody(
-                          settings: s, colors: colors, isDark: isDark),
-                      loading: () => const _SettingsBodyShimmer(),
-                      error: (e, _) => _SettingsErrorBanner(
-                          message: e.toString(), colors: colors),
+                    // ── Profile Summary Card ───────────────────────────────
+                    SliverToBoxAdapter(
+                      child: profileAsync.when(
+                        data: (p) => _ProfileSummaryCard(
+                            profile: p, colors: colors, isDark: isDark),
+                        loading: () => const _ProfileSummaryShimmer(),
+                        error: (_, __) => const SizedBox.shrink(),
+                      ),
                     ),
-                  ),
 
-                  const SliverToBoxAdapter(
-                    child: SizedBox(height: AppSpacing.px48),
-                  ),
-                ],
+                    const SliverToBoxAdapter(
+                      child: SizedBox(height: AppSpacing.px24),
+                    ),
+
+                    // ── Settings body ──────────────────────────────────────
+                    SliverToBoxAdapter(
+                      child: settingsAsync.when(
+                        data: (s) => _SettingsBody(
+                            settings: s, colors: colors, isDark: isDark),
+                        loading: () => const _SettingsBodyShimmer(),
+                        error: (e, _) => _SettingsErrorBanner(
+                            message: e.toString(), colors: colors),
+                      ),
+                    ),
+
+                    const SliverToBoxAdapter(
+                      child: SizedBox(height: AppSpacing.px48),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -134,16 +136,30 @@ class _SettingsHeader extends StatelessWidget {
         AppSpacing.pageH,
         AppSpacing.px8,
       ),
-      child: Text(
-        'Settings',
-        style: AppTextStyles.display.copyWith(color: colors.foreground),
+      child: Row(
+        children: [
+          if (context.canPop())
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                color: colors.foreground,
+                onPressed: () => context.pop(),
+                tooltip: 'Back',
+              ),
+            ),
+          Text(
+            'Settings',
+            style: AppTextStyles.display.copyWith(color: colors.foreground),
+          ),
+        ],
       ),
     );
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Profile summary card
+// Profile Summary
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _ProfileSummaryCard extends ConsumerWidget {

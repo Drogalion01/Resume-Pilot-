@@ -80,182 +80,185 @@ class _ResumeUploadScreenState extends ConsumerState<ResumeUploadScreen> {
             ),
           ),
 
-          SafeArea(
-            child: Column(
-              children: [
-                // ── Custom AppBar ──────────────────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.pageH, vertical: 8),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back_ios_new_rounded,
-                            color: colors.foreground, size: 20),
-                        onPressed: () => context.pop(),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Upload Resume',
-                        style: AppTextStyles.headline
-                            .copyWith(color: colors.foreground),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // ── Content ────────────────────────────────────────────────
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colors.surfacePrimary,
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadii.xl2)),
-                      boxShadow:
-                          AppShadows.elevated(Theme.of(context).brightness),
+          Positioned.fill(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // ── Custom AppBar ──────────────────────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.pageH, vertical: 8),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.arrow_back_ios_new_rounded,
+                              color: colors.foreground, size: 20),
+                          onPressed: () => context.pop(),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Upload Resume',
+                          style: AppTextStyles.headline
+                              .copyWith(color: colors.foreground),
+                        ),
+                      ],
                     ),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadii.xl2)),
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.pageH, vertical: 24),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            // ── Input mode toggle ──────────────────────────
-                            SegmentedButton<bool>(
-                              segments: const [
-                                ButtonSegment(
-                                  value: true,
-                                  label: Text('Upload File'),
-                                  icon: Icon(Icons.upload_file_outlined),
-                                ),
-                                ButtonSegment(
-                                  value: false,
-                                  label: Text('Paste Text'),
-                                  icon: Icon(Icons.text_snippet_outlined),
-                                ),
-                              ],
-                              selected: {isFileMode},
-                              onSelectionChanged: (s) =>
-                                  notifier.setMode(s.first),
-                            ),
+                  ),
 
-                            const SizedBox(height: 20),
-
-                            // ── File zone or paste ─────────────────────────
-                            if (isFileMode)
-                              _FileZone(state: state, notifier: notifier)
-                            else
-                              _PasteZone(
-                                controller: _pasteController,
-                                onChanged: notifier.setPastedText,
-                              ),
-
-                            const SizedBox(height: 20),
-
-                            // ── Optional fields ────────────────────────────
-                            Text(
-                              'Improve Analysis (Optional)',
-                              style: AppTextStyles.title
-                                  .copyWith(color: colors.foreground),
-                            ),
-                            const SizedBox(height: 12),
-                            _OptionalField(
-                              controller: _roleController,
-                              label: 'Target Role',
-                              hint: 'e.g. Senior Product Manager',
-                              icon: Icons.work_outline,
-                            ),
-                            const SizedBox(height: 10),
-                            _OptionalField(
-                              controller: _companyController,
-                              label: 'Company',
-                              hint: 'e.g. Google',
-                              icon: Icons.business_outlined,
-                            ),
-                            const SizedBox(height: 10),
-                            TextFormField(
-                              controller: _jdController,
-                              onChanged: notifier.setJdText,
-                              maxLines: 5,
-                              maxLength: 3000,
-                              decoration: const InputDecoration(
-                                labelText: 'Paste Job Description',
-                                hintText:
-                                    'Paste the job posting here to improve keyword matching…',
-                                alignLabelWithHint: true,
-                                prefixIcon: Padding(
-                                  padding: EdgeInsets.only(bottom: 64),
-                                  child: Icon(Icons.article_outlined),
-                                ),
-                              ),
-                            ),
-
-                            const SizedBox(height: 4),
-
-                            // ── Error banner ───────────────────────────────
-                            if (state is UploadError)
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 12),
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: colors.statusRejectedBg,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.error_outline,
-                                        color: colors.statusRejected, size: 18),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        (state).message,
-                                        style: AppTextStyles.caption.copyWith(
-                                            color: colors.statusRejected),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                            // ── Analyze button ─────────────────────────────
-                            if (isLoading)
-                              const Column(
-                                children: [
-                                  LinearProgressIndicator(),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'Analyzing your resume…',
-                                    textAlign: TextAlign.center,
+                  // ── Content ────────────────────────────────────────────────
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary,
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2)),
+                        boxShadow:
+                            AppShadows.elevated(Theme.of(context).brightness),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2)),
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.pageH, vertical: 24),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              // ── Input mode toggle ──────────────────────────
+                              SegmentedButton<bool>(
+                                segments: const [
+                                  ButtonSegment(
+                                    value: true,
+                                    label: Text('Upload File'),
+                                    icon: Icon(Icons.upload_file_outlined),
+                                  ),
+                                  ButtonSegment(
+                                    value: false,
+                                    label: Text('Paste Text'),
+                                    icon: Icon(Icons.text_snippet_outlined),
                                   ),
                                 ],
-                              )
-                            else
-                              FilledButton.icon(
-                                onPressed: notifier.canAnalyze
-                                    ? () => _onAnalyze(notifier, state)
-                                    : null,
-                                icon: const Icon(Icons.auto_awesome_outlined,
-                                    size: 18),
-                                label: const Text('Analyze Resume'),
-                                style: FilledButton.styleFrom(
-                                  minimumSize:
-                                      const Size.fromHeight(AppSpacing.buttonH),
+                                selected: {isFileMode},
+                                onSelectionChanged: (s) =>
+                                    notifier.setMode(s.first),
+                              ),
+
+                              const SizedBox(height: 20),
+
+                              // ── File zone or paste ─────────────────────────
+                              if (isFileMode)
+                                _FileZone(state: state, notifier: notifier)
+                              else
+                                _PasteZone(
+                                  controller: _pasteController,
+                                  onChanged: notifier.setPastedText,
+                                ),
+
+                              const SizedBox(height: 20),
+
+                              // ── Optional fields ────────────────────────────
+                              Text(
+                                'Improve Analysis (Optional)',
+                                style: AppTextStyles.title
+                                    .copyWith(color: colors.foreground),
+                              ),
+                              const SizedBox(height: 12),
+                              _OptionalField(
+                                controller: _roleController,
+                                label: 'Target Role',
+                                hint: 'e.g. Senior Product Manager',
+                                icon: Icons.work_outline,
+                              ),
+                              const SizedBox(height: 10),
+                              _OptionalField(
+                                controller: _companyController,
+                                label: 'Company',
+                                hint: 'e.g. Google',
+                                icon: Icons.business_outlined,
+                              ),
+                              const SizedBox(height: 10),
+                              TextFormField(
+                                controller: _jdController,
+                                onChanged: notifier.setJdText,
+                                maxLines: 5,
+                                maxLength: 3000,
+                                decoration: const InputDecoration(
+                                  labelText: 'Paste Job Description',
+                                  hintText:
+                                      'Paste the job posting here to improve keyword matching…',
+                                  alignLabelWithHint: true,
+                                  prefixIcon: Padding(
+                                    padding: EdgeInsets.only(bottom: 64),
+                                    child: Icon(Icons.article_outlined),
+                                  ),
                                 ),
                               ),
 
-                            const SizedBox(
-                                height:
-                                    AppSpacing.bottomNavH + AppSpacing.cardPad),
-                          ],
+                              const SizedBox(height: 4),
+
+                              // ── Error banner ───────────────────────────────
+                              if (state is UploadError)
+                                Container(
+                                  margin: const EdgeInsets.only(bottom: 12),
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: colors.statusRejectedBg,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.error_outline,
+                                          color: colors.statusRejected,
+                                          size: 18),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          (state).message,
+                                          style: AppTextStyles.caption.copyWith(
+                                              color: colors.statusRejected),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                              // ── Analyze button ─────────────────────────────
+                              if (isLoading)
+                                const Column(
+                                  children: [
+                                    LinearProgressIndicator(),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'Analyzing your resume…',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                )
+                              else
+                                FilledButton.icon(
+                                  onPressed: notifier.canAnalyze
+                                      ? () => _onAnalyze(notifier, state)
+                                      : null,
+                                  icon: const Icon(Icons.auto_awesome_outlined,
+                                      size: 18),
+                                  label: const Text('Analyze Resume'),
+                                  style: FilledButton.styleFrom(
+                                    minimumSize: const Size.fromHeight(
+                                        AppSpacing.buttonH),
+                                  ),
+                                ),
+
+                              const SizedBox(
+                                  height: AppSpacing.bottomNavH +
+                                      AppSpacing.cardPad),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
