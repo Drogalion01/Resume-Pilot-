@@ -1,5 +1,5 @@
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status, UploadFile, File, Form
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -15,11 +15,61 @@ from app.services.analysis_service import analyze_resume
 from app.services.storage_service import cloudinary_storage
 
 # Two routers mapped to separate prefixes in main.py
+from app.database import SessionLocal
+from app.models.resume import AnalysisResult
+from app.services.resume_parser import parse_resume_text
+from app.services.analysis_service import analyze_resume
+
+from app.database import SessionLocal
+
+def process_resume_background(
+    db_analysis_id: int, 
+    raw_text: str, 
+    target_role: str,
+    jd_text: str
+):
+    db: Session = SessionLocal()
+    try:
+        # Load from DB
+        db_analysis = db.query(AnalysisResult).filter(AnalysisResult.id == db_analysis_id).first()
+        if not db_analysis:
+            return
+
+        # Heavy processing
+        parsed_data = parse_resume_text(raw_text)
+        analysis_dict = analyze_resume(parsed_data, raw_text, target_role, jd_text)
+        
+        # Update db_analysis with the heavy data
+        db_analysis.overall_score = analysis_dict.get("overall_score")
+        db_analysis.ats_score = analysis_dict.get("ats_score")
+        db_analysis.recruiter_score = analysis_dict.get("recruiter_score")
+        db_analysis.overall_label = analysis_dict.get("overall_label")
+        db_analysis.breakdown_json = analysis_dict.get("breakdown")
+        db_analysis.issues_json = analysis_dict.get("issues")
+        db_analysis.missing_keywords_json = analysis_dict.get("missing_keywords")
+        db_analysis.rewrites_json = analysis_dict.get("rewrites")
+        db_analysis.action_plan_json = analysis_dict.get("action_plan")
+        db_analysis.status = "completed"
+        
+        # We also need to update the resume's parsed json
+        if db_analysis.resume:
+            db_analysis.resume.parsed_json = parsed_data
+
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        # Mark as failed
+        db_analysis = db.query(AnalysisResult).filter(AnalysisResult.id == db_analysis_id).first()
+        if db_analysis:
+            db_analysis.status = "failed"
+            db.commit()
+    finally:
+        db.close()
+
+
 router = APIRouter()
-versions_router = APIRouter()
 
 def to_analysis_response_dict(db_analysis: AnalysisResult) -> dict:
-    """Helper to cleanly bypass SQLAlchemy JSON column variable names into Pydantic."""
     return {
         "id": db_analysis.id,
         "resume_id": db_analysis.resume_id,
@@ -34,7 +84,8 @@ def to_analysis_response_dict(db_analysis: AnalysisResult) -> dict:
         "rewrites": db_analysis.rewrites_json or [],
         "action_plan": db_analysis.action_plan_json or [],
         "created_at": db_analysis.created_at,
-        "updated_at": db_analysis.updated_at
+        "updated_at": db_analysis.updated_at,
+        "status": getattr(db_analysis, "status", "completed")
     }
 
 # --------------------------
@@ -117,6 +168,7 @@ def get_resume_analysis(
 
 @router.post("/analyze", response_model=AnalysisResultResponse)
 async def analyze_and_store_resume(
+    background_tasks: BackgroundTasks,
     file: Optional[UploadFile] = File(None),
     pasted_text: Optional[str] = Form(None),
     target_role: Optional[str] = Form(None),
@@ -163,57 +215,59 @@ async def analyze_and_store_resume(
             user_id=current_user.id,
         )
 
-    # 2. Structural Parse
-    parsed_data = parse_resume_text(raw_text)
-
-    # 3. Logic Scoring
-    analysis_dict = analyze_resume(parsed_data, raw_text, target_role, jd_text)
-    
-    # 4. Store the artifacts to the tracking database natively
+    # 2. Store minimal artifacts directly (so client has resume record immediately)
     new_resume = Resume(
         user_id=current_user.id,
         title=title,
         file_type=file_type,
         raw_text=raw_text,
-        parsed_json=parsed_data,
-        original_file_path=original_file_url,  # Cloudinary HTTPS URL, or None if pasted text
+        parsed_json={}, # will be filled later in background task
+        original_file_path=original_file_url,
     )
     db.add(new_resume)
-    db.flush() # Yields the new_resume.id inline
+    db.flush()
 
-    # Create root original version mapping
     new_version = ResumeVersion(
         resume_id=new_resume.id,
         user_id=current_user.id,
         version_name="Original Upload",
         target_role=target_role,
         company_name=company_name,
-        tag="general",
+        tag="Original",
         edited_text=raw_text
     )
     db.add(new_version)
-    db.flush() 
+    db.flush()
 
-    # Save logic mappings matching our database aliases -> Analysis Service Returns
-    db_analysis = AnalysisResult(
+    analysis = AnalysisResult(
         resume_id=new_resume.id,
         resume_version_id=new_version.id,
-        overall_score=analysis_dict.get("overall_score"),
-        ats_score=analysis_dict.get("ats_score"),
-        recruiter_score=analysis_dict.get("recruiter_score"),
-        overall_label=analysis_dict.get("overall_label"),
-        breakdown_json=analysis_dict.get("breakdown"),
-        issues_json=analysis_dict.get("issues"),
-        missing_keywords_json=analysis_dict.get("missing_keywords"),
-        rewrites_json=analysis_dict.get("rewrites"),
-        action_plan_json=analysis_dict.get("action_plan")
+        status="processing",
+        overall_score=0,
+        ats_score=0,
+        recruiter_score=0,
+        overall_label="Processing",
+        breakdown_json=[],
+        issues_json=[],
+        missing_keywords_json=[],
+        rewrites_json=[],
+        action_plan_json=[]
     )
-    db.add(db_analysis)
+    db.add(analysis)
     db.commit()
-    db.refresh(db_analysis)
+    db.refresh(analysis)
 
-    # Return perfectly parsed Pydantic schema using the helper mapper
-    return to_analysis_response_dict(db_analysis)
+    # 3. Offload Heavy AI execution
+    background_tasks.add_task(
+        process_resume_background,
+        db_analysis_id=analysis.id,
+        raw_text=raw_text,
+        target_role=target_role or "",
+        jd_text=jd_text or ""
+    )
+
+    # Return immediately while processing happens
+    return to_analysis_response_dict(analysis)
 
 # --------------------------
 # RESUME VERSIONS ROUTER (/api/v1/resume-versions)
@@ -263,3 +317,20 @@ def duplicate_resume_version(
     db.commit()
     db.refresh(duplicate)
     return duplicate
+
+@router.get("/analyze/{analysis_id}/status", response_model=AnalysisResultResponse)
+def get_analysis_status(
+    analysis_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    # Verify the user actually owns the resume attached to this analysis
+    db_analysis = db.query(AnalysisResult).join(Resume).filter(
+        AnalysisResult.id == analysis_id,
+        Resume.user_id == current_user.id
+    ).first()
+    
+    if not db_analysis:
+        raise HTTPException(status_code=404, detail="Analysis result not found")
+        
+    return to_analysis_response_dict(db_analysis)

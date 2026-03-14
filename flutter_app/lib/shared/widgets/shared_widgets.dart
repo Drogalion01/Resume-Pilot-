@@ -10,7 +10,7 @@ export 'bottom_nav.dart';
 export 'chip.dart';
 export 'empty_state.dart';
 export 'fab.dart';
-export 'gradient_header.dart';   // AppScaffold + GradientHeader + GradientPageTitle
+export 'gradient_header.dart'; // AppScaffold + GradientHeader + GradientPageTitle
 export 'list_item.dart';
 export 'loading_skeletons.dart';
 export 'mobile_card.dart';

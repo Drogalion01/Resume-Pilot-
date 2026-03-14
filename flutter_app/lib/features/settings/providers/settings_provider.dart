@@ -20,8 +20,7 @@ final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
 class SettingsNotifier extends AsyncNotifier<UserSettings> {
   @override
   Future<UserSettings> build() async {
-    final settings =
-        await ref.watch(settingsServiceProvider).getSettings();
+    final settings = await ref.watch(settingsServiceProvider).getSettings();
     // Seed the theme provider immediately in the same frame.
     ref.read(themeModeProvider.notifier).state =
         _toThemeMode(settings.themePreference);
@@ -111,13 +110,12 @@ class SettingsNotifier extends AsyncNotifier<UserSettings> {
   // ── Helpers ───────────────────────────────────────────────────────────────
 
   static ThemeMode _toThemeMode(String pref) => switch (pref) {
-        'light'  => ThemeMode.light,
-        'dark'   => ThemeMode.dark,
-        _        => ThemeMode.system,
+        'light' => ThemeMode.light,
+        'dark' => ThemeMode.dark,
+        _ => ThemeMode.system,
       };
 }
 
-final settingsProvider =
-    AsyncNotifierProvider<SettingsNotifier, UserSettings>(
+final settingsProvider = AsyncNotifierProvider<SettingsNotifier, UserSettings>(
   SettingsNotifier.new,
 );

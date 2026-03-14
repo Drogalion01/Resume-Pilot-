@@ -29,13 +29,13 @@ class MobileCard extends StatefulWidget {
     this.color,
   });
 
-  final Widget         child;
-  final VoidCallback?  onTap;
-  final EdgeInsets?    padding;
-  final EdgeInsets?    margin;
-  final CardVariant    variant;
-  final double?        radius;
-  final Color?         color;
+  final Widget child;
+  final VoidCallback? onTap;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
+  final CardVariant variant;
+  final double? radius;
+  final Color? color;
 
   @override
   State<MobileCard> createState() => _MobileCardState();
@@ -46,7 +46,7 @@ class _MobileCardState extends State<MobileCard> {
 
   @override
   Widget build(BuildContext context) {
-    final colors     = Theme.of(context).appColors;
+    final colors = Theme.of(context).appColors;
     final brightness = Theme.of(context).brightness;
     final isInteractive =
         widget.variant == CardVariant.interactive || widget.onTap != null;
@@ -82,10 +82,10 @@ class _MobileCardState extends State<MobileCard> {
 
     if (isInteractive) {
       content = GestureDetector(
-        onTapDown:   (_) => setState(() => _pressed = true),
-        onTapUp:     (_) => setState(() => _pressed = false),
-        onTapCancel: ()  => setState(() => _pressed = false),
-        onTap:       widget.onTap,
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        onTap: widget.onTap,
         child: AnimatedScale(
           scale: (_pressed && isInteractive) ? 0.975 : 1.0,
           duration: const Duration(milliseconds: 130),

@@ -21,18 +21,18 @@ class ScoreCard extends StatelessWidget {
     this.onTap,
   });
 
-  final double        score;
-  final String        title;
-  final String?       subtitle;
-  final double        ringSize;
+  final double score;
+  final String title;
+  final String? subtitle;
+  final double ringSize;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final colors     = Theme.of(context).appColors;
+    final colors = Theme.of(context).appColors;
     final brightness = Theme.of(context).brightness;
-    final scorePair  = AppScoreColors.forScore(score.round(), colors);
-    final band       = AppScoreColors.bandFor(score.round());
+    final scorePair = AppScoreColors.forScore(score.round(), colors);
+    final band = AppScoreColors.bandFor(score.round());
 
     Widget card = DecoratedBox(
       decoration: AppDecorations.cardElevated(colors, brightness),
@@ -60,8 +60,7 @@ class ScoreCard extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: scorePair.background,
-                      borderRadius:
-                          BorderRadius.circular(AppRadii.badgePill),
+                      borderRadius: BorderRadius.circular(AppRadii.badgePill),
                     ),
                     child: Text(
                       band.label,
@@ -74,8 +73,8 @@ class ScoreCard extends StatelessWidget {
                   const SizedBox(height: AppSpacing.px6),
                   Text(
                     title,
-                    style: AppTextStyles.title
-                        .copyWith(color: colors.foreground),
+                    style:
+                        AppTextStyles.title.copyWith(color: colors.foreground),
                   ),
                   if (subtitle != null)
                     Text(

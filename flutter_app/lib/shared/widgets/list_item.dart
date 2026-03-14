@@ -19,12 +19,12 @@ class AppListItem extends StatelessWidget {
     this.padding,
   });
 
-  final String       title;
-  final String?      subtitle;
-  final Widget?      leading;
-  final Widget?      trailing;
+  final String title;
+  final String? subtitle;
+  final Widget? leading;
+  final Widget? trailing;
   final VoidCallback? onTap;
-  final EdgeInsets?  padding;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {

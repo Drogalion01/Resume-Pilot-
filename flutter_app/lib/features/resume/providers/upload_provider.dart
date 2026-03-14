@@ -132,7 +132,9 @@ class UploadNotifier extends AutoDisposeNotifier<UploadState> {
       state = UploadSuccess(analysis: result);
     } catch (e) {
       state = UploadError(
-        e is AppException ? e.userMessage : 'Analysis failed. Please try again.',
+        e is AppException
+            ? e.userMessage
+            : 'Analysis failed. Please try again.',
       );
     }
   }
@@ -143,7 +145,7 @@ class UploadNotifier extends AutoDisposeNotifier<UploadState> {
     state = const UploadLoading();
     try {
       final service = ref.read(resumeServiceProvider);
-      final AnalysisResultResponse result;
+      AnalysisResultResponse result;
 
       if (_fileMode && picked != null) {
         result = await service.analyzeResume(
@@ -162,16 +164,29 @@ class UploadNotifier extends AutoDisposeNotifier<UploadState> {
         );
       }
 
+      // Polling logic for background processing
+      while (result.status == 'processing') {
+        await Future.delayed(const Duration(seconds: 2));
+        result = await service.checkAnalysisStatus(result.id);
+      }
+
+      if (result.status == 'failed') {
+        state =
+            const UploadError('Analysis failed during background processing.');
+        return;
+      }
+
       state = UploadSuccess(analysis: result);
     } catch (e) {
       state = UploadError(
-        e is AppException ? e.userMessage : 'Analysis failed. Please try again.',
+        e is AppException
+            ? e.userMessage
+            : 'Analysis failed. Please try again.',
       );
     }
   }
 }
 
-final uploadProvider =
-    AutoDisposeNotifierProvider<UploadNotifier, UploadState>(
+final uploadProvider = AutoDisposeNotifierProvider<UploadNotifier, UploadState>(
   UploadNotifier.new,
 );

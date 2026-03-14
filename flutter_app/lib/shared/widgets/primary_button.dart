@@ -24,13 +24,13 @@ class PrimaryButton extends StatefulWidget {
     this.height = 52.0,
   });
 
-  final String       label;
+  final String label;
   final VoidCallback? onPressed;
-  final IconData?    icon;
-  final bool         loading;
-  final bool         enabled;
-  final double?      width;
-  final double       height;
+  final IconData? icon;
+  final bool loading;
+  final bool enabled;
+  final double? width;
+  final double height;
 
   @override
   State<PrimaryButton> createState() => _PrimaryButtonState();
@@ -41,25 +41,27 @@ class _PrimaryButtonState extends State<PrimaryButton> {
 
   @override
   Widget build(BuildContext context) {
-    final colors     = Theme.of(context).appColors;
-    final isDisabled = !widget.enabled || widget.loading || widget.onPressed == null;
+    final colors = Theme.of(context).appColors;
+    final isDisabled =
+        !widget.enabled || widget.loading || widget.onPressed == null;
 
     return GestureDetector(
-      onTapDown:   (_) => setState(() => _pressed = true),
-      onTapUp:     (_) { setState(() => _pressed = false); if (!isDisabled) widget.onPressed?.call(); },
-      onTapCancel: ()  => setState(() => _pressed = false),
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) {
+        setState(() => _pressed = false);
+        if (!isDisabled) widget.onPressed?.call();
+      },
+      onTapCancel: () => setState(() => _pressed = false),
       child: AnimatedScale(
         scale: _pressed ? 0.97 : 1.0,
         duration: const Duration(milliseconds: 120),
         curve: Curves.easeOut,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
-          width:  widget.width,
+          width: widget.width,
           height: widget.height,
           decoration: BoxDecoration(
-            gradient: isDisabled
-                ? null
-                : AppGradients.primaryButton(colors),
+            gradient: isDisabled ? null : AppGradients.primaryButton(colors),
             color: isDisabled ? colors.primaryMuted : null,
             borderRadius: BorderRadius.circular(AppRadii.button),
           ),
@@ -70,14 +72,16 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                   height: 22,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.5,
-                    valueColor: AlwaysStoppedAnimation(colors.primaryForeground),
+                    valueColor:
+                        AlwaysStoppedAnimation(colors.primaryForeground),
                   ),
                 )
               : Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (widget.icon != null) ...[
-                      Icon(widget.icon, size: 18, color: colors.primaryForeground),
+                      Icon(widget.icon,
+                          size: 18, color: colors.primaryForeground),
                       const SizedBox(width: 8),
                     ],
                     Text(

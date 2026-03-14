@@ -46,6 +46,7 @@ class AnalysisResult(Base, TimestampMixin):
     ats_score = Column(Integer)
     recruiter_score = Column(Integer)
     overall_label = Column(String)
+    status = Column(String, default="completed")  # processing, completed, failed
     
     # JSON mapped structures for frontend breakdown
     breakdown_json = Column(JSON)

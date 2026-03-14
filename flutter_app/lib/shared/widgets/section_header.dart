@@ -15,8 +15,8 @@ class SectionHeader extends StatelessWidget {
     this.onAction,
   });
 
-  final String    title;
-  final String?   actionLabel;
+  final String title;
+  final String? actionLabel;
   final VoidCallback? onAction;
 
   @override
@@ -35,8 +35,8 @@ class SectionHeader extends StatelessWidget {
             onTap: onAction,
             child: Text(
               actionLabel!,
-              style: AppTextStyles.buttonLabelSm
-                  .copyWith(color: colors.primary),
+              style:
+                  AppTextStyles.buttonLabelSm.copyWith(color: colors.primary),
             ),
           ),
       ],

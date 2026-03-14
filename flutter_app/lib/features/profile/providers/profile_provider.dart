@@ -12,14 +12,12 @@ import '../models/user_profile.dart';
 
 class ProfileNotifier extends AsyncNotifier<UserProfile> {
   @override
-  Future<UserProfile> build() =>
-      ref.watch(userServiceProvider).getProfile();
+  Future<UserProfile> build() => ref.watch(userServiceProvider).getProfile();
 
   Future<bool> updateProfile(Map<String, dynamic> fields) async {
     state = const AsyncLoading();
     try {
-      final updated =
-          await ref.read(userServiceProvider).updateProfile(fields);
+      final updated = await ref.read(userServiceProvider).updateProfile(fields);
       state = AsyncData(updated);
       return true;
     } catch (e, st) {
@@ -34,7 +32,6 @@ class ProfileNotifier extends AsyncNotifier<UserProfile> {
   }
 }
 
-final profileProvider =
-    AsyncNotifierProvider<ProfileNotifier, UserProfile>(
+final profileProvider = AsyncNotifierProvider<ProfileNotifier, UserProfile>(
   ProfileNotifier.new,
 );

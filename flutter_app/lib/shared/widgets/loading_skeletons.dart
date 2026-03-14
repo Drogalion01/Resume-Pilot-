@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+import 'animations/premium_shimmer.dart';
 
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_theme.dart';
@@ -32,9 +32,7 @@ class LoadingSkeletons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
-    return Shimmer.fromColors(
-      baseColor: colors.surfaceSecondary,
-      highlightColor: colors.surfacePrimary,
+    return PremiumShimmer(
       child: _child,
     );
   }
@@ -48,9 +46,9 @@ class _SkeletonBox extends StatelessWidget {
     required this.height,
     this.radius = AppRadii.md,
   });
-  final double  width;
-  final double  height;
-  final double  radius;
+  final double width;
+  final double height;
+  final double radius;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -181,7 +179,10 @@ class _ApplicationListSkeleton extends StatelessWidget {
                         children: [
                           _SkeletonFlex(height: 14),
                           SizedBox(height: 6),
-                          _SkeletonBox(width: 60, height: 18, radius: AppRadii.badgePill),
+                          _SkeletonBox(
+                              width: 60,
+                              height: 18,
+                              radius: AppRadii.badgePill),
                         ],
                       ),
                     ),

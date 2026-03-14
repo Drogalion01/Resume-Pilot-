@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+import '../../../shared/widgets/animations/premium_shimmer.dart';
 
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -15,9 +15,7 @@ class ApplicationListSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
-    return Shimmer.fromColors(
-      baseColor: colors.surfaceSecondary,
-      highlightColor: colors.primaryLight,
+    return PremiumShimmer(
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.pageH, vertical: 12),
@@ -47,9 +45,7 @@ class ApplicationDetailSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
-    return Shimmer.fromColors(
-      baseColor: colors.surfaceSecondary,
-      highlightColor: colors.primaryLight,
+    return PremiumShimmer(
       child: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(
@@ -123,14 +119,12 @@ class ApplicationsEmptyState extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
-              child:
-                  Icon(Icons.work_outline, color: colors.primary, size: 32),
+              child: Icon(Icons.work_outline, color: colors.primary, size: 32),
             ),
             const SizedBox(height: 16),
             Text(
               'No applications yet',
-              style: AppTextStyles.headline
-                  .copyWith(color: colors.foreground),
+              style: AppTextStyles.headline.copyWith(color: colors.foreground),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),

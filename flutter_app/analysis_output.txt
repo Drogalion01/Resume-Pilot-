@@ -1,0 +1,18 @@
+Analyzing flutter_app...
+
+warning - lib\app\app.dart:4:8 - Unused import: '../core/theme/theme.dart'. Try removing the import directive. - unused_import
+warning - lib\features\dashboard\widgets\dashboard_content_widgets.dart:18:8 - Unused import: '../../../shared/widgets/buttons/animated_scale_button.dart'. Try removing the import directive. - unused_import
+warning - lib\features\settings\screens\settings_screen.dart:25:14 - The declaration '_bdappsPhpBaseUrl' isn't referenced. Try removing the declaration of '_bdappsPhpBaseUrl'. - unused_element
+   info - lib\features\settings\screens\settings_screen.dart:448:44 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\settings\screens\settings_screen.dart:455:42 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\shared\widgets\animations\animated_counter_text.dart:10:9 - Parameter 'key' could be a super parameter. Trying converting 'key' to a super parameter. - use_super_parameters
+   info - lib\shared\widgets\backgrounds\breathing_background.dart:7:9 - Parameter 'key' could be a super parameter. Trying converting 'key' to a super parameter. - use_super_parameters
+   info - lib\shared\widgets\backgrounds\breathing_background.dart:53:39 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\backgrounds\breathing_background.dart:70:39 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\buttons\animated_scale_button.dart:7:9 - Parameter 'key' could be a super parameter. Trying converting 'key' to a super parameter. - use_super_parameters
+   info - lib\shared\widgets\buttons\animated_scale_button.dart:65:64 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\cards\glass_card.dart:10:9 - Parameter 'key' could be a super parameter. Trying converting 'key' to a super parameter. - use_super_parameters
+   info - lib\shared\widgets\charts\smooth_wave_chart.dart:9:9 - Parameter 'key' could be a super parameter. Trying converting 'key' to a super parameter. - use_super_parameters
+   info - lib\shared\widgets\charts\smooth_wave_chart.dart:67:23 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+
+14 issues found.

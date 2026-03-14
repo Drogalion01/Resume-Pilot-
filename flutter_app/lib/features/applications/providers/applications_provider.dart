@@ -24,8 +24,7 @@ class ApplicationsState {
   }) =>
       ApplicationsState(
         applications: applications ?? this.applications,
-        activeFilter:
-            clearFilter ? null : (activeFilter ?? this.activeFilter),
+        activeFilter: clearFilter ? null : (activeFilter ?? this.activeFilter),
         searchQuery: searchQuery ?? this.searchQuery,
       );
 
@@ -59,8 +58,7 @@ class ApplicationsState {
 class ApplicationsNotifier extends AsyncNotifier<ApplicationsState> {
   @override
   Future<ApplicationsState> build() async {
-    final apps =
-        await ref.watch(applicationServiceProvider).getApplications();
+    final apps = await ref.watch(applicationServiceProvider).getApplications();
     return ApplicationsState(applications: apps);
   }
 
@@ -100,8 +98,7 @@ class ApplicationsNotifier extends AsyncNotifier<ApplicationsState> {
     final current = state.valueOrNull;
     if (current != null) {
       state = AsyncData(current.copyWith(
-        applications:
-            current.applications.where((a) => a.id != id).toList(),
+        applications: current.applications.where((a) => a.id != id).toList(),
       ));
     }
   }

@@ -17,9 +17,9 @@ library;
 
 export 'app_colors.dart';
 export 'app_text_styles.dart';
-export 'app_spacing.dart';       // AppSpacing + AppRadii (same file)
+export 'app_spacing.dart'; // AppSpacing + AppRadii (same file)
 export 'app_shadows.dart';
 export 'app_gradients.dart';
 export 'app_status_colors.dart'; // ApplicationStatus, ScoreBand, ColorPair, AppStatusColors, AppScoreColors
 export 'app_decorations.dart';
-export 'app_theme.dart';         // AppTheme, AppThemeX, AppColorsExtension
+export 'app_theme.dart'; // AppTheme, AppThemeX, AppColorsExtension

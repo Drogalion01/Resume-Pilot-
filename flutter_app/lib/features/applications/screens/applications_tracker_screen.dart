@@ -64,8 +64,8 @@ class ApplicationsTrackerScreen extends ConsumerWidget {
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 10),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
               ),
             ),
@@ -103,8 +103,8 @@ class ApplicationsTrackerScreen extends ConsumerWidget {
                     return Center(
                       child: Text(
                         'No matching applications.',
-                        style: AppTextStyles.caption.copyWith(
-                            color: colors.foregroundSecondary),
+                        style: AppTextStyles.caption
+                            .copyWith(color: colors.foregroundSecondary),
                       ),
                     );
                   }
@@ -115,8 +115,7 @@ class ApplicationsTrackerScreen extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.pageH, vertical: 8),
                       itemCount: list.length,
-                      itemBuilder: (_, i) =>
-                          _ApplicationCard(app: list[i]),
+                      itemBuilder: (_, i) => _ApplicationCard(app: list[i]),
                     ),
                   );
                 },
@@ -153,8 +152,7 @@ class _StatusFilterRow extends StatelessWidget {
       height: 40,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding:
-            const EdgeInsets.symmetric(horizontal: AppSpacing.pageH),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pageH),
         children: [
           _Chip(
             label: 'All',
@@ -170,8 +168,7 @@ class _StatusFilterRow extends StatelessWidget {
                 active: activeFilter == s,
                 foreground: s.foreground(colors),
                 background: s.background(colors),
-                onTap: () =>
-                    onSelect(activeFilter == s ? null : s),
+                onTap: () => onSelect(activeFilter == s ? null : s),
               )),
         ],
       ),
@@ -204,8 +201,7 @@ class _Chip extends StatelessWidget {
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
-          padding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: active ? foreground : background,
             borderRadius: BorderRadius.circular(20),
@@ -265,8 +261,7 @@ class _ApplicationCard extends StatelessWidget {
       color: colors.surfaceSecondary,
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadii.card),
-        onTap: () =>
-            context.push(AppRoutes.applicationDetail(app.id)),
+        onTap: () => context.push(AppRoutes.applicationDetail(app.id)),
         child: Padding(
           padding: const EdgeInsets.all(14),
           child: Column(
@@ -281,15 +276,15 @@ class _ApplicationCard extends StatelessWidget {
                       children: [
                         Text(
                           app.companyName,
-                          style: AppTextStyles.title.copyWith(
-                              color: colors.foreground),
+                          style: AppTextStyles.title
+                              .copyWith(color: colors.foreground),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           app.role,
-                          style: AppTextStyles.caption.copyWith(
-                              color: colors.foregroundSecondary),
+                          style: AppTextStyles.caption
+                              .copyWith(color: colors.foregroundSecondary),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),

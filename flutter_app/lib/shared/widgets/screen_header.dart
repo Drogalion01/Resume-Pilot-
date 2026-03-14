@@ -22,11 +22,11 @@ class ScreenHeader extends StatelessWidget {
     this.centerTitle = false,
   });
 
-  final String       title;
-  final String?      subtitle;
-  final Widget?      leading;
+  final String title;
+  final String? subtitle;
+  final Widget? leading;
   final List<Widget> actions;
-  final bool         centerTitle;
+  final bool centerTitle;
 
   @override
   Widget build(BuildContext context) {

@@ -254,8 +254,8 @@ class AuthErrorBanner extends StatelessWidget {
           ? const SizedBox.shrink()
           : Container(
               margin: const EdgeInsets.only(bottom: AppSpacing.px20),
-              padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.px12, AppSpacing.px10, AppSpacing.px8, AppSpacing.px10),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.px12,
+                  AppSpacing.px10, AppSpacing.px8, AppSpacing.px10),
               decoration: BoxDecoration(
                 color: colors.destructiveLight,
                 borderRadius: BorderRadius.circular(AppRadii.md),
@@ -362,9 +362,8 @@ class AuthSubmitButton extends StatelessWidget {
                   : Text(
                       label,
                       style: AppTextStyles.buttonLabel.copyWith(
-                        color: disabled
-                            ? colors.foregroundTertiary
-                            : Colors.white,
+                        color:
+                            disabled ? colors.foregroundTertiary : Colors.white,
                       ),
                     ),
             ),

@@ -23,31 +23,30 @@ class AppFAB extends StatefulWidget {
   });
 
   final VoidCallback onPressed;
-  final IconData     icon;
-  final String       label;
-  final bool         extended;
-  final bool         visible;
+  final IconData icon;
+  final String label;
+  final bool extended;
+  final bool visible;
 
   @override
   State<AppFAB> createState() => _AppFABState();
 }
 
-class _AppFABState extends State<AppFAB>
-    with SingleTickerProviderStateMixin {
+class _AppFABState extends State<AppFAB> with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
-  late final Animation<double>    _scale;
-  late final Animation<double>    _fade;
+  late final Animation<double> _scale;
+  late final Animation<double> _fade;
 
   @override
   void initState() {
     super.initState();
-    _ctrl  = AnimationController(
+    _ctrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 220),
     );
     _scale = CurvedAnimation(parent: _ctrl, curve: Curves.easeOutBack)
         .drive(Tween(begin: 0.6, end: 1.0));
-    _fade  = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut)
+    _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut)
         .drive(Tween(begin: 0.0, end: 1.0));
     if (widget.visible) _ctrl.forward();
   }
@@ -68,7 +67,7 @@ class _AppFABState extends State<AppFAB>
 
   @override
   Widget build(BuildContext context) {
-    final colors     = Theme.of(context).appColors;
+    final colors = Theme.of(context).appColors;
     final brightness = Theme.of(context).brightness;
 
     return FadeTransition(
@@ -90,7 +89,8 @@ class _AppFABState extends State<AppFAB>
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(widget.icon, color: colors.primaryForeground, size: 22),
+                        Icon(widget.icon,
+                            color: colors.primaryForeground, size: 22),
                         const SizedBox(width: AppSpacing.px8),
                         Text(
                           widget.label,

@@ -20,11 +20,11 @@ class AppChip extends StatelessWidget {
     this.backgroundColor,
   });
 
-  final String       label;
-  final bool         selected;
+  final String label;
+  final bool selected;
   final VoidCallback? onTap;
-  final IconData?    icon;
-  final int?         count;
+  final IconData? icon;
+  final int? count;
 
   /// Override foreground — defaults to primary (selected) / foreground-secondary
   final Color? foregroundColor;
@@ -40,8 +40,7 @@ class AppChip extends StatelessWidget {
         (selected ? colors.primary : colors.foregroundSecondary);
     final bg = backgroundColor ??
         (selected ? colors.primaryLight : colors.surfaceSecondary);
-    final borderColor =
-        selected ? colors.primaryMuted : colors.borderSubtle;
+    final borderColor = selected ? colors.primaryMuted : colors.borderSubtle;
 
     return GestureDetector(
       onTap: onTap,
@@ -76,13 +75,14 @@ class AppChip extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: selected ? colors.primary : colors.border,
-                  borderRadius:
-                      BorderRadius.circular(AppRadii.badgePill),
+                  borderRadius: BorderRadius.circular(AppRadii.badgePill),
                 ),
                 child: Text(
                   '$count',
-                  style: AppTextStyles.micro
-                      .copyWith(color: selected ? colors.primaryForeground : colors.foregroundSecondary),
+                  style: AppTextStyles.micro.copyWith(
+                      color: selected
+                          ? colors.primaryForeground
+                          : colors.foregroundSecondary),
                 ),
               ),
             ],

@@ -46,8 +46,7 @@ class ResumeVersionDetailScreen extends ConsumerWidget {
           IconButton(
             icon: Icon(Icons.auto_awesome_outlined, color: colors.primary),
             tooltip: 'View analysis',
-            onPressed: () =>
-                context.push(AppRoutes.resumeAnalysis(resumeId)),
+            onPressed: () => context.push(AppRoutes.resumeAnalysis(resumeId)),
           ),
           IconButton(
             icon: Icon(Icons.add_outlined, color: colors.foreground),
@@ -70,8 +69,7 @@ class ResumeVersionDetailScreen extends ConsumerWidget {
               loading: () => const ResumeListSkeleton(),
               error: (e, _) => ResumeErrorState(
                 error: e,
-                onRetry: () =>
-                    ref.invalidate(resumeVersionsProvider(resumeId)),
+                onRetry: () => ref.invalidate(resumeVersionsProvider(resumeId)),
               ),
               data: (versions) {
                 if (versions.isEmpty) {
@@ -92,8 +90,8 @@ class ResumeVersionDetailScreen extends ConsumerWidget {
                           const SizedBox(height: 8),
                           Text(
                             'Save a version to track iterations targeted at specific roles or companies.',
-                            style: AppTextStyles.caption.copyWith(
-                                color: colors.foregroundSecondary),
+                            style: AppTextStyles.caption
+                                .copyWith(color: colors.foregroundSecondary),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -146,8 +144,8 @@ class _MetaRow extends StatelessWidget {
           horizontal: AppSpacing.pageH, vertical: 12),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-              color: colors.primaryMuted.withAlpha(60), width: 1),
+          bottom:
+              BorderSide(color: colors.primaryMuted.withAlpha(60), width: 1),
         ),
       ),
       child: Row(
@@ -167,8 +165,8 @@ class _MetaRow extends StatelessWidget {
             ),
             child: Text(
               resume.fileTypeLabel,
-              style: AppTextStyles.micro.copyWith(
-                  color: colors.primary, fontWeight: FontWeight.w600),
+              style: AppTextStyles.micro
+                  .copyWith(color: colors.primary, fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -193,9 +191,8 @@ class _VersionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
-    final displayName = version.versionName ??
-        version.targetRole ??
-        'Version #${version.id}';
+    final displayName =
+        version.versionName ?? version.targetRole ?? 'Version #${version.id}';
     final subtitle = [
       if (version.targetRole != null) version.targetRole!,
       if (version.companyName != null) version.companyName!,
@@ -209,8 +206,7 @@ class _VersionTile extends StatelessWidget {
       elevation: 0,
       color: colors.surfaceSecondary,
       child: ListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         leading: Container(
           width: 40,
           height: 40,
@@ -223,8 +219,8 @@ class _VersionTile extends StatelessWidget {
         ),
         title: Text(
           displayName,
-          style: AppTextStyles.bodyMedium.copyWith(
-              color: colors.foreground, fontWeight: FontWeight.w600),
+          style: AppTextStyles.bodyMedium
+              .copyWith(color: colors.foreground, fontWeight: FontWeight.w600),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -275,8 +271,8 @@ class _SaveVersionSheet extends ConsumerStatefulWidget {
 }
 
 class _SaveVersionSheetState extends ConsumerState<_SaveVersionSheet> {
-  final _nameCtrl    = TextEditingController();
-  final _roleCtrl    = TextEditingController();
+  final _nameCtrl = TextEditingController();
+  final _roleCtrl = TextEditingController();
   final _companyCtrl = TextEditingController();
   bool _saving = false;
   String? _err;
@@ -290,19 +286,28 @@ class _SaveVersionSheetState extends ConsumerState<_SaveVersionSheet> {
   }
 
   Future<void> _save() async {
-    setState(() { _saving = true; _err = null; });
+    setState(() {
+      _saving = true;
+      _err = null;
+    });
     try {
       final svc = ref.read(resumeServiceProvider);
       await svc.createResumeVersion(
         widget.resumeId,
-        versionName: _nameCtrl.text.trim().isEmpty ? null : _nameCtrl.text.trim(),
-        targetRole:  _roleCtrl.text.trim().isEmpty ? null : _roleCtrl.text.trim(),
-        companyName: _companyCtrl.text.trim().isEmpty ? null : _companyCtrl.text.trim(),
+        versionName:
+            _nameCtrl.text.trim().isEmpty ? null : _nameCtrl.text.trim(),
+        targetRole:
+            _roleCtrl.text.trim().isEmpty ? null : _roleCtrl.text.trim(),
+        companyName:
+            _companyCtrl.text.trim().isEmpty ? null : _companyCtrl.text.trim(),
       );
       ref.invalidate(resumeVersionsProvider(widget.resumeId));
       if (mounted) Navigator.pop(context);
     } catch (e) {
-      setState(() { _saving = false; _err = e.toString(); });
+      setState(() {
+        _saving = false;
+        _err = e.toString();
+      });
     }
   }
 
@@ -312,7 +317,7 @@ class _SaveVersionSheetState extends ConsumerState<_SaveVersionSheet> {
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        20, 20, 20, MediaQuery.viewInsetsOf(context).bottom + 20),
+          20, 20, 20, MediaQuery.viewInsetsOf(context).bottom + 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,

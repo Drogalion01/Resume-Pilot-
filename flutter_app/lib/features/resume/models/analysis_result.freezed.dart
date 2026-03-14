@@ -883,6 +883,7 @@ mixin _$AnalysisResultResponse {
   DateTime get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'updated_at')
   DateTime get updatedAt => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -911,7 +912,8 @@ abstract class $AnalysisResultResponseCopyWith<$Res> {
       List<RewriteItem> rewrites,
       @JsonKey(name: 'action_plan') List<ActionPlanItem> actionPlan,
       @JsonKey(name: 'created_at') DateTime createdAt,
-      @JsonKey(name: 'updated_at') DateTime updatedAt});
+      @JsonKey(name: 'updated_at') DateTime updatedAt,
+      String status});
 }
 
 /// @nodoc
@@ -942,6 +944,7 @@ class _$AnalysisResultResponseCopyWithImpl<$Res,
     Object? actionPlan = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? status = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -1000,6 +1003,10 @@ class _$AnalysisResultResponseCopyWithImpl<$Res,
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -1028,7 +1035,8 @@ abstract class _$$AnalysisResultResponseImplCopyWith<$Res>
       List<RewriteItem> rewrites,
       @JsonKey(name: 'action_plan') List<ActionPlanItem> actionPlan,
       @JsonKey(name: 'created_at') DateTime createdAt,
-      @JsonKey(name: 'updated_at') DateTime updatedAt});
+      @JsonKey(name: 'updated_at') DateTime updatedAt,
+      String status});
 }
 
 /// @nodoc
@@ -1058,6 +1066,7 @@ class __$$AnalysisResultResponseImplCopyWithImpl<$Res>
     Object? actionPlan = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? status = null,
   }) {
     return _then(_$AnalysisResultResponseImpl(
       id: null == id
@@ -1116,6 +1125,10 @@ class __$$AnalysisResultResponseImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -1139,7 +1152,8 @@ class _$AnalysisResultResponseImpl implements _AnalysisResultResponse {
       @JsonKey(name: 'action_plan')
       final List<ActionPlanItem> actionPlan = const [],
       @JsonKey(name: 'created_at') required this.createdAt,
-      @JsonKey(name: 'updated_at') required this.updatedAt})
+      @JsonKey(name: 'updated_at') required this.updatedAt,
+      this.status = 'completed'})
       : _breakdown = breakdown,
         _issues = issues,
         _missingKeywords = missingKeywords,
@@ -1220,10 +1234,13 @@ class _$AnalysisResultResponseImpl implements _AnalysisResultResponse {
   @override
   @JsonKey(name: 'updated_at')
   final DateTime updatedAt;
+  @override
+  @JsonKey()
+  final String status;
 
   @override
   String toString() {
-    return 'AnalysisResultResponse(id: $id, resumeId: $resumeId, resumeVersionId: $resumeVersionId, overallScore: $overallScore, atsScore: $atsScore, recruiterScore: $recruiterScore, overallLabel: $overallLabel, breakdown: $breakdown, issues: $issues, missingKeywords: $missingKeywords, rewrites: $rewrites, actionPlan: $actionPlan, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'AnalysisResultResponse(id: $id, resumeId: $resumeId, resumeVersionId: $resumeVersionId, overallScore: $overallScore, atsScore: $atsScore, recruiterScore: $recruiterScore, overallLabel: $overallLabel, breakdown: $breakdown, issues: $issues, missingKeywords: $missingKeywords, rewrites: $rewrites, actionPlan: $actionPlan, createdAt: $createdAt, updatedAt: $updatedAt, status: $status)';
   }
 
   @override
@@ -1255,7 +1272,8 @@ class _$AnalysisResultResponseImpl implements _AnalysisResultResponse {
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            (identical(other.status, status) || other.status == status));
   }
 
   @JsonKey(ignore: true)
@@ -1275,7 +1293,8 @@ class _$AnalysisResultResponseImpl implements _AnalysisResultResponse {
       const DeepCollectionEquality().hash(_rewrites),
       const DeepCollectionEquality().hash(_actionPlan),
       createdAt,
-      updatedAt);
+      updatedAt,
+      status);
 
   @JsonKey(ignore: true)
   @override
@@ -1294,22 +1313,22 @@ class _$AnalysisResultResponseImpl implements _AnalysisResultResponse {
 
 abstract class _AnalysisResultResponse implements AnalysisResultResponse {
   const factory _AnalysisResultResponse(
-          {required final int id,
-          @JsonKey(name: 'resume_id') required final int resumeId,
-          @JsonKey(name: 'resume_version_id') final int? resumeVersionId,
-          @JsonKey(name: 'overall_score') final int? overallScore,
-          @JsonKey(name: 'ats_score') final int? atsScore,
-          @JsonKey(name: 'recruiter_score') final int? recruiterScore,
-          @JsonKey(name: 'overall_label') final String? overallLabel,
-          final List<BreakdownItem> breakdown,
-          final List<IssueItem> issues,
-          @JsonKey(name: 'missing_keywords')
-          final List<MissingKeywordItem> missingKeywords,
-          final List<RewriteItem> rewrites,
-          @JsonKey(name: 'action_plan') final List<ActionPlanItem> actionPlan,
-          @JsonKey(name: 'created_at') required final DateTime createdAt,
-          @JsonKey(name: 'updated_at') required final DateTime updatedAt}) =
-      _$AnalysisResultResponseImpl;
+      {required final int id,
+      @JsonKey(name: 'resume_id') required final int resumeId,
+      @JsonKey(name: 'resume_version_id') final int? resumeVersionId,
+      @JsonKey(name: 'overall_score') final int? overallScore,
+      @JsonKey(name: 'ats_score') final int? atsScore,
+      @JsonKey(name: 'recruiter_score') final int? recruiterScore,
+      @JsonKey(name: 'overall_label') final String? overallLabel,
+      final List<BreakdownItem> breakdown,
+      final List<IssueItem> issues,
+      @JsonKey(name: 'missing_keywords')
+      final List<MissingKeywordItem> missingKeywords,
+      final List<RewriteItem> rewrites,
+      @JsonKey(name: 'action_plan') final List<ActionPlanItem> actionPlan,
+      @JsonKey(name: 'created_at') required final DateTime createdAt,
+      @JsonKey(name: 'updated_at') required final DateTime updatedAt,
+      final String status}) = _$AnalysisResultResponseImpl;
 
   factory _AnalysisResultResponse.fromJson(Map<String, dynamic> json) =
       _$AnalysisResultResponseImpl.fromJson;
@@ -1352,6 +1371,8 @@ abstract class _AnalysisResultResponse implements AnalysisResultResponse {
   @override
   @JsonKey(name: 'updated_at')
   DateTime get updatedAt;
+  @override
+  String get status;
   @override
   @JsonKey(ignore: true)
   _$$AnalysisResultResponseImplCopyWith<_$AnalysisResultResponseImpl>

@@ -18,9 +18,8 @@ class ResumeVersionsNotifier
   }
 
   Future<void> duplicateVersion(int versionId) async {
-    final newVersion = await ref
-        .read(resumeServiceProvider)
-        .duplicateResumeVersion(versionId);
+    final newVersion =
+        await ref.read(resumeServiceProvider).duplicateResumeVersion(versionId);
     state = AsyncData([...?state.valueOrNull, newVersion]);
   }
 }
@@ -32,8 +31,7 @@ final resumeVersionsProvider = AsyncNotifierProviderFamily<
 
 // ── Single resume detail ───────────────────────────────────────────────────────
 
-class ResumeDetailNotifier
-    extends FamilyAsyncNotifier<ResumeResponse, int> {
+class ResumeDetailNotifier extends FamilyAsyncNotifier<ResumeResponse, int> {
   @override
   Future<ResumeResponse> build(int resumeId) =>
       ref.watch(resumeServiceProvider).getResumeById(resumeId);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/theme/theme.dart';
+import '../core/theme/premium_theme.dart';
 import '../features/settings/providers/settings_provider.dart';
 import 'router/router.dart';
 
@@ -16,9 +16,9 @@ class App extends ConsumerWidget {
     return MaterialApp.router(
       title: 'ResumePilot',
       debugShowCheckedModeBanner: false,
-      // Light / dark themes from design system
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      // Light / dark themes from premium design system
+      theme: PremiumTheme.lightMode,
+      darkTheme: PremiumTheme.darkMode,
       // Driven by user settings — falls back to system until settings load
       themeMode: themeMode,
       // GoRouter drives all navigation

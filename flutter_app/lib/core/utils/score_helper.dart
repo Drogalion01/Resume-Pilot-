@@ -28,24 +28,23 @@ abstract class ScoreHelper {
   static Color colorFromScore(num score, AppColors colors) =>
       switch (tierFromScore(score)) {
         ScoreTier.excellent => colors.scoreExcellent,
-        ScoreTier.good      => colors.scoreGood,
-        ScoreTier.average   => colors.scoreAverage,
-        ScoreTier.poor      => colors.scorePoor,
+        ScoreTier.good => colors.scoreGood,
+        ScoreTier.average => colors.scoreAverage,
+        ScoreTier.poor => colors.scorePoor,
       };
 
   static Color bgColorFromScore(num score, AppColors colors) =>
       switch (tierFromScore(score)) {
         ScoreTier.excellent => colors.scoreExcellentBg,
-        ScoreTier.good      => colors.scoreGoodBg,
-        ScoreTier.average   => colors.scoreAverageBg,
-        ScoreTier.poor      => colors.scorePoorBg,
+        ScoreTier.good => colors.scoreGoodBg,
+        ScoreTier.average => colors.scoreAverageBg,
+        ScoreTier.poor => colors.scorePoorBg,
       };
 
-  static String labelFromScore(num score) =>
-      switch (tierFromScore(score)) {
+  static String labelFromScore(num score) => switch (tierFromScore(score)) {
         ScoreTier.excellent => 'Excellent',
-        ScoreTier.good      => 'Good',
-        ScoreTier.average   => 'Average',
-        ScoreTier.poor      => 'Poor',
+        ScoreTier.good => 'Good',
+        ScoreTier.average => 'Average',
+        ScoreTier.poor => 'Poor',
       };
 }

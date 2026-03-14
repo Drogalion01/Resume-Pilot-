@@ -29,10 +29,9 @@ class ApplicationDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors     = Theme.of(context).appColors;
+    final colors = Theme.of(context).appColors;
     final brightness = Theme.of(context).brightness;
-    final detailAsync =
-        ref.watch(applicationDetailProvider(applicationId));
+    final detailAsync = ref.watch(applicationDetailProvider(applicationId));
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -41,12 +40,13 @@ class ApplicationDetailScreen extends ConsumerWidget {
           // Gradient bg
           Positioned.fill(
             child: Container(
-              decoration: BoxDecoration(
-                  gradient: AppGradients.heroBackground(colors)),
+              decoration:
+                  BoxDecoration(gradient: AppGradients.heroBackground(colors)),
             ),
           ),
           Positioned(
-            top: -40, right: -40,
+            top: -40,
+            right: -40,
             child: IgnorePointer(
               child: Container(
                 width: 180,
@@ -91,8 +91,7 @@ class ApplicationDetailScreen extends ConsumerWidget {
                         data: (d) => IconButton(
                           icon: Icon(Icons.delete_outline_rounded,
                               color: colors.destructive, size: 22),
-                          onPressed: () =>
-                              _confirmDelete(context, ref),
+                          onPressed: () => _confirmDelete(context, ref),
                         ),
                         orElse: () => const SizedBox.shrink(),
                       ),
@@ -113,8 +112,7 @@ class ApplicationDetailScreen extends ConsumerWidget {
                       borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(AppRadii.xl2)),
                       child: detailAsync.when(
-                        loading: () =>
-                            const ApplicationDetailSkeleton(),
+                        loading: () => const ApplicationDetailSkeleton(),
                         error: (e, _) => ApplicationErrorState(
                           error: e,
                           onRetry: () => ref.invalidate(
@@ -180,11 +178,11 @@ class _DetailContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).appColors;
-    final app    = detail.application;
+    final app = detail.application;
 
     return CustomScrollView(
-      physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics()),
+      physics:
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       slivers: [
         // ── Hero header ─────────────────────────────────────────────────
         SliverToBoxAdapter(
@@ -308,8 +306,7 @@ class _DetailContent extends ConsumerWidget {
         ),
 
         const SliverToBoxAdapter(
-          child: SizedBox(
-              height: AppSpacing.bottomNavH + AppSpacing.cardPad),
+          child: SizedBox(height: AppSpacing.bottomNavH + AppSpacing.cardPad),
         ),
       ],
     );
@@ -337,8 +334,7 @@ class _Section extends StatelessWidget {
           children: [
             Text(
               title,
-              style:
-                  AppTextStyles.title.copyWith(color: colors.foreground),
+              style: AppTextStyles.title.copyWith(color: colors.foreground),
             ),
             const SizedBox(height: 12),
             child,
@@ -408,15 +404,12 @@ class _StatusPicker extends ConsumerWidget {
             decoration: BoxDecoration(
               color: active ? fg : bg,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                  color: active ? fg : fg.withAlpha(60)),
+              border: Border.all(color: active ? fg : fg.withAlpha(60)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(s.icon,
-                    size: 13,
-                    color: active ? Colors.white : fg),
+                Icon(s.icon, size: 13, color: active ? Colors.white : fg),
                 const SizedBox(width: 5),
                 Text(
                   s.displayName,
@@ -446,8 +439,7 @@ class _LinkedResumeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.push(
-          AppRoutes.resumeDetail(version.resumeId)),
+      onTap: () => context.push(AppRoutes.resumeDetail(version.resumeId)),
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
@@ -457,8 +449,7 @@ class _LinkedResumeTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(Icons.description_outlined,
-                color: colors.primary, size: 24),
+            Icon(Icons.description_outlined, color: colors.primary, size: 24),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -469,8 +460,7 @@ class _LinkedResumeTile extends StatelessWidget {
                         version.targetRole ??
                         'Resume Version',
                     style: AppTextStyles.bodyMedium.copyWith(
-                        color: colors.foreground,
-                        fontWeight: FontWeight.w600),
+                        color: colors.foreground, fontWeight: FontWeight.w600),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -483,8 +473,7 @@ class _LinkedResumeTile extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.open_in_new_rounded,
-                size: 16, color: colors.primary),
+            Icon(Icons.open_in_new_rounded, size: 16, color: colors.primary),
           ],
         ),
       ),

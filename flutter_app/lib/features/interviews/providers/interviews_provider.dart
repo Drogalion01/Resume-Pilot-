@@ -39,11 +39,9 @@ class InterviewFormState {
 
 /// Handles add & edit form submission.
 /// Family param: applicationId (needed to invalidate detail after mutation).
-class InterviewFormNotifier
-    extends FamilyNotifier<InterviewFormState, int> {
+class InterviewFormNotifier extends FamilyNotifier<InterviewFormState, int> {
   @override
-  InterviewFormState build(int applicationId) =>
-      const InterviewFormState();
+  InterviewFormState build(int applicationId) => const InterviewFormState();
 
   /// Load an existing interview for editing.
   Future<void> loadForEdit(int interviewId) async {
@@ -76,18 +74,18 @@ class InterviewFormNotifier
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       await ref.read(interviewServiceProvider).createInterview(
-        applicationId: arg,
-        roundName: roundName,
-        interviewType: interviewType,
-        date: date,
-        time: time,
-        timezone: timezone,
-        interviewerName: interviewerName,
-        meetingLink: meetingLink,
-        status: status,
-        notes: notes,
-        reminderEnabled: reminderEnabled,
-      );
+            applicationId: arg,
+            roundName: roundName,
+            interviewType: interviewType,
+            date: date,
+            time: time,
+            timezone: timezone,
+            interviewerName: interviewerName,
+            meetingLink: meetingLink,
+            status: status,
+            notes: notes,
+            reminderEnabled: reminderEnabled,
+          );
       ref.invalidate(applicationDetailProvider(arg));
       state = state.copyWith(isLoading: false, isSaved: true);
       return true;
@@ -150,8 +148,9 @@ Future<void> updateInterviewStatus(
   required int interviewId,
   required InterviewStatus newStatus,
 }) async {
-  await ref.read(interviewServiceProvider).updateInterview(
-      interviewId, {'status': newStatus.name});
+  await ref
+      .read(interviewServiceProvider)
+      .updateInterview(interviewId, {'status': newStatus.name});
   ref.invalidate(applicationDetailProvider(applicationId));
 }
 

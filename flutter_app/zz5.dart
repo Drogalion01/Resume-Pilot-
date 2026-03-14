@@ -1,1 +1,16 @@
-import 'package:dio/dio.dart'; void main() async { var d = Dio(BaseOptions(baseUrl:'https://resume-pilot-lc1i.onrender.com/api/v1')); d.interceptors.add(InterceptorsWrapper(onRequest:(o, h) { print('URI=${o.uri}'); h.reject(DioException(requestOptions:o)); })); try { await d.post('/auth/login'); } catch(e){} try{ await d.post('auth/login'); } catch(e){} }
+import 'package:dio/dio.dart';
+
+void main() async {
+  var d = Dio(
+      BaseOptions(baseUrl: 'https://resume-pilot-lc1i.onrender.com/api/v1'));
+  d.interceptors.add(InterceptorsWrapper(onRequest: (o, h) {
+    print('URI=${o.uri}');
+    h.reject(DioException(requestOptions: o));
+  }));
+  try {
+    await d.post('/auth/login');
+  } catch (e) {}
+  try {
+    await d.post('auth/login');
+  } catch (e) {}
+}

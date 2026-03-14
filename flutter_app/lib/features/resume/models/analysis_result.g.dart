@@ -106,6 +106,7 @@ _$AnalysisResultResponseImpl _$$AnalysisResultResponseImplFromJson(
           const [],
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
+      status: json['status'] as String? ?? 'completed',
     );
 
 Map<String, dynamic> _$$AnalysisResultResponseImplToJson(
@@ -125,4 +126,5 @@ Map<String, dynamic> _$$AnalysisResultResponseImplToJson(
       'action_plan': instance.actionPlan,
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),
+      'status': instance.status,
     };

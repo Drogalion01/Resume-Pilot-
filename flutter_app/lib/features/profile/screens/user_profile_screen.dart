@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +21,7 @@ class UserProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors     = Theme.of(context).appColors;
+    final colors = Theme.of(context).appColors;
     final profileAsync = ref.watch(profileProvider);
 
     return Scaffold(
@@ -29,8 +29,8 @@ class UserProfileScreen extends ConsumerWidget {
       body: profileAsync.when(
         data: (p) => _ProfileLoaded(profile: p, colors: colors),
         loading: () => _ProfileLoadingView(colors: colors),
-        error: (e, _) => _ProfileErrorView(
-          message: e.toString(), colors: colors),
+        error: (e, _) =>
+            _ProfileErrorView(message: e.toString(), colors: colors),
       ),
     );
   }
@@ -43,14 +43,14 @@ class UserProfileScreen extends ConsumerWidget {
 class _ProfileLoaded extends ConsumerStatefulWidget {
   const _ProfileLoaded({required this.profile, required this.colors});
   final UserProfile profile;
-  final AppColors   colors;
+  final AppColors colors;
 
   @override
   ConsumerState<_ProfileLoaded> createState() => _ProfileLoadedState();
 }
 
 class _ProfileLoadedState extends ConsumerState<_ProfileLoaded> {
-  final _formKey   = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameCtrl;
   late final TextEditingController _initialsCtrl;
   bool _saving = false;
@@ -58,7 +58,7 @@ class _ProfileLoadedState extends ConsumerState<_ProfileLoaded> {
   @override
   void initState() {
     super.initState();
-    _nameCtrl     = TextEditingController(text: widget.profile.fullName);
+    _nameCtrl = TextEditingController(text: widget.profile.fullName);
     _initialsCtrl = TextEditingController(
       text: widget.profile.initials ?? '',
     );
@@ -81,9 +81,7 @@ class _ProfileLoadedState extends ConsumerState<_ProfileLoaded> {
         'initials': _initialsCtrl.text.trim().toUpperCase(),
     };
 
-    final ok = await ref
-        .read(profileProvider.notifier)
-        .updateProfile(fields);
+    final ok = await ref.read(profileProvider.notifier).updateProfile(fields);
 
     if (!mounted) return;
     setState(() => _saving = false);
@@ -102,8 +100,8 @@ class _ProfileLoadedState extends ConsumerState<_ProfileLoaded> {
 
   @override
   Widget build(BuildContext context) {
-    final colors  = widget.colors;
-    final isDark  = Theme.of(context).brightness == Brightness.dark;
+    final colors = widget.colors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final profile = widget.profile;
 
     return Stack(
@@ -257,8 +255,8 @@ class _ProfileAppBar extends StatelessWidget {
     required this.onSave,
   });
 
-  final AppColors  colors;
-  final bool       saving;
+  final AppColors colors;
+  final bool saving;
   final VoidCallback onSave;
 
   @override
@@ -277,8 +275,8 @@ class _ProfileAppBar extends StatelessWidget {
             Expanded(
               child: Text(
                 'Edit Profile',
-                style: AppTextStyles.headline
-                    .copyWith(color: colors.foreground),
+                style:
+                    AppTextStyles.headline.copyWith(color: colors.foreground),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -290,8 +288,7 @@ class _ProfileAppBar extends StatelessWidget {
                       height: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor:
-                            AlwaysStoppedAnimation(colors.primary),
+                        valueColor: AlwaysStoppedAnimation(colors.primary),
                       ),
                     )
                   : Text(
@@ -311,7 +308,7 @@ class _ProfileAppBar extends StatelessWidget {
 
 class _LargeAvatarCircle extends StatelessWidget {
   const _LargeAvatarCircle({required this.initials, required this.colors});
-  final String    initials;
+  final String initials;
   final AppColors colors;
 
   @override
@@ -355,7 +352,7 @@ class _LargeAvatarCircle extends StatelessWidget {
 
 class _EmailChip extends StatelessWidget {
   const _EmailChip({required this.email, required this.colors});
-  final String    email;
+  final String email;
   final AppColors colors;
 
   @override
@@ -372,7 +369,8 @@ class _EmailChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.lock_outline, size: 14, color: colors.foregroundTertiary),
+            Icon(Icons.lock_outline,
+                size: 14, color: colors.foregroundTertiary),
             const SizedBox(width: 6),
             Text(
               email,
@@ -394,8 +392,8 @@ class _FormCard extends StatelessWidget {
     required this.isDark,
     required this.colors,
   });
-  final Widget    child;
-  final bool      isDark;
+  final Widget child;
+  final bool isDark;
   final AppColors colors;
 
   @override
@@ -425,13 +423,13 @@ class _FormField extends StatelessWidget {
     this.validator,
   });
 
-  final TextEditingController   controller;
-  final String                  label;
-  final String                  hint;
-  final AppColors               colors;
-  final bool                    required;
-  final int?                    maxLength;
-  final TextCapitalization      textCapitalization;
+  final TextEditingController controller;
+  final String label;
+  final String hint;
+  final AppColors colors;
+  final bool required;
+  final int? maxLength;
+  final TextCapitalization textCapitalization;
   final FormFieldValidator<String>? validator;
 
   @override
@@ -465,8 +463,8 @@ class _FormField extends StatelessWidget {
               maxLength: maxLength,
               textCapitalization: textCapitalization,
               validator: validator,
-              style: AppTextStyles.bodyMedium
-                  .copyWith(color: colors.foreground),
+              style:
+                  AppTextStyles.bodyMedium.copyWith(color: colors.foreground),
               decoration: InputDecoration(
                 hintText: hint,
                 hintStyle: AppTextStyles.bodyMedium.copyWith(
@@ -504,12 +502,12 @@ class _AccountStatsCard extends StatelessWidget {
   });
 
   final UserProfile profile;
-  final bool        isDark;
-  final AppColors   colors;
+  final bool isDark;
+  final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
-    final joined    = DateFormat('MMMM yyyy').format(profile.createdAt);
+    final joined = DateFormat('MMMM yyyy').format(profile.createdAt);
     final daysSince = DateTime.now().difference(profile.createdAt).inDays;
 
     return DecoratedBox(
@@ -562,8 +560,8 @@ class _StatChip extends StatelessWidget {
     required this.label,
     required this.colors,
   });
-  final IconData  icon;
-  final String    label;
+  final IconData icon;
+  final String label;
   final AppColors colors;
 
   @override
@@ -600,8 +598,8 @@ class _SaveButton extends StatelessWidget {
     required this.colors,
     required this.onPressed,
   });
-  final bool       saving;
-  final AppColors  colors;
+  final bool saving;
+  final AppColors colors;
   final VoidCallback onPressed;
 
   @override
@@ -677,7 +675,7 @@ class _ProfileErrorView extends StatelessWidget {
     required this.message,
     required this.colors,
   });
-  final String    message;
+  final String message;
   final AppColors colors;
 
   @override

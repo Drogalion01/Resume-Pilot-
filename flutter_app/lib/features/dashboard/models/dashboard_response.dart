@@ -44,9 +44,9 @@ class DashboardResponse with _$DashboardResponse {
 @freezed
 class DashboardSummary with _$DashboardSummary {
   const factory DashboardSummary({
-    @JsonKey(name: 'total_resumes')       required int totalResumes,
-    @JsonKey(name: 'total_applications')  required int totalApplications,
-    @JsonKey(name: 'total_interviews')    required int totalInterviews,
+    @JsonKey(name: 'total_resumes') required int totalResumes,
+    @JsonKey(name: 'total_applications') required int totalApplications,
+    @JsonKey(name: 'total_interviews') required int totalInterviews,
   }) = _DashboardSummary;
 
   factory DashboardSummary.fromJson(Map<String, dynamic> json) =>

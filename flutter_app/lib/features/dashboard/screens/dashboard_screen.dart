@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/router/routes.dart';
@@ -8,6 +8,8 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/dashboard_provider.dart';
 import '../models/dashboard_response.dart';
+import '../../../shared/widgets/backgrounds/breathing_background.dart';
+
 import '../widgets/dashboard_header.dart';
 import '../widgets/dashboard_content_widgets.dart';
 import '../widgets/dashboard_states.dart';
@@ -32,138 +34,135 @@ class DashboardScreen extends ConsumerWidget {
     final state = ref.watch(dashboardProvider);
 
     return Scaffold(
-      backgroundColor: colors.background,
-      body: Stack(
-        children: [
-          // ── Gradient background ──────────────────────────────────────────
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: AppGradients.heroBackground(colors),
-              ),
-            ),
-          ),
-
-          // ── Ambient glow blobs ───────────────────────────────────────────
-          Positioned(
-            top: -60,
-            right: -60,
-            child: IgnorePointer(
+      backgroundColor: Colors.transparent,
+      body: BreathingBackground(
+        child: Stack(
+          children: [
+            // ── Gradient background ──────────────────────────────────────────
+            Positioned.fill(
               child: Container(
-                width: 220,
-                height: 220,
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: AppGradients.heroGlow1(colors),
+                  gradient: AppGradients.heroBackground(colors),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            top: 30,
-            left: -40,
-            child: IgnorePointer(
-              child: Container(
-                width: 160,
-                height: 160,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: AppGradients.heroGlow2(colors),
+
+            // ── Ambient glow blobs ───────────────────────────────────────────
+            Positioned(
+              top: -60,
+              right: -60,
+              child: IgnorePointer(
+                child: Container(
+                  width: 220,
+                  height: 220,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: AppGradients.heroGlow1(colors),
+                  ),
                 ),
               ),
             ),
-          ),
-
-          // ── Main content ─────────────────────────────────────────────────
-          SafeArea(
-            bottom: false,
-            child: Column(
-              children: [
-                // Header section (fixed height)
-                SizedBox(
-                  height: 110,
-                  child: state.whenOrNull(
-                    data: (data) => DashboardHeader(user: data.user),
-                  ) ??
-                      // Skeleton / error: show placeholder row
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.pageH)
-                            .copyWith(top: 16, bottom: 12),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: 80,
-                                    height: 14,
-                                    decoration: BoxDecoration(
-                                      color: colors.primaryLight,
-                                      borderRadius:
-                                          BorderRadius.circular(6),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Container(
-                                    width: 140,
-                                    height: 18,
-                                    decoration: BoxDecoration(
-                                      color: colors.primaryMuted,
-                                      borderRadius:
-                                          BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: colors.primaryLight,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+            Positioned(
+              top: 30,
+              left: -40,
+              child: IgnorePointer(
+                child: Container(
+                  width: 160,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: AppGradients.heroGlow2(colors),
+                  ),
                 ),
+              ),
+            ),
 
-                // Content surface
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colors.surfacePrimary,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(AppRadii.xl2),
-                      ),
-                      boxShadow: AppShadows.elevated(brightness),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(AppRadii.xl2),
-                      ),
-                      child: state.when(
-                        loading: () => const DashboardSkeleton(),
-                        error: (e, _) => DashboardError(
-                          error: e,
-                          onRetry: () =>
-                              ref.invalidate(dashboardProvider),
+            // ── Main content ─────────────────────────────────────────────────
+            SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  // Header section (fixed height)
+                  SizedBox(
+                    height: 110,
+                    child: state.whenOrNull(
+                          data: (data) => DashboardHeader(user: data.user),
+                        ) ??
+                        // Skeleton / error: show placeholder row
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.pageH)
+                              .copyWith(top: 16, bottom: 12),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 80,
+                                      height: 14,
+                                      decoration: BoxDecoration(
+                                        color: colors.primaryLight,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Container(
+                                      width: 140,
+                                      height: 18,
+                                      decoration: BoxDecoration(
+                                        color: colors.primaryMuted,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: colors.primaryLight,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        data: (data) =>
-                            _DashboardContent(data: data),
+                  ),
+
+                  // Content surface
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(AppRadii.xl2),
+                        ),
+                        boxShadow: AppShadows.elevated(brightness),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(AppRadii.xl2),
+                        ),
+                        child: state.when(
+                          loading: () => const DashboardSkeleton(),
+                          error: (e, _) => DashboardError(
+                            error: e,
+                            onRetry: () => ref.invalidate(dashboardProvider),
+                          ),
+                          data: (data) => _DashboardContent(data: data),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -187,8 +186,8 @@ class _DashboardContent extends StatelessWidget {
     if (isEmpty) return const DashboardEmpty();
 
     return CustomScrollView(
-      physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics()),
+      physics:
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       slivers: [
         // Top padding
         const SliverToBoxAdapter(child: SizedBox(height: 8)),
@@ -217,8 +216,7 @@ class _DashboardContent extends StatelessWidget {
           ),
           SliverList.builder(
             itemCount: data.recentResumes.length,
-            itemBuilder: (_, i) =>
-                ResumeTile(resume: data.recentResumes[i]),
+            itemBuilder: (_, i) => ResumeTile(resume: data.recentResumes[i]),
           ),
         ],
 
@@ -246,8 +244,8 @@ class _DashboardContent extends StatelessWidget {
           ),
           SliverList.builder(
             itemCount: data.recentApplications.length,
-            itemBuilder: (_, i) => ApplicationTile(
-                application: data.recentApplications[i]),
+            itemBuilder: (_, i) =>
+                ApplicationTile(application: data.recentApplications[i]),
           ),
         ],
 

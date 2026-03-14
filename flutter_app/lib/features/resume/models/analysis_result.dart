@@ -93,11 +93,10 @@ class AnalysisResultResponse with _$AnalysisResultResponse {
     @Default([])
     List<MissingKeywordItem> missingKeywords,
     @Default([]) List<RewriteItem> rewrites,
-    @JsonKey(name: 'action_plan')
-    @Default([])
-    List<ActionPlanItem> actionPlan,
+    @JsonKey(name: 'action_plan') @Default([]) List<ActionPlanItem> actionPlan,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @Default('completed') String status,
   }) = _AnalysisResultResponse;
 
   factory AnalysisResultResponse.fromJson(Map<String, dynamic> json) =>

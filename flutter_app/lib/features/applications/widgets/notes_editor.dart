@@ -36,8 +36,7 @@ class _NotesEditorState extends ConsumerState<NotesEditor> {
   void didUpdateWidget(NotesEditor old) {
     super.didUpdateWidget(old);
     if (old.notes != widget.notes && !_editing) {
-      _ctrl.text =
-          widget.notes.isNotEmpty ? widget.notes.first.content : '';
+      _ctrl.text = widget.notes.isNotEmpty ? widget.notes.first.content : '';
     }
   }
 
@@ -125,8 +124,8 @@ class _NotesEditorState extends ConsumerState<NotesEditor> {
                 children: [
                   Text(
                     widget.notes.first.content,
-                    style: AppTextStyles.body
-                        .copyWith(color: colors.foreground),
+                    style:
+                        AppTextStyles.body.copyWith(color: colors.foreground),
                     maxLines: 6,
                     overflow: TextOverflow.fade,
                   ),

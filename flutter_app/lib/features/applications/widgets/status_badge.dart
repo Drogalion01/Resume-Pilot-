@@ -7,25 +7,25 @@ import '../models/application.dart';
 
 extension ApplicationStatusColors on ApplicationStatus {
   Color foreground(AppColors c) => switch (this) {
-        ApplicationStatus.saved       => c.statusSaved,
-        ApplicationStatus.applied     => c.statusApplied,
-        ApplicationStatus.assessment  => c.statusAssessment,
-        ApplicationStatus.hr          => c.statusHr,
-        ApplicationStatus.technical   => c.statusTechnical,
-        ApplicationStatus.finalRound  => c.statusFinal,
-        ApplicationStatus.offer       => c.statusOffer,
-        ApplicationStatus.rejected    => c.statusRejected,
+        ApplicationStatus.saved => c.statusSaved,
+        ApplicationStatus.applied => c.statusApplied,
+        ApplicationStatus.assessment => c.statusAssessment,
+        ApplicationStatus.hr => c.statusHr,
+        ApplicationStatus.technical => c.statusTechnical,
+        ApplicationStatus.finalRound => c.statusFinal,
+        ApplicationStatus.offer => c.statusOffer,
+        ApplicationStatus.rejected => c.statusRejected,
       };
 
   Color background(AppColors c) => switch (this) {
-        ApplicationStatus.saved       => c.statusSavedBg,
-        ApplicationStatus.applied     => c.statusAppliedBg,
-        ApplicationStatus.assessment  => c.statusAssessmentBg,
-        ApplicationStatus.hr          => c.statusHrBg,
-        ApplicationStatus.technical   => c.statusTechnicalBg,
-        ApplicationStatus.finalRound  => c.statusFinalBg,
-        ApplicationStatus.offer       => c.statusOfferBg,
-        ApplicationStatus.rejected    => c.statusRejectedBg,
+        ApplicationStatus.saved => c.statusSavedBg,
+        ApplicationStatus.applied => c.statusAppliedBg,
+        ApplicationStatus.assessment => c.statusAssessmentBg,
+        ApplicationStatus.hr => c.statusHrBg,
+        ApplicationStatus.technical => c.statusTechnicalBg,
+        ApplicationStatus.finalRound => c.statusFinalBg,
+        ApplicationStatus.offer => c.statusOfferBg,
+        ApplicationStatus.rejected => c.statusRejectedBg,
       };
 }
 

@@ -19,10 +19,10 @@ class EmptyState extends StatelessWidget {
     this.compact = false,
   });
 
-  final IconData     icon;
-  final String       title;
-  final String?      description;
-  final String?      actionLabel;
+  final IconData icon;
+  final String title;
+  final String? description;
+  final String? actionLabel;
   final VoidCallback? onAction;
 
   /// Smaller layout for inline empty sections inside a card.
@@ -32,9 +32,9 @@ class EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
 
-    final iconSize  = compact ? 36.0 : 52.0;
-    final boxSize   = compact ? 72.0 : 100.0;
-    final vPad      = compact ? AppSpacing.px24 : AppSpacing.px48;
+    final iconSize = compact ? 36.0 : 52.0;
+    final boxSize = compact ? 72.0 : 100.0;
+    final vPad = compact ? AppSpacing.px24 : AppSpacing.px48;
 
     return Padding(
       padding: EdgeInsets.symmetric(

@@ -39,12 +39,11 @@ sealed class AuthState with _$AuthState {
 
 extension AuthStateX on AuthState {
   bool get isAuthenticated => this is AuthStateAuthenticated;
-  bool get isInitial       => this is AuthStateInitial;
-  bool get isChecking      => this is AuthStateChecking;
+  bool get isInitial => this is AuthStateInitial;
+  bool get isChecking => this is AuthStateChecking;
   bool get isUnauthenticated => this is AuthStateUnauthenticated;
 
   /// Convenience — returns null if not authenticated.
   AuthStateAuthenticated? get asAuthenticated =>
       isAuthenticated ? this as AuthStateAuthenticated : null;
 }
-

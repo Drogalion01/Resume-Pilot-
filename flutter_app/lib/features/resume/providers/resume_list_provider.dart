@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/resume_service.dart';
 import '../models/resume_version.dart';
 
-class ResumeListNotifier
-    extends AsyncNotifier<List<ResumeResponse>> {
+class ResumeListNotifier extends AsyncNotifier<List<ResumeResponse>> {
   @override
   Future<List<ResumeResponse>> build() =>
       ref.watch(resumeServiceProvider).getResumes();

@@ -13,6 +13,8 @@ import '../../applications/models/application.dart';
 import '../../interviews/models/interview.dart';
 import '../../resume/models/resume_version.dart';
 import '../models/dashboard_response.dart';
+import '../../../shared/widgets/animations/animated_counter_text.dart';
+import '../../../shared/widgets/cards/glass_card.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // InsightCard
@@ -27,58 +29,51 @@ class InsightCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(
+    return Padding(
+      padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.pageH,
         vertical: 8,
       ),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [colors.primaryLight, colors.primaryMuted],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(AppRadii.card),
-        boxShadow: AppShadows.card(Theme.of(context).brightness),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white.withAlpha(51),
-              borderRadius: BorderRadius.circular(10),
+      child: GlassCard(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withAlpha(51),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(Icons.lightbulb_outline,
+                  color: colors.primary, size: 20),
             ),
-            child: Icon(Icons.lightbulb_outline,
-                color: colors.primary, size: 20),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  insight.trendingStat,
-                  style: AppTextStyles.title
-                      .copyWith(color: colors.foreground),
-                ),
-                if (insight.description != null &&
-                    insight.description!.isNotEmpty) ...[
-                  const SizedBox(height: 4),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    insight.description!,
-                    style: AppTextStyles.caption
-                        .copyWith(color: colors.foregroundSecondary),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    insight.trendingStat,
+                    style:
+                        AppTextStyles.title.copyWith(color: colors.foreground),
                   ),
+                  if (insight.description != null &&
+                      insight.description!.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      insight.description!,
+                      style: AppTextStyles.caption
+                          .copyWith(color: colors.foregroundSecondary),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -151,9 +146,9 @@ class _StatChip extends StatelessWidget {
           children: [
             Icon(icon, size: 18, color: colors.primary),
             const SizedBox(height: 4),
-            Text(
-              '$value',
-              style: AppTextStyles.title.copyWith(color: colors.foreground),
+            AnimatedCounterText(
+              targetValue: value.toDouble(),
+              textStyle: AppTextStyles.title.copyWith(color: colors.foreground),
             ),
             Text(
               label,
@@ -284,8 +279,7 @@ class SectionHeader extends StatelessWidget {
             TextButton(
               onPressed: () => context.push(seeAllRoute!),
               style: TextButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
@@ -327,7 +321,8 @@ class ResumeTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         alignment: Alignment.center,
-        child: Icon(Icons.description_outlined, color: colors.primary, size: 20),
+        child:
+            Icon(Icons.description_outlined, color: colors.primary, size: 20),
       ),
       title: Text(
         resume.title,
@@ -340,8 +335,8 @@ class ResumeTile extends StatelessWidget {
       ),
       subtitle: Text(
         dateLabel,
-        style: AppTextStyles.caption
-            .copyWith(color: colors.foregroundSecondary),
+        style:
+            AppTextStyles.caption.copyWith(color: colors.foregroundSecondary),
       ),
       trailing: _FileTypeBadge(label: resume.fileTypeLabel, colors: colors),
     );
@@ -433,8 +428,8 @@ class InterviewTile extends StatelessWidget {
       ),
       subtitle: Text(
         typeLabel,
-        style: AppTextStyles.caption
-            .copyWith(color: colors.foregroundSecondary),
+        style:
+            AppTextStyles.caption.copyWith(color: colors.foregroundSecondary),
       ),
       trailing: _InterviewStatusBadge(status: interview.status, colors: colors),
     );
@@ -530,13 +525,13 @@ class ApplicationTile extends StatelessWidget {
       ),
       subtitle: Text(
         application.role,
-        style: AppTextStyles.caption
-            .copyWith(color: colors.foregroundSecondary),
+        style:
+            AppTextStyles.caption.copyWith(color: colors.foregroundSecondary),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      trailing: _ApplicationStatusBadge(
-          status: application.status, colors: colors),
+      trailing:
+          _ApplicationStatusBadge(status: application.status, colors: colors),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+import '../../../shared/widgets/animations/premium_shimmer.dart';
 
 import '../../../core/error/app_exception.dart';
 import '../../../core/theme/app_spacing.dart';
@@ -19,12 +19,8 @@ class DashboardSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
-    final base = colors.surfaceSecondary;
-    final highlight = colors.primaryLight;
 
-    return Shimmer.fromColors(
-      baseColor: base,
-      highlightColor: highlight,
+    return PremiumShimmer(
       child: ListView(
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.pageH,
@@ -162,8 +158,8 @@ class DashboardEmpty extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
-              child:
-                  Icon(Icons.rocket_launch_outlined, color: colors.primary, size: 36),
+              child: Icon(Icons.rocket_launch_outlined,
+                  color: colors.primary, size: 36),
             ),
             const SizedBox(height: 20),
             Text(

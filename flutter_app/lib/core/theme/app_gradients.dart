@@ -39,7 +39,7 @@ abstract class AppGradients {
   /// Hero radial glow layers as separate gradients to be rendered additively.
   /// Render heroGlow1 → heroGlow2 → heroGlow3 in stacked Containers.
   static RadialGradient heroGlow1(AppColors colors) => RadialGradient(
-        center: const Alignment(-0.6, -0.4),   // 20% x, 30% y
+        center: const Alignment(-0.6, -0.4), // 20% x, 30% y
         radius: 1.2,
         colors: [
           colors.heroGradient1.withValues(alpha: 0.85),
@@ -48,7 +48,7 @@ abstract class AppGradients {
       );
 
   static RadialGradient heroGlow2(AppColors colors) => RadialGradient(
-        center: const Alignment(0.6, 0.4),     // 80% x, 70% y
+        center: const Alignment(0.6, 0.4), // 80% x, 70% y
         radius: 1.1,
         colors: [
           colors.heroGradient2.withValues(alpha: 0.80),
@@ -58,7 +58,7 @@ abstract class AppGradients {
 
   /// Gold shimmer accent layered on top of hero glows (opacity 0.45 in CSS)
   static RadialGradient heroGoldGlow(AppColors colors) => RadialGradient(
-        center: const Alignment(0.5, 0.2),     // 75% x, 60% y
+        center: const Alignment(0.5, 0.2), // 75% x, 60% y
         radius: 0.9,
         colors: [
           colors.heroGoldGlow.withValues(alpha: 0.45),

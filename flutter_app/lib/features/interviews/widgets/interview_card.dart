@@ -23,7 +23,7 @@ class InterviewCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors   = Theme.of(context).appColors;
+    final colors = Theme.of(context).appColors;
     final dateLabel = DateFormat('EEE, MMM d yyyy').format(interview.date);
     final timeLabel = interview.parsedTime?.format(context);
 
@@ -128,11 +128,9 @@ class InterviewCard extends ConsumerWidget {
           ),
 
           // ── Notes preview ────────────────────────────────────────────
-          if (interview.notes != null &&
-              interview.notes!.isNotEmpty)
+          if (interview.notes != null && interview.notes!.isNotEmpty)
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               child: Text(
                 interview.notes!,
                 style: AppTextStyles.caption
@@ -146,8 +144,7 @@ class InterviewCard extends ConsumerWidget {
 
           // ── Action row ───────────────────────────────────────────────
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
             child: Row(
               children: [
                 // Reminder toggle
@@ -164,12 +161,12 @@ class InterviewCard extends ConsumerWidget {
                       size: 15, color: colors.primary),
                   label: Text(
                     'Edit',
-                    style: AppTextStyles.caption
-                        .copyWith(color: colors.primary),
+                    style:
+                        AppTextStyles.caption.copyWith(color: colors.primary),
                   ),
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   ),
                 ),
                 // Delete
@@ -185,12 +182,14 @@ class InterviewCard extends ConsumerWidget {
     );
   }
 
-  (Color, Color) _statusColors(InterviewStatus s, AppColors c) =>
-      switch (s) {
-        InterviewStatus.scheduled   => (c.statusApplied, c.statusAppliedBg),
-        InterviewStatus.completed   => (c.statusOffer, c.statusOfferBg),
-        InterviewStatus.rescheduled => (c.statusAssessment, c.statusAssessmentBg),
-        InterviewStatus.cancelled   => (c.statusRejected, c.statusRejectedBg),
+  (Color, Color) _statusColors(InterviewStatus s, AppColors c) => switch (s) {
+        InterviewStatus.scheduled => (c.statusApplied, c.statusAppliedBg),
+        InterviewStatus.completed => (c.statusOffer, c.statusOfferBg),
+        InterviewStatus.rescheduled => (
+            c.statusAssessment,
+            c.statusAssessmentBg
+          ),
+        InterviewStatus.cancelled => (c.statusRejected, c.statusRejectedBg),
       };
 }
 
@@ -245,8 +244,8 @@ class _ReminderToggleState extends ConsumerState<_ReminderToggle> {
         const SizedBox(width: 2),
         Text(
           'Reminder',
-          style: AppTextStyles.micro
-              .copyWith(color: colors.foregroundSecondary),
+          style:
+              AppTextStyles.micro.copyWith(color: colors.foregroundSecondary),
         ),
       ],
     );
@@ -276,8 +275,7 @@ class _DeleteButtonState extends ConsumerState<_DeleteButton> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Interview'),
-        content: Text(
-            'Remove "${widget.interview.roundName}" interview?'),
+        content: Text('Remove "${widget.interview.roundName}" interview?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -285,8 +283,7 @@ class _DeleteButtonState extends ConsumerState<_DeleteButton> {
           ),
           TextButton(
             style: TextButton.styleFrom(
-                foregroundColor:
-                    Theme.of(ctx).appColors.destructive),
+                foregroundColor: Theme.of(ctx).appColors.destructive),
             onPressed: () => Navigator.pop(ctx, true),
             child: const Text('Delete'),
           ),
@@ -321,7 +318,8 @@ class _DeleteButtonState extends ConsumerState<_DeleteButton> {
             onPressed: _confirmDelete,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             constraints: const BoxConstraints(),
-            style: IconButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+            style: IconButton.styleFrom(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
           );
   }
 }

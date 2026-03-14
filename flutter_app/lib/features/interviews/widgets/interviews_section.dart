@@ -50,21 +50,20 @@ class InterviewsSection extends StatelessWidget {
           ),
         const SizedBox(height: 8),
         OutlinedButton.icon(
-          onPressed: () =>
-              context.push(AppRoutes.addInterview(applicationId)),
+          onPressed: () => context.push(AppRoutes.addInterview(applicationId)),
           icon: const Icon(Icons.add_rounded, size: 16),
           label: const Text('Schedule Interview'),
-          style: OutlinedButton.styleFrom(
-              minimumSize: const Size.fromHeight(40)),
+          style:
+              OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(40)),
         ),
       ],
     );
   }
 
   int _rank(InterviewStatus s) => switch (s) {
-        InterviewStatus.scheduled   => 0,
+        InterviewStatus.scheduled => 0,
         InterviewStatus.rescheduled => 1,
-        InterviewStatus.completed   => 2,
-        InterviewStatus.cancelled   => 3,
+        InterviewStatus.completed => 2,
+        InterviewStatus.cancelled => 3,
       };
 }

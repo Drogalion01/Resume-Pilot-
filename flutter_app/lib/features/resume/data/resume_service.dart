@@ -156,6 +156,15 @@ class ResumeService {
       return AnalysisResultResponse.fromJson(res.data!);
     });
   }
+
+  // --- NEW: Polling route ---
+  Future<AnalysisResultResponse> checkAnalysisStatus(int analysisId) async {
+    return _run(() async {
+      final res = await _dio
+          .get<Map<String, dynamic>>('resumes/analyze/$analysisId/status');
+      return AnalysisResultResponse.fromJson(res.data!);
+    });
+  }
 }
 
 final resumeServiceProvider = Provider<ResumeService>(

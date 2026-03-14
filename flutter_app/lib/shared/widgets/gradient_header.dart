@@ -121,10 +121,10 @@ class AppScaffold extends StatelessWidget {
     this.resizeToAvoidBottomInset = true,
   });
 
-  final Widget  body;
+  final Widget body;
   final Widget? header;
   final Widget? floatingActionButton;
-  final bool    resizeToAvoidBottomInset;
+  final bool resizeToAvoidBottomInset;
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +166,7 @@ class GradientPageTitle extends StatelessWidget {
     this.trailing,
   });
 
-  final String  title;
+  final String title;
   final String? subtitle;
   final Widget? trailing;
 
@@ -176,7 +176,10 @@ class GradientPageTitle extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-        AppSpacing.pageH, AppSpacing.px20, AppSpacing.pageH, AppSpacing.px8,
+        AppSpacing.pageH,
+        AppSpacing.px20,
+        AppSpacing.pageH,
+        AppSpacing.px8,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -187,8 +190,8 @@ class GradientPageTitle extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: AppTextStyles.display
-                      .copyWith(color: colors.foreground),
+                  style:
+                      AppTextStyles.display.copyWith(color: colors.foreground),
                 ),
                 if (subtitle != null)
                   Text(

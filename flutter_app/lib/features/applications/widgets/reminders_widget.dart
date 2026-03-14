@@ -45,8 +45,7 @@ class RemindersWidget extends ConsumerWidget {
           ),
         const SizedBox(height: 8),
         OutlinedButton.icon(
-          onPressed: () =>
-              _showAddReminderSheet(context, notifier),
+          onPressed: () => _showAddReminderSheet(context, notifier),
           icon: const Icon(Icons.alarm_add_outlined, size: 16),
           label: const Text('Add Reminder'),
           style: OutlinedButton.styleFrom(
@@ -82,8 +81,7 @@ class _ReminderTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
     final dateLabel = reminder.scheduledFor != null
-        ? DateFormat('MMM d, h:mm a')
-            .format(reminder.scheduledFor!.toLocal())
+        ? DateFormat('MMM d, h:mm a').format(reminder.scheduledFor!.toLocal())
         : null;
 
     return Padding(
@@ -175,8 +173,8 @@ class _AddReminderSheetState extends State<_AddReminderSheet> {
     );
     if (time == null) return;
     setState(() {
-      _scheduledFor = DateTime(
-          date.year, date.month, date.day, time.hour, time.minute);
+      _scheduledFor =
+          DateTime(date.year, date.month, date.day, time.hour, time.minute);
     });
   }
 
@@ -192,8 +190,7 @@ class _AddReminderSheetState extends State<_AddReminderSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text('Add Reminder',
-              style: AppTextStyles.headline
-                  .copyWith(color: colors.foreground)),
+              style: AppTextStyles.headline.copyWith(color: colors.foreground)),
           const SizedBox(height: 16),
           TextFormField(
             controller: _titleCtrl,
@@ -215,8 +212,7 @@ class _AddReminderSheetState extends State<_AddReminderSheet> {
           ),
           const SizedBox(height: 16),
           FilledButton(
-            onPressed:
-                _saving || _titleCtrl.text.trim().isEmpty ? null : _save,
+            onPressed: _saving || _titleCtrl.text.trim().isEmpty ? null : _save,
             child: _saving
                 ? const SizedBox.square(
                     dimension: 18,

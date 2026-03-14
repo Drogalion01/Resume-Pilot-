@@ -72,7 +72,7 @@ abstract class AppShadows {
   /// Card hover / interactive press shadow  (purple tinted)
   static const List<BoxShadow> cardHoverLight = [
     BoxShadow(
-      color: Color(0x1A4A3975),  // purple 10%
+      color: Color(0x1A4A3975), // purple 10%
       blurRadius: 14,
       spreadRadius: -2,
       offset: Offset(0, 4),
@@ -88,7 +88,7 @@ abstract class AppShadows {
   /// Elevated state shadow  (purple tinted, stronger)
   static const List<BoxShadow> elevatedLight = [
     BoxShadow(
-      color: Color(0x1F4A3975),  // purple 12%
+      color: Color(0x1F4A3975), // purple 12%
       blurRadius: 24,
       spreadRadius: -6,
       offset: Offset(0, 8),
@@ -113,7 +113,7 @@ abstract class AppShadows {
   /// FAB shadow  (purple tinted, prominent)
   static const List<BoxShadow> fabLight = [
     BoxShadow(
-      color: Color(0x404A3975),  // purple 25%
+      color: Color(0x404A3975), // purple 25%
       blurRadius: 16,
       spreadRadius: -3,
       offset: Offset(0, 6),
@@ -179,7 +179,7 @@ abstract class AppShadows {
 
   static const List<BoxShadow> cardHoverDark = [
     BoxShadow(
-      color: Color(0x1F8A6DC2),  // dark-primary 12%
+      color: Color(0x1F8A6DC2), // dark-primary 12%
       blurRadius: 12,
       spreadRadius: -2,
       offset: Offset(0, 4),
@@ -194,7 +194,7 @@ abstract class AppShadows {
 
   static const List<BoxShadow> elevatedDark = [
     BoxShadow(
-      color: Color(0x248A6DC2),  // dark-primary 14%
+      color: Color(0x248A6DC2), // dark-primary 14%
       blurRadius: 24,
       spreadRadius: -6,
       offset: Offset(0, 8),
@@ -217,7 +217,7 @@ abstract class AppShadows {
 
   static const List<BoxShadow> fabDark = [
     BoxShadow(
-      color: Color(0x3D8A6DC2),  // dark-primary 24%
+      color: Color(0x3D8A6DC2), // dark-primary 24%
       blurRadius: 16,
       spreadRadius: -3,
       offset: Offset(0, 6),

@@ -41,7 +41,7 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     super.dispose();
   }
 
-    Future<void> _verifyOtpWithPhp() async {
+  Future<void> _verifyOtpWithPhp() async {
     final response = await http.post(
       Uri.parse('${_bdappsPhpBaseUrl}verify_otp.php'),
       body: {
@@ -82,7 +82,9 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
           if (data is Map<String, dynamic>) {
-            final status = (data['subscriptionStatus']?.toString() ?? '').trim().toUpperCase();
+            final status = (data['subscriptionStatus']?.toString() ?? '')
+                .trim()
+                .toUpperCase();
             if (status == 'REGISTERED') {
               return true;
             }
@@ -104,12 +106,14 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
 
     try {
       await _verifyOtpWithPhp();
-      
+
       final subscribed = await _waitForSubscriptionSync();
       if (!mounted) return;
 
       if (!subscribed) {
-        _showMessage('সাবস্ক্রিপশন চলছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।', isError: true);
+        _showMessage(
+            'সাবস্ক্রিপশন চলছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।',
+            isError: true);
         setState(() => _loading = false);
         return;
       }
@@ -117,7 +121,7 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
       await ref
           .read(authNotifierProvider.notifier)
           .sessionByPhone(phone: widget.subscriberId);
-          
+
       _showMessage('যাচাই সফল হয়েছে', isError: false);
     } on AppException catch (e) {
       if (mounted) {
@@ -127,12 +131,14 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _error = const ServerException(500, 'Unexpected error'));
-        _showMessage('নেটওয়ার্ক সমস্যা হয়েছে: ${e.toString()}', isError: true);
+        _showMessage('নেটওয়ার্ক সমস্যা হয়েছে: ${e.toString()}',
+            isError: true);
       }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
+
   void _showMessage(String text, {required bool isError}) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(

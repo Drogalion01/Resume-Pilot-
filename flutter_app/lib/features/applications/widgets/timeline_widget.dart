@@ -17,8 +17,8 @@ class TimelineWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Text(
           'No activity yet.',
-          style: AppTextStyles.caption.copyWith(
-              color: Theme.of(context).appColors.foregroundSecondary),
+          style: AppTextStyles.caption
+              .copyWith(color: Theme.of(context).appColors.foregroundSecondary),
         ),
       );
     }
@@ -45,18 +45,19 @@ class _TimelineItem extends StatelessWidget {
   final bool isLast;
 
   static IconData _iconFor(String type) => switch (type) {
-        'created'            => Icons.add_circle_outline,
-        'status_change'      => Icons.swap_horiz_rounded,
-        'reminder_added'     => Icons.alarm_add_outlined,
+        'created' => Icons.add_circle_outline,
+        'status_change' => Icons.swap_horiz_rounded,
+        'reminder_added' => Icons.alarm_add_outlined,
         'reminder_completed' => Icons.task_alt_outlined,
-        'note_added'         => Icons.sticky_note_2_outlined,
-        _                    => Icons.circle_outlined,
+        'note_added' => Icons.sticky_note_2_outlined,
+        _ => Icons.circle_outlined,
       };
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
-    final dateLabel = DateFormat('MMM d, h:mm a').format(event.createdAt.toLocal());
+    final dateLabel =
+        DateFormat('MMM d, h:mm a').format(event.createdAt.toLocal());
 
     return IntrinsicHeight(
       child: Row(
@@ -102,8 +103,7 @@ class _TimelineItem extends StatelessWidget {
                   Text(
                     event.title,
                     style: AppTextStyles.bodyMedium.copyWith(
-                        color: colors.foreground,
-                        fontWeight: FontWeight.w600),
+                        color: colors.foreground, fontWeight: FontWeight.w600),
                   ),
                   if (event.detail != null) ...[
                     const SizedBox(height: 2),

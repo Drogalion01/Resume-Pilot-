@@ -76,7 +76,8 @@ class ResumeAnalysisScreen extends ConsumerWidget {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.save_outlined, color: colors.foreground),
+                        icon:
+                            Icon(Icons.save_outlined, color: colors.foreground),
                         tooltip: 'Save version',
                         onPressed: () =>
                             _showSaveVersionSheet(context, ref, resumeId),
@@ -104,8 +105,8 @@ class ResumeAnalysisScreen extends ConsumerWidget {
                           onRetry: () =>
                               ref.invalidate(resumeAnalysisProvider(resumeId)),
                         ),
-                        data: (analysis) =>
-                            _AnalysisContent(analysis: analysis, resumeId: resumeId),
+                        data: (analysis) => _AnalysisContent(
+                            analysis: analysis, resumeId: resumeId),
                       ),
                     ),
                   ),
@@ -143,8 +144,8 @@ class _AnalysisContent extends StatelessWidget {
     final rec = (analysis.recruiterScore ?? 0).toDouble();
 
     return CustomScrollView(
-      physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics()),
+      physics:
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       slivers: [
         // ── Dual score hero ──────────────────────────────────────────────
         SliverToBoxAdapter(
@@ -154,8 +155,8 @@ class _AnalysisContent extends StatelessWidget {
               children: [
                 Text(
                   analysis.overallLabel ?? ScoreHelper.labelFromScore(ats),
-                  style: AppTextStyles.display
-                      .copyWith(color: colors.foreground),
+                  style:
+                      AppTextStyles.display.copyWith(color: colors.foreground),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -257,8 +258,7 @@ class _AnalysisContent extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.pageH, vertical: 20),
             child: OutlinedButton.icon(
-              onPressed: () =>
-                  context.push(AppRoutes.resumeVersions(resumeId)),
+              onPressed: () => context.push(AppRoutes.resumeVersions(resumeId)),
               icon: const Icon(Icons.history_outlined, size: 18),
               label: const Text('View Versions'),
             ),
@@ -266,8 +266,7 @@ class _AnalysisContent extends StatelessWidget {
         ),
 
         const SliverToBoxAdapter(
-          child: SizedBox(
-              height: AppSpacing.bottomNavH + AppSpacing.cardPad),
+          child: SizedBox(height: AppSpacing.bottomNavH + AppSpacing.cardPad),
         ),
       ],
     );
@@ -303,8 +302,8 @@ class _ScoreCol extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           label,
-          style: AppTextStyles.caption
-              .copyWith(color: colors.foregroundSecondary),
+          style:
+              AppTextStyles.caption.copyWith(color: colors.foregroundSecondary),
         ),
       ],
     );
@@ -350,8 +349,8 @@ class _BreakdownBar extends StatelessWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.pageH, vertical: 6),
+      padding:
+          const EdgeInsets.symmetric(horizontal: AppSpacing.pageH, vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -394,21 +393,21 @@ class _IssueRow extends StatelessWidget {
   final AppColors colors;
 
   static Color _severityColor(String s, AppColors c) => switch (s) {
-        'high'   => c.statusRejected,
+        'high' => c.statusRejected,
         'medium' => c.statusAssessment,
-        _        => c.statusApplied,
+        _ => c.statusApplied,
       };
 
   static Color _severityBg(String s, AppColors c) => switch (s) {
-        'high'   => c.statusRejectedBg,
+        'high' => c.statusRejectedBg,
         'medium' => c.statusAssessmentBg,
-        _        => c.statusAppliedBg,
+        _ => c.statusAppliedBg,
       };
 
   static IconData _severityIcon(String s) => switch (s) {
-        'high'   => Icons.error_outline,
+        'high' => Icons.error_outline,
         'medium' => Icons.warning_amber_outlined,
-        _        => Icons.info_outline,
+        _ => Icons.info_outline,
       };
 
   @override
@@ -417,8 +416,8 @@ class _IssueRow extends StatelessWidget {
     final bg = _severityBg(item.severity, colors);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.pageH, vertical: 5),
+      padding:
+          const EdgeInsets.symmetric(horizontal: AppSpacing.pageH, vertical: 5),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -433,23 +432,23 @@ class _IssueRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: bg,
                     borderRadius: BorderRadius.circular(AppRadii.badge),
                   ),
                   child: Text(
                     item.severity.toUpperCase(),
-                    style: AppTextStyles.micro.copyWith(
-                        color: fg, fontWeight: FontWeight.w700),
+                    style: AppTextStyles.micro
+                        .copyWith(color: fg, fontWeight: FontWeight.w700),
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   item.description,
-                  style: AppTextStyles.caption
-                      .copyWith(color: colors.foreground),
+                  style:
+                      AppTextStyles.caption.copyWith(color: colors.foreground),
                 ),
               ],
             ),
@@ -517,8 +516,8 @@ class _RewriteCardState extends State<_RewriteCard> {
     final colors = widget.colors;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.pageH, vertical: 6),
+      padding:
+          const EdgeInsets.symmetric(horizontal: AppSpacing.pageH, vertical: 6),
       child: Container(
         decoration: BoxDecoration(
           color: colors.surfaceSecondary,
@@ -543,9 +542,7 @@ class _RewriteCardState extends State<_RewriteCard> {
                       ),
                     ),
                     Icon(
-                      _expanded
-                          ? Icons.expand_less
-                          : Icons.expand_more,
+                      _expanded ? Icons.expand_less : Icons.expand_more,
                       color: colors.foregroundSecondary,
                     ),
                   ],
@@ -553,9 +550,7 @@ class _RewriteCardState extends State<_RewriteCard> {
               ),
             ),
             if (_expanded) ...[
-              Divider(
-                  height: 1,
-                  color: colors.primaryMuted.withAlpha(80)),
+              Divider(height: 1, color: colors.primaryMuted.withAlpha(80)),
               Padding(
                 padding: const EdgeInsets.all(14),
                 child: Column(
@@ -567,8 +562,8 @@ class _RewriteCardState extends State<_RewriteCard> {
                             fontWeight: FontWeight.w700)),
                     const SizedBox(height: 4),
                     Text(widget.item.original,
-                        style: AppTextStyles.caption.copyWith(
-                            color: colors.foreground)),
+                        style: AppTextStyles.caption
+                            .copyWith(color: colors.foreground)),
                     const SizedBox(height: 12),
                     Row(
                       children: [
@@ -583,8 +578,7 @@ class _RewriteCardState extends State<_RewriteCard> {
                             await Clipboard.setData(
                                 ClipboardData(text: widget.item.improved));
                             setState(() => _copied = true);
-                            await Future.delayed(
-                                const Duration(seconds: 2));
+                            await Future.delayed(const Duration(seconds: 2));
                             if (mounted) {
                               setState(() => _copied = false);
                             }
@@ -620,8 +614,7 @@ class _RewriteCardState extends State<_RewriteCard> {
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: colors.scoreExcellentBg,
-                        borderRadius:
-                            BorderRadius.circular(AppRadii.cardSm),
+                        borderRadius: BorderRadius.circular(AppRadii.cardSm),
                       ),
                       child: Text(
                         widget.item.improved,
@@ -651,8 +644,8 @@ class _ActionStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.pageH, vertical: 6),
+      padding:
+          const EdgeInsets.symmetric(horizontal: AppSpacing.pageH, vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -725,19 +718,28 @@ class _SaveVersionSheetState extends ConsumerState<_SaveVersionSheet> {
   }
 
   Future<void> _save() async {
-    setState(() { _saving = true; _errorMsg = null; });
+    setState(() {
+      _saving = true;
+      _errorMsg = null;
+    });
     try {
       final svc = ref.read(resumeServiceProvider);
       await svc.createResumeVersion(
         widget.resumeId,
-        versionName: _nameCtrl.text.trim().isEmpty ? null : _nameCtrl.text.trim(),
-        targetRole:  _roleCtrl.text.trim().isEmpty ? null : _roleCtrl.text.trim(),
-        companyName: _companyCtrl.text.trim().isEmpty ? null : _companyCtrl.text.trim(),
+        versionName:
+            _nameCtrl.text.trim().isEmpty ? null : _nameCtrl.text.trim(),
+        targetRole:
+            _roleCtrl.text.trim().isEmpty ? null : _roleCtrl.text.trim(),
+        companyName:
+            _companyCtrl.text.trim().isEmpty ? null : _companyCtrl.text.trim(),
       );
       ref.invalidate(resumeVersionsProvider(widget.resumeId));
       if (mounted) Navigator.pop(context);
     } catch (e) {
-      setState(() { _saving = false; _errorMsg = e.toString(); });
+      setState(() {
+        _saving = false;
+        _errorMsg = e.toString();
+      });
     }
   }
 
@@ -747,7 +749,7 @@ class _SaveVersionSheetState extends ConsumerState<_SaveVersionSheet> {
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        20, 20, 20, MediaQuery.viewInsetsOf(context).bottom + 20),
+          20, 20, 20, MediaQuery.viewInsetsOf(context).bottom + 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -781,7 +783,8 @@ class _SaveVersionSheetState extends ConsumerState<_SaveVersionSheet> {
           if (_errorMsg != null) ...[
             const SizedBox(height: 8),
             Text(_errorMsg!,
-                style: AppTextStyles.caption.copyWith(color: colors.statusRejected)),
+                style: AppTextStyles.caption
+                    .copyWith(color: colors.statusRejected)),
           ],
           const SizedBox(height: 16),
           FilledButton(

@@ -32,6 +32,7 @@ class AnalysisResultResponse(BaseModel):
     ats_score: int | None = None
     recruiter_score: int | None = None
     overall_label: str | None = None
+    status: str = "completed"
     
     breakdown: List[BreakdownItem] = []
     issues: List[IssueItem] = []

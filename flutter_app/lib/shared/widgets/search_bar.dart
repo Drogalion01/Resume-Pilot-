@@ -21,10 +21,10 @@ class AppSearchBar extends StatefulWidget {
     this.autofocus = false,
   });
 
-  final String                   hint;
-  final ValueChanged<String>?    onChanged;
-  final TextEditingController?   controller;
-  final bool                     autofocus;
+  final String hint;
+  final ValueChanged<String>? onChanged;
+  final TextEditingController? controller;
+  final bool autofocus;
 
   @override
   State<AppSearchBar> createState() => _AppSearchBarState();
@@ -61,8 +61,7 @@ class _AppSearchBarState extends State<AppSearchBar> {
       child: DecoratedBox(
         decoration: AppDecorations.searchBar(colors),
         child: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: AppSpacing.px12),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.px12),
           child: Row(
             children: [
               Icon(

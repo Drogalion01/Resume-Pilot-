@@ -25,21 +25,21 @@ abstract class AppTextStyles {
 
   static TextStyle get display => GoogleFonts.plusJakartaSans(
         fontSize: 28,
-        height: 34 / 28,          // 1.214
+        height: 34 / 28, // 1.214
         fontWeight: FontWeight.w800,
         letterSpacing: -0.5,
       );
 
   static TextStyle get headline => GoogleFonts.plusJakartaSans(
         fontSize: 20,
-        height: 28 / 20,          // 1.4
+        height: 28 / 20, // 1.4
         fontWeight: FontWeight.w700,
         letterSpacing: -0.2,
       );
 
   static TextStyle get title => GoogleFonts.plusJakartaSans(
         fontSize: 15,
-        height: 22 / 15,          // 1.467
+        height: 22 / 15, // 1.467
         fontWeight: FontWeight.w700,
         letterSpacing: -0.1,
       );
@@ -58,21 +58,21 @@ abstract class AppTextStyles {
 
   static TextStyle get caption => GoogleFonts.plusJakartaSans(
         fontSize: 13,
-        height: 18 / 13,          // 1.385
+        height: 18 / 13, // 1.385
         fontWeight: FontWeight.w500,
       );
 
   /// 11px · SemiBold · Uppercase · letter-spacing +0.7
   static TextStyle get overline => GoogleFonts.plusJakartaSans(
         fontSize: 11,
-        height: 16 / 11,          // 1.455
+        height: 16 / 11, // 1.455
         fontWeight: FontWeight.w600,
         letterSpacing: 0.7,
       );
 
   static TextStyle get micro => GoogleFonts.plusJakartaSans(
         fontSize: 10,
-        height: 14 / 10,          // 1.4
+        height: 14 / 10, // 1.4
         fontWeight: FontWeight.w600,
       );
 

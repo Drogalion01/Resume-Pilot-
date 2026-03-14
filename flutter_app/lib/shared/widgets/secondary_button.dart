@@ -21,13 +21,13 @@ class SecondaryButton extends StatefulWidget {
     this.ghost = false,
   });
 
-  final String       label;
+  final String label;
   final VoidCallback? onPressed;
-  final IconData?    icon;
-  final bool         loading;
-  final bool         enabled;
-  final double?      width;
-  final double       height;
+  final IconData? icon;
+  final bool loading;
+  final bool enabled;
+  final double? width;
+  final double height;
 
   /// ghost = true → transparent fill; false → surfacePrimary fill
   final bool ghost;
@@ -41,10 +41,11 @@ class _SecondaryButtonState extends State<SecondaryButton> {
 
   @override
   Widget build(BuildContext context) {
-    final colors     = Theme.of(context).appColors;
-    final isDisabled = !widget.enabled || widget.loading || widget.onPressed == null;
-    final fg         = isDisabled ? colors.foregroundTertiary : colors.primary;
-    final bg         = widget.ghost
+    final colors = Theme.of(context).appColors;
+    final isDisabled =
+        !widget.enabled || widget.loading || widget.onPressed == null;
+    final fg = isDisabled ? colors.foregroundTertiary : colors.primary;
+    final bg = widget.ghost
         ? ((_pressed && !isDisabled)
             ? colors.primaryLight.withValues(alpha: 0.6)
             : Colors.transparent)
@@ -53,16 +54,19 @@ class _SecondaryButtonState extends State<SecondaryButton> {
             : colors.surfacePrimary);
 
     return GestureDetector(
-      onTapDown:   (_) => setState(() => _pressed = true),
-      onTapUp:     (_) { setState(() => _pressed = false); if (!isDisabled) widget.onPressed?.call(); },
-      onTapCancel: ()  => setState(() => _pressed = false),
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) {
+        setState(() => _pressed = false);
+        if (!isDisabled) widget.onPressed?.call();
+      },
+      onTapCancel: () => setState(() => _pressed = false),
       child: AnimatedScale(
         scale: _pressed ? 0.97 : 1.0,
         duration: const Duration(milliseconds: 120),
         curve: Curves.easeOut,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 160),
-          width:  widget.width,
+          width: widget.width,
           height: widget.height,
           decoration: BoxDecoration(
             color: bg,

@@ -27,19 +27,19 @@ class AppTextArea extends StatefulWidget {
     this.focusNode,
   });
 
-  final TextEditingController?      controller;
-  final String?                     label;
-  final String?                     hint;
-  final String?                     helperText;
-  final String?                     errorText;
-  final int                         minLines;
-  final int                         maxLines;
-  final int?                        maxLength;
+  final TextEditingController? controller;
+  final String? label;
+  final String? hint;
+  final String? helperText;
+  final String? errorText;
+  final int minLines;
+  final int maxLines;
+  final int? maxLength;
   final FormFieldValidator<String>? validator;
-  final ValueChanged<String>?       onChanged;
-  final bool                        autofocus;
-  final bool                        enabled;
-  final FocusNode?                  focusNode;
+  final ValueChanged<String>? onChanged;
+  final bool autofocus;
+  final bool enabled;
+  final FocusNode? focusNode;
 
   @override
   State<AppTextArea> createState() => _AppTextAreaState();
@@ -104,22 +104,22 @@ class _AppTextAreaState extends State<AppTextArea> {
 
         // Text area
         TextFormField(
-          controller:   _ctrl,
-          minLines:     widget.minLines,
-          maxLines:     widget.maxLines,
-          maxLength:    widget.maxLength,
-          validator:    widget.validator,
-          onChanged:    widget.onChanged,
-          autofocus:    widget.autofocus,
-          enabled:      widget.enabled,
-          focusNode:    widget.focusNode,
+          controller: _ctrl,
+          minLines: widget.minLines,
+          maxLines: widget.maxLines,
+          maxLength: widget.maxLength,
+          validator: widget.validator,
+          onChanged: widget.onChanged,
+          autofocus: widget.autofocus,
+          enabled: widget.enabled,
+          focusNode: widget.focusNode,
           style: AppTextStyles.inputText.copyWith(color: colors.foreground),
           decoration: AppDecorations.inputDecoration(
-            colors:     colors,
-            hintText:   widget.hint,
+            colors: colors,
+            hintText: widget.hint,
             helperText: widget.helperText,
-            errorText:  widget.errorText,
-            enabled:    widget.enabled,
+            errorText: widget.errorText,
+            enabled: widget.enabled,
           ).copyWith(
             // hide the built-in counter since we draw our own
             counterText: '',

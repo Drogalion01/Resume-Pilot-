@@ -34,25 +34,25 @@ class AppTextField extends StatelessWidget {
     this.focusNode,
   });
 
-  final TextEditingController?   controller;
-  final String?                  label;
-  final String?                  hint;
-  final String?                  helperText;
-  final String?                  errorText;
-  final Widget?                  prefixIcon;
-  final Widget?                  suffixIcon;
-  final bool                     obscureText;
-  final TextInputType?           keyboardType;
-  final TextCapitalization       textCapitalization;
+  final TextEditingController? controller;
+  final String? label;
+  final String? hint;
+  final String? helperText;
+  final String? errorText;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final bool obscureText;
+  final TextInputType? keyboardType;
+  final TextCapitalization textCapitalization;
   final List<TextInputFormatter>? inputFormatters;
   final FormFieldValidator<String>? validator;
-  final ValueChanged<String>?    onChanged;
-  final ValueChanged<String>?    onSubmitted;
-  final bool                     autofocus;
-  final bool                     enabled;
-  final int?                     maxLength;
-  final TextInputAction?         textInputAction;
-  final FocusNode?               focusNode;
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
+  final bool autofocus;
+  final bool enabled;
+  final int? maxLength;
+  final TextInputAction? textInputAction;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -80,28 +80,28 @@ class AppTextField extends StatelessWidget {
           const SizedBox(height: AppSpacing.px6),
         ],
         TextFormField(
-          controller:            controller,
-          obscureText:           obscureText,
-          keyboardType:          keyboardType,
-          textCapitalization:    textCapitalization,
-          inputFormatters:       inputFormatters,
-          validator:             validator,
-          onChanged:             onChanged,
-          onFieldSubmitted:      onSubmitted,
-          autofocus:             autofocus,
-          enabled:               enabled,
-          maxLength:             maxLength,
-          textInputAction:       textInputAction,
-          focusNode:             focusNode,
+          controller: controller,
+          obscureText: obscureText,
+          keyboardType: keyboardType,
+          textCapitalization: textCapitalization,
+          inputFormatters: inputFormatters,
+          validator: validator,
+          onChanged: onChanged,
+          onFieldSubmitted: onSubmitted,
+          autofocus: autofocus,
+          enabled: enabled,
+          maxLength: maxLength,
+          textInputAction: textInputAction,
+          focusNode: focusNode,
           style: AppTextStyles.inputText.copyWith(color: colors.foreground),
           decoration: AppDecorations.inputDecoration(
-            colors:      colors,
-            hintText:    hint,
-            prefixIcon:  builtPrefix,
-            suffixIcon:  builtSuffix,
-            helperText:  helperText,
-            errorText:   errorText,
-            enabled:     enabled,
+            colors: colors,
+            hintText: hint,
+            prefixIcon: builtPrefix,
+            suffixIcon: builtSuffix,
+            helperText: helperText,
+            errorText: errorText,
+            enabled: enabled,
           ),
         ),
       ],

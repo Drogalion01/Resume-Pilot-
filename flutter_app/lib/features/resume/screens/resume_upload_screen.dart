@@ -15,15 +15,14 @@ class ResumeUploadScreen extends ConsumerStatefulWidget {
   const ResumeUploadScreen({super.key});
 
   @override
-  ConsumerState<ResumeUploadScreen> createState() =>
-      _ResumeUploadScreenState();
+  ConsumerState<ResumeUploadScreen> createState() => _ResumeUploadScreenState();
 }
 
 class _ResumeUploadScreenState extends ConsumerState<ResumeUploadScreen> {
   final _pasteController = TextEditingController();
-  final _roleController  = TextEditingController();
+  final _roleController = TextEditingController();
   final _companyController = TextEditingController();
-  final _jdController    = TextEditingController();
+  final _jdController = TextEditingController();
 
   @override
   void dispose() {
@@ -41,9 +40,8 @@ class _ResumeUploadScreenState extends ConsumerState<ResumeUploadScreen> {
     notifier.setCompanyName(_companyController.text.trim().isEmpty
         ? null
         : _companyController.text.trim());
-    notifier.setJdText(_jdController.text.trim().isEmpty
-        ? null
-        : _jdController.text.trim());
+    notifier.setJdText(
+        _jdController.text.trim().isEmpty ? null : _jdController.text.trim());
 
     notifier.triggerAnalyze(
       state is UploadFilePicked ? state : null,
@@ -209,8 +207,7 @@ class _ResumeUploadScreenState extends ConsumerState<ResumeUploadScreen> {
                                 child: Row(
                                   children: [
                                     Icon(Icons.error_outline,
-                                        color: colors.statusRejected,
-                                        size: 18),
+                                        color: colors.statusRejected, size: 18),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
@@ -244,14 +241,14 @@ class _ResumeUploadScreenState extends ConsumerState<ResumeUploadScreen> {
                                     size: 18),
                                 label: const Text('Analyze Resume'),
                                 style: FilledButton.styleFrom(
-                                  minimumSize: const Size.fromHeight(
-                                      AppSpacing.buttonH),
+                                  minimumSize:
+                                      const Size.fromHeight(AppSpacing.buttonH),
                                 ),
                               ),
 
                             const SizedBox(
-                                height: AppSpacing.bottomNavH +
-                                    AppSpacing.cardPad),
+                                height:
+                                    AppSpacing.bottomNavH + AppSpacing.cardPad),
                           ],
                         ),
                       ),
@@ -300,8 +297,7 @@ class _FileZone extends StatelessWidget {
                   Text(
                     picked.fileName,
                     style: AppTextStyles.bodyMedium.copyWith(
-                        color: colors.foreground,
-                        fontWeight: FontWeight.w600),
+                        color: colors.foreground, fontWeight: FontWeight.w600),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -342,8 +338,8 @@ class _FileZone extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Tap to select a file',
-              style: AppTextStyles.bodyMedium
-                  .copyWith(color: colors.foreground),
+              style:
+                  AppTextStyles.bodyMedium.copyWith(color: colors.foreground),
             ),
             const SizedBox(height: 4),
             Text(

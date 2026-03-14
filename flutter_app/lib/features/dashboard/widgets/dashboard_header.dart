@@ -47,8 +47,8 @@ class DashboardHeader extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   user.firstName,
-                  style: AppTextStyles.headline
-                      .copyWith(color: colors.foreground),
+                  style:
+                      AppTextStyles.headline.copyWith(color: colors.foreground),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

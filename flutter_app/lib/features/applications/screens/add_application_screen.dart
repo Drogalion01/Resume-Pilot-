@@ -21,14 +21,13 @@ class AddApplicationScreen extends ConsumerStatefulWidget {
       _AddApplicationScreenState();
 }
 
-class _AddApplicationScreenState
-    extends ConsumerState<AddApplicationScreen> {
+class _AddApplicationScreenState extends ConsumerState<AddApplicationScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final _companyCtrl   = TextEditingController();
-  final _roleCtrl      = TextEditingController();
-  final _locationCtrl  = TextEditingController();
-  final _sourceCtrl    = TextEditingController();
+  final _companyCtrl = TextEditingController();
+  final _roleCtrl = TextEditingController();
+  final _locationCtrl = TextEditingController();
+  final _sourceCtrl = TextEditingController();
   final _recruiterCtrl = TextEditingController();
 
   ApplicationStatus _status = ApplicationStatus.saved;
@@ -58,13 +57,16 @@ class _AddApplicationScreenState
     if (!_formKey.currentState!.validate()) return;
 
     final body = ApplicationCreate(
-      companyName:     _companyCtrl.text.trim(),
-      role:            _roleCtrl.text.trim(),
-      status:          _status,
+      companyName: _companyCtrl.text.trim(),
+      role: _roleCtrl.text.trim(),
+      status: _status,
       applicationDate: _applicationDate,
-      location:  _locationCtrl.text.trim().isEmpty ? null : _locationCtrl.text.trim(),
-      source:    _sourceCtrl.text.trim().isEmpty ? null : _sourceCtrl.text.trim(),
-      recruiterName: _recruiterCtrl.text.trim().isEmpty ? null : _recruiterCtrl.text.trim(),
+      location:
+          _locationCtrl.text.trim().isEmpty ? null : _locationCtrl.text.trim(),
+      source: _sourceCtrl.text.trim().isEmpty ? null : _sourceCtrl.text.trim(),
+      recruiterName: _recruiterCtrl.text.trim().isEmpty
+          ? null
+          : _recruiterCtrl.text.trim(),
     );
 
     final notifier = ref.read(addApplicationProvider.notifier);
@@ -78,7 +80,7 @@ class _AddApplicationScreenState
 
   @override
   Widget build(BuildContext context) {
-    final colors   = Theme.of(context).appColors;
+    final colors = Theme.of(context).appColors;
     final brightness = Theme.of(context).brightness;
     final formState = ref.watch(addApplicationProvider);
 
@@ -88,8 +90,8 @@ class _AddApplicationScreenState
         children: [
           Positioned.fill(
             child: Container(
-              decoration: BoxDecoration(
-                  gradient: AppGradients.heroBackground(colors)),
+              decoration:
+                  BoxDecoration(gradient: AppGradients.heroBackground(colors)),
             ),
           ),
           SafeArea(
@@ -177,8 +179,7 @@ class _AddApplicationScreenState
                                   final fg = s.foreground(colors);
                                   final bg = s.background(colors);
                                   return GestureDetector(
-                                    onTap: () =>
-                                        setState(() => _status = s),
+                                    onTap: () => setState(() => _status = s),
                                     child: AnimatedContainer(
                                       duration:
                                           const Duration(milliseconds: 150),
@@ -186,12 +187,9 @@ class _AddApplicationScreenState
                                           horizontal: 12, vertical: 7),
                                       decoration: BoxDecoration(
                                         color: active ? fg : bg,
-                                        borderRadius:
-                                            BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(20),
                                         border: Border.all(
-                                          color: active
-                                              ? fg
-                                              : fg.withAlpha(60),
+                                          color: active ? fg : fg.withAlpha(60),
                                         ),
                                       ),
                                       child: Text(
@@ -237,8 +235,7 @@ class _AddApplicationScreenState
                               // Date picker
                               OutlinedButton.icon(
                                 onPressed: _pickDate,
-                                icon: const Icon(
-                                    Icons.calendar_today_outlined,
+                                icon: const Icon(Icons.calendar_today_outlined,
                                     size: 16),
                                 label: Text(
                                   _applicationDate != null
@@ -253,13 +250,12 @@ class _AddApplicationScreenState
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
                                     color: colors.statusRejectedBg,
-                                    borderRadius:
-                                        BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Text(
                                     formState.errorMessage!,
-                                    style: AppTextStyles.caption.copyWith(
-                                        color: colors.statusRejected),
+                                    style: AppTextStyles.caption
+                                        .copyWith(color: colors.statusRejected),
                                   ),
                                 ),
                               ],
@@ -267,11 +263,10 @@ class _AddApplicationScreenState
                               const SizedBox(height: 24),
 
                               FilledButton(
-                                onPressed:
-                                    formState.isLoading ? null : _submit,
+                                onPressed: formState.isLoading ? null : _submit,
                                 style: FilledButton.styleFrom(
-                                  minimumSize: const Size.fromHeight(
-                                      AppSpacing.buttonH),
+                                  minimumSize:
+                                      const Size.fromHeight(AppSpacing.buttonH),
                                 ),
                                 child: formState.isLoading
                                     ? const SizedBox.square(
