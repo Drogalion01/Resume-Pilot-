@@ -1,4 +1,6 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/router/routes.dart';
@@ -35,6 +37,56 @@ class DashboardScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
+      floatingActionButton: Container(
+        height: 64,
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+          boxShadow: [
+            BoxShadow(
+              color: colors.primary.withAlpha(80),
+              blurRadius: 24,
+              spreadRadius: 4,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: FloatingActionButton.extended(
+          onPressed: () => context.push(AppRoutes.upload),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          highlightElevation: 0,
+          hoverElevation: 0,
+          focusElevation: 0,
+          extendedPadding: EdgeInsets.zero,
+          label: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(32),
+              gradient: AppGradients.primaryButton(colors),
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              alignment: Alignment.center,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.auto_awesome, color: Colors.white, size: 24),
+                  SizedBox(width: 12),
+                  Text(
+                    'Analyze Resume',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
       body: BreathingBackground(
         child: Stack(
           children: [
@@ -135,25 +187,33 @@ class DashboardScreen extends ConsumerWidget {
 
                   // Content surface
                   Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: colors.surfacePrimary,
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadii.xl2),
-                        ),
-                        boxShadow: AppShadows.elevated(brightness),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(AppRadii.xl2),
                       ),
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadii.xl2),
-                        ),
-                        child: state.when(
-                          loading: () => const DashboardSkeleton(),
-                          error: (e, _) => DashboardError(
-                            error: e,
-                            onRetry: () => ref.invalidate(dashboardProvider),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: colors.surfacePrimary.withOpacity(0.55),
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(AppRadii.xl2),
+                            ),
+                            border: Border(
+                              top: BorderSide(
+                                color: Colors.white.withOpacity(0.2),
+                                width: 1.0,
+                              ),
+                            ),
                           ),
-                          data: (data) => _DashboardContent(data: data),
+                          child: state.when(
+                            loading: () => const DashboardSkeleton(),
+                            error: (e, _) => DashboardError(
+                              error: e,
+                              onRetry: () => ref.invalidate(dashboardProvider),
+                            ),
+                            data: (data) => _DashboardContent(data: data),
+                          ),
                         ),
                       ),
                     ),
