@@ -70,6 +70,7 @@ def process_resume_background(
 router = APIRouter()
 versions_router = APIRouter()
 versions_router = APIRouter()
+versions_router = APIRouter()
 
 def to_analysis_response_dict(db_analysis: AnalysisResult) -> dict:
     return {

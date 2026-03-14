@@ -10,7 +10,6 @@ import '../../../app/router/routes.dart';
 import '../../../shared/widgets/backgrounds/breathing_background.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_gradients.dart';
-import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/theme/app_theme.dart';
@@ -483,6 +482,7 @@ class _SettingsBody extends ConsumerWidget {
                       // Unsubscribed successfully, log out locally
                       ref.read(authNotifierProvider.notifier).logout();
                     } else {
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                             content: Text(
@@ -490,6 +490,7 @@ class _SettingsBody extends ConsumerWidget {
                       );
                     }
                   } catch (e) {
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Error: $e')),
                     );
