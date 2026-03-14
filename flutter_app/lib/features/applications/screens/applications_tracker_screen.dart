@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../shared/widgets/backgrounds/breathing_background.dart';
+import 'dart:ui';
+import '../../../core/theme/app_gradients.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -21,8 +24,46 @@ class ApplicationsTrackerScreen extends ConsumerWidget {
     final stateAsync = ref.watch(applicationsProvider);
 
     return Scaffold(
-      backgroundColor: colors.surfacePrimary,
-      body: SafeArea(
+      backgroundColor: Colors.transparent,
+      body: BreathingBackground(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: AppGradients.heroBackground(colors),
+                ),
+              ),
+            ),
+            Positioned(
+              top: -60,
+              right: -60,
+              child: IgnorePointer(
+                child: Container(
+                  width: 220,
+                  height: 220,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: AppGradients.heroGlow1(colors),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 30,
+              left: -40,
+              child: IgnorePointer(
+                child: Container(
+                  width: 160,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: AppGradients.heroGlow2(colors),
+                  ),
+                ),
+              ),
+            ),
+            SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -124,6 +165,8 @@ class ApplicationsTrackerScreen extends ConsumerWidget {
           ],
         ),
       ),
+        ],
+      )),
     );
   }
 }
