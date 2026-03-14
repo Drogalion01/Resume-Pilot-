@@ -31,7 +31,6 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).appColors;
-    final brightness = Theme.of(context).brightness;
     final state = ref.watch(dashboardProvider);
 
     return Scaffold(
@@ -198,26 +197,32 @@ class DashboardScreen extends ConsumerWidget {
                           filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: colors.surfacePrimary.withOpacity(0.55),
+                              color:
+                                  colors.surfacePrimary.withValues(alpha: 0.55),
                               borderRadius: const BorderRadius.vertical(
                                 top: Radius.circular(AppRadii.xl2),
                               ),
                               border: Border(
                                 top: BorderSide(
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: Colors.white.withValues(alpha: 0.2),
                                   width: 1.0,
                                 ),
                               ),
                             ),
-                            child: state.when(
-                              loading: () => const DashboardSkeleton(),
-                              error: (e, _) => DashboardError(
-                                error: e,
-                                onRetry: () =>
-                                    ref.invalidate(dashboardProvider),
-                              ),
-                              data: (data) => _DashboardContent(data: data),
-                            ),
+                            child: state.hasValue
+                                ? _DashboardContent(data: state.requireValue)
+                                : state.when(
+                                    skipLoadingOnRefresh: true,
+                                    skipLoadingOnReload: true,
+                                    loading: () => const DashboardLoading(),
+                                    error: (e, _) => DashboardError(
+                                      error: e,
+                                      onRetry: () =>
+                                          ref.invalidate(dashboardProvider),
+                                    ),
+                                    data: (data) =>
+                                        _DashboardContent(data: data),
+                                  ),
                           ),
                         ),
                       ),

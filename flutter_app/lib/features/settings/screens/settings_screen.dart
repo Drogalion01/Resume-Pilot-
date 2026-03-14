@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
@@ -7,9 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/routes.dart';
-import '../../../shared/widgets/backgrounds/breathing_background.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_gradients.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/theme/app_theme.dart';
@@ -22,8 +21,6 @@ import '../providers/settings_provider.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 // SettingsScreen — tab 3
 // ─────────────────────────────────────────────────────────────────────────────
-
-const String _bdappsPhpBaseUrl = 'https://www.flicksize.com/resumepilot/';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -38,82 +35,59 @@ class SettingsScreen extends ConsumerWidget {
     final settingsAsync = ref.watch(settingsProvider);
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: BreathingBackground(
-        child: Stack(
-          children: [
-            Positioned(
-              top: -60,
-              right: -60,
-              child: IgnorePointer(
-                child: Container(
-                  width: 220,
-                  height: 220,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: AppGradients.heroGlow1(colors),
+      backgroundColor: colors.background,
+      body: Stack(
+        children: [
+          // ── Background gradient ────────────────────────────────────────
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: AppGradients.heroBackground(colors),
+              ),
+            ),
+          ),
+
+          SafeArea(
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                // ── Header ─────────────────────────────────────────────
+                SliverToBoxAdapter(
+                  child: _SettingsHeader(colors: colors),
+                ),
+
+                // ── Profile Summary Card ───────────────────────────────
+                SliverToBoxAdapter(
+                  child: profileAsync.when(
+                    data: (p) => _ProfileSummaryCard(
+                        profile: p, colors: colors, isDark: isDark),
+                    loading: () => const _ProfileSummaryShimmer(),
+                    error: (_, __) => const SizedBox.shrink(),
                   ),
                 ),
-              ),
-            ),
-            Positioned(
-              top: 30,
-              left: -40,
-              child: IgnorePointer(
-                child: Container(
-                  width: 160,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: AppGradients.heroGlow2(colors),
+
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: AppSpacing.px24),
+                ),
+
+                // ── Settings body ──────────────────────────────────────
+                SliverToBoxAdapter(
+                  child: settingsAsync.when(
+                    data: (s) => _SettingsBody(
+                        settings: s, colors: colors, isDark: isDark),
+                    loading: () => const _SettingsBodyShimmer(),
+                    error: (e, _) => _SettingsErrorBanner(
+                        message: e.toString(), colors: colors),
                   ),
                 ),
-              ),
-            ),
-            Positioned.fill(
-              child: SafeArea(
-                child: CustomScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  slivers: [
-                    // ── Header ─────────────────────────────────────────────
-                    SliverToBoxAdapter(
-                      child: _SettingsHeader(colors: colors),
-                    ),
 
-                    // ── Profile Summary Card ───────────────────────────────
-                    SliverToBoxAdapter(
-                      child: profileAsync.when(
-                        data: (p) => _ProfileSummaryCard(
-                            profile: p, colors: colors, isDark: isDark),
-                        loading: () => const _ProfileSummaryShimmer(),
-                        error: (_, __) => const SizedBox.shrink(),
-                      ),
-                    ),
-
-                    const SliverToBoxAdapter(
-                      child: SizedBox(height: AppSpacing.px24),
-                    ),
-
-                    // ── Settings body ──────────────────────────────────────
-                    SliverToBoxAdapter(
-                      child: settingsAsync.when(
-                        data: (s) => _SettingsBody(
-                            settings: s, colors: colors, isDark: isDark),
-                        loading: () => const _SettingsBodyShimmer(),
-                        error: (e, _) => _SettingsErrorBanner(
-                            message: e.toString(), colors: colors),
-                      ),
-                    ),
-
-                    const SliverToBoxAdapter(
-                      child: SizedBox(height: AppSpacing.px48),
-                    ),
-                  ],
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: AppSpacing.px48),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -136,30 +110,16 @@ class _SettingsHeader extends StatelessWidget {
         AppSpacing.pageH,
         AppSpacing.px8,
       ),
-      child: Row(
-        children: [
-          if (context.canPop())
-            Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                color: colors.foreground,
-                onPressed: () => context.pop(),
-                tooltip: 'Back',
-              ),
-            ),
-          Text(
-            'Settings',
-            style: AppTextStyles.display.copyWith(color: colors.foreground),
-          ),
-        ],
+      child: Text(
+        'Settings',
+        style: AppTextStyles.display.copyWith(color: colors.foreground),
       ),
     );
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Profile Summary
+// Profile summary card
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _ProfileSummaryCard extends ConsumerWidget {
@@ -177,86 +137,71 @@ class _ProfileSummaryCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pageH),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
-          color: colors.surfacePrimary.withOpacity(0.55),
+          color: colors.surfacePrimary,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-              blurRadius: 16,
-              spreadRadius: -4,
-            )
-          ],
-          border: Border.all(
-            color: Colors.white.withOpacity(isDark ? 0.05 : 0.2),
-          ),
+          boxShadow: isDark ? AppShadows.cardDark : AppShadows.cardLight,
+          border: Border.all(color: colors.borderSubtle),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.px20),
-              child: Row(
-                children: [
-                  // Avatar
-                  _AvatarCircle(
-                      initials: profile.displayInitials, colors: colors),
-                  const SizedBox(width: AppSpacing.px16),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.px20),
+          child: Row(
+            children: [
+              // Avatar
+              _AvatarCircle(initials: profile.displayInitials, colors: colors),
+              const SizedBox(width: AppSpacing.px16),
 
-                  // Name + Email
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          profile.fullName ?? 'User',
-                          style: AppTextStyles.title
-                              .copyWith(color: colors.foreground),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          profile.email ?? profile.phone ?? '',
-                          style: AppTextStyles.caption.copyWith(
-                            color: colors.foregroundSecondary,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+              // Name + Email
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      profile.fullName ?? 'User',
+                      style: AppTextStyles.title
+                          .copyWith(color: colors.foreground),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-
-                  // Edit Profile button
-                  TextButton.icon(
-                    onPressed: () => context.push(AppRoutes.profile),
-                    icon: Icon(
-                      Icons.edit_outlined,
-                      size: 16,
-                      color: colors.primary,
-                    ),
-                    label: Text(
-                      'Edit',
-                      style: AppTextStyles.buttonLabel
-                          .copyWith(color: colors.primary),
-                    ),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.px10,
-                        vertical: AppSpacing.px6,
+                    const SizedBox(height: 2),
+                    Text(
+                      profile.email ?? profile.phone ?? '',
+                      style: AppTextStyles.caption.copyWith(
+                        color: colors.foregroundSecondary,
                       ),
-                      backgroundColor: colors.primaryLight,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+
+              // Edit Profile button
+              TextButton.icon(
+                onPressed: () => context.push(AppRoutes.profile),
+                icon: Icon(
+                  Icons.edit_outlined,
+                  size: 16,
+                  color: colors.primary,
+                ),
+                label: Text(
+                  'Edit',
+                  style:
+                      AppTextStyles.buttonLabel.copyWith(color: colors.primary),
+                ),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.px10,
+                    vertical: AppSpacing.px6,
+                  ),
+                  backgroundColor: colors.primaryLight,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -607,34 +552,16 @@ class _SettingsCard extends StatelessWidget {
   final AppColors colors;
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) => DecoratedBox(
         decoration: BoxDecoration(
-          color: colors.surfacePrimary.withOpacity(0.55),
+          color: colors.surfacePrimary,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: isDark
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 16,
-                    spreadRadius: -4,
-                  )
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 16,
-                    spreadRadius: -4,
-                  )
-                ],
-          border:
-              Border.all(color: Colors.white.withOpacity(isDark ? 0.05 : 0.2)),
+          boxShadow: isDark ? AppShadows.cardDark : AppShadows.cardLight,
+          border: Border.all(color: colors.borderSubtle),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-            child: child,
-          ),
+          child: child,
         ),
       );
 }
@@ -870,7 +797,7 @@ class _ProfileSummaryShimmer extends StatelessWidget {
       child: Container(
         height: 88,
         decoration: BoxDecoration(
-          color: colors.surfacePrimary.withOpacity(0.55),
+          color: colors.surfacePrimary,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: colors.borderSubtle),
         ),
@@ -895,7 +822,7 @@ class _SettingsBodyShimmer extends StatelessWidget {
             child: Container(
               height: 120,
               decoration: BoxDecoration(
-                color: colors.surfacePrimary.withOpacity(0.55),
+                color: colors.surfacePrimary,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: colors.borderSubtle),
               ),

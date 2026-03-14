@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'animations/premium_shimmer.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_theme.dart';
@@ -32,7 +32,9 @@ class LoadingSkeletons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
-    return PremiumShimmer(
+    return Shimmer.fromColors(
+      baseColor: colors.surfaceSecondary,
+      highlightColor: colors.surfacePrimary,
       child: _child,
     );
   }

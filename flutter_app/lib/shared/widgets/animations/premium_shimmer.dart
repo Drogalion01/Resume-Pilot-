@@ -41,10 +41,10 @@ class _PremiumShimmerState extends State<PremiumShimmer>
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final baseColor =
-        isDark ? const Color(0xFF1E1E1E) : const Color(0xFFEFF2F9);
+        isDark ? const Color(0xFF2A2A36) : const Color(0xFFDCE3F0);
     final highlightColor = isDark
-        ? Colors.white.withValues(alpha: 0.05)
-        : Colors.white.withValues(alpha: 0.4);
+        ? Colors.white.withValues(alpha: 0.12)
+        : Colors.white.withValues(alpha: 0.65);
 
     return AnimatedBuilder(
       animation: _controller,

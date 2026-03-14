@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../shared/widgets/animations/premium_shimmer.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -15,7 +15,9 @@ class ApplicationListSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
-    return PremiumShimmer(
+    return Shimmer.fromColors(
+      baseColor: colors.surfaceSecondary,
+      highlightColor: colors.primaryLight,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.pageH, vertical: 12),
@@ -45,7 +47,9 @@ class ApplicationDetailSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
-    return PremiumShimmer(
+    return Shimmer.fromColors(
+      baseColor: colors.surfaceSecondary,
+      highlightColor: colors.primaryLight,
       child: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(

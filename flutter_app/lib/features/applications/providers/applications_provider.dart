@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/application_service.dart';
 import '../models/application.dart';
+
+const _kApplicationsCacheKey = 'applications_list_cache';
 
 // ── State ─────────────────────────────────────────────────────────────────────
 
@@ -58,8 +62,38 @@ class ApplicationsState {
 class ApplicationsNotifier extends AsyncNotifier<ApplicationsState> {
   @override
   Future<ApplicationsState> build() async {
-    final apps = await ref.watch(applicationServiceProvider).getApplications();
-    return ApplicationsState(applications: apps);
+    final prefs = await SharedPreferences.getInstance();
+    List<ApplicationResponse>? cachedApps;
+
+    final cachedData = prefs.getString(_kApplicationsCacheKey);
+    if (cachedData != null) {
+      try {
+        final List<dynamic> jsonList = jsonDecode(cachedData);
+        cachedApps =
+            jsonList.map((j) => ApplicationResponse.fromJson(j)).toList();
+      } catch (_) {}
+    }
+
+    final service = ref.watch(applicationServiceProvider);
+
+    final fetchFuture = service.getApplications().then((apps) async {
+      await prefs.setString(_kApplicationsCacheKey,
+          jsonEncode(apps.map((a) => a.toJson()).toList()));
+      if (cachedApps != null) {
+        state = AsyncData(ApplicationsState(applications: apps));
+      }
+      return ApplicationsState(applications: apps);
+    }).catchError((error, stackTrace) {
+      if (cachedApps != null)
+        return ApplicationsState(applications: cachedApps);
+      throw error;
+    });
+
+    if (cachedApps != null) {
+      return ApplicationsState(applications: cachedApps);
+    }
+
+    return await fetchFuture;
   }
 
   Future<void> refresh() async {

@@ -50,7 +50,7 @@ class _BreathingBackgroundState extends State<BreathingBackground>
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: primaryColor.withOpacity(0.15),
+                  color: primaryColor.withValues(alpha: 0.15),
                 ),
               ),
             );
@@ -67,7 +67,7 @@ class _BreathingBackgroundState extends State<BreathingBackground>
                 height: 400,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: primaryColor.withOpacity(0.1),
+                  color: primaryColor.withValues(alpha: 0.1),
                 ),
               ),
             );

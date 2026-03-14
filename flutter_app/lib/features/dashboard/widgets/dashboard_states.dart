@@ -8,6 +8,48 @@ import '../../../core/theme/app_theme.dart';
 import '../../../app/router/routes.dart';
 import 'package:go_router/go_router.dart';
 
+class DashboardLoading extends StatelessWidget {
+  const DashboardLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).appColors;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 32,
+              height: 32,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.8,
+                valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Loading your dashboard…',
+              style:
+                  AppTextStyles.bodyMedium.copyWith(color: colors.foreground),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'If this takes more than a few seconds, tap retry.',
+              style: AppTextStyles.caption
+                  .copyWith(color: colors.foregroundSecondary),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // DashboardSkeleton
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18,8 +60,6 @@ class DashboardSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).appColors;
-
     return PremiumShimmer(
       child: ListView(
         padding: const EdgeInsets.symmetric(
