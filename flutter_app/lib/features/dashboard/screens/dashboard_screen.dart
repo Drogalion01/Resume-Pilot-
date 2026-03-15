@@ -189,39 +189,36 @@ class DashboardScreen extends ConsumerWidget {
 
                     // Content surface
                     Expanded(
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadii.xl2),
-                        ),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color:
-                                  colors.surfacePrimary.withValues(alpha: 0.55),
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(AppRadii.xl2),
-                              ),
-                              border: Border(
-                                top: BorderSide(
-                                  color: Colors.white.withValues(alpha: 0.2),
-                                  width: 1.0,
-                                ),
-                              ),
-                            ),
-                            child: state.hasValue
-                                ? _DashboardContent(data: state.requireValue)
-                                : state.when(
-                                    skipLoadingOnRefresh: true,
-                                    skipLoadingOnReload: true,
-                                    loading: () => const DashboardLoading(),
-                                    error: (e, _) => DashboardError(
-                                      error: e,
-                                      onRetry: () => ref.invalidate(dashboardProvider),
-                                    ),
-                                    data: (data) => _DashboardContent(data: data),
-                                  ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: colors.surfacePrimary.withValues(alpha: 0.85),
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2),
                           ),
+                          border: Border(
+                            top: BorderSide(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              width: 1.0,
+                            ),
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2),
+                          ),
+                          child: state.hasValue
+                              ? _DashboardContent(data: state.requireValue)
+                              : state.when(
+                                  skipLoadingOnRefresh: true,
+                                  skipLoadingOnReload: true,
+                                  loading: () => const DashboardLoading(),
+                                  error: (e, _) => DashboardError(
+                                    error: e,
+                                    onRetry: () =>
+                                        ref.invalidate(dashboardProvider),
+                                  ),
+                                  data: (data) => _DashboardContent(data: data),
+                                ),
                         ),
                       ),
                     ),
