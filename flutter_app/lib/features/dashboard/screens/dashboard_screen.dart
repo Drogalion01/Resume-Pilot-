@@ -217,11 +217,9 @@ class DashboardScreen extends ConsumerWidget {
                                     loading: () => const DashboardLoading(),
                                     error: (e, _) => DashboardError(
                                       error: e,
-                                      onRetry: () =>
-                                          ref.invalidate(dashboardProvider),
+                                      onRetry: () => ref.invalidate(dashboardProvider),
                                     ),
-                                    data: (data) =>
-                                        _DashboardContent(data: data),
+                                    data: (data) => _DashboardContent(data: data),
                                   ),
                           ),
                         ),

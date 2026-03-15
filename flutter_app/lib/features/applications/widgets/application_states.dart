@@ -123,12 +123,14 @@ class ApplicationsEmptyState extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
-              child: Icon(Icons.work_outline, color: colors.primary, size: 32),
+              child:
+                  Icon(Icons.work_outline, color: colors.primary, size: 32),
             ),
             const SizedBox(height: 16),
             Text(
               'No applications yet',
-              style: AppTextStyles.headline.copyWith(color: colors.foreground),
+              style: AppTextStyles.headline
+                  .copyWith(color: colors.foreground),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),

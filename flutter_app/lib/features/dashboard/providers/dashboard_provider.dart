@@ -28,18 +28,15 @@ class DashboardNotifier extends AsyncNotifier<DashboardResponse> {
     final service = ref.watch(dashboardServiceProvider);
 
     // 2. Fetch fresh data from backend (Background Task)
-    final fetchFuture = service
-        .getDashboard()
-        .timeout(
-          const Duration(seconds: 12),
-          onTimeout: () => throw const NetworkException(
-            'Dashboard is taking too long to load. Please check your internet and retry.',
-          ),
-        )
-        .then((response) async {
+    final fetchFuture = service.getDashboard().timeout(
+      const Duration(seconds: 12),
+      onTimeout: () => throw const NetworkException(
+        'Dashboard is taking too long to load. Please check your internet and retry.',
+      ),
+    ).then((response) async {
       // 3. Update cache with fresh data
       await prefs.setString(_kDashboardCacheKey, jsonEncode(response.toJson()));
-
+      
       // If we yielded cache initially, we update the state with the fresh data now
       if (cachedResponse != null) {
         state = AsyncData(response);

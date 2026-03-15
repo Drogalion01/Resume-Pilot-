@@ -17,16 +17,15 @@ class ResumeListNotifier extends AsyncNotifier<List<ResumeResponse>> {
     if (cachedData != null) {
       try {
         final List<dynamic> jsonList = jsonDecode(cachedData);
-        cachedResumes =
-            jsonList.map((j) => ResumeResponse.fromJson(j)).toList();
+        cachedResumes = jsonList.map((j) => ResumeResponse.fromJson(j)).toList();
       } catch (_) {}
     }
 
     final service = ref.watch(resumeServiceProvider);
 
     final fetchFuture = service.getResumes().then((resumes) async {
-      await prefs.setString(_kResumeListCacheKey,
-          jsonEncode(resumes.map((r) => r.toJson()).toList()));
+      await prefs.setString(
+          _kResumeListCacheKey, jsonEncode(resumes.map((r) => r.toJson()).toList()));
       if (cachedResumes != null) state = AsyncData(resumes);
       return resumes;
     }).catchError((error, stackTrace) {

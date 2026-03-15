@@ -48,9 +48,9 @@ class _SkeletonBox extends StatelessWidget {
     required this.height,
     this.radius = AppRadii.md,
   });
-  final double width;
-  final double height;
-  final double radius;
+  final double  width;
+  final double  height;
+  final double  radius;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -181,10 +181,7 @@ class _ApplicationListSkeleton extends StatelessWidget {
                         children: [
                           _SkeletonFlex(height: 14),
                           SizedBox(height: 6),
-                          _SkeletonBox(
-                              width: 60,
-                              height: 18,
-                              radius: AppRadii.badgePill),
+                          _SkeletonBox(width: 60, height: 18, radius: AppRadii.badgePill),
                         ],
                       ),
                     ),

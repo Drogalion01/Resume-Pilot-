@@ -166,7 +166,8 @@ class ResumesEmptyState extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               'No resumes yet',
-              style: AppTextStyles.headline.copyWith(color: colors.foreground),
+              style: AppTextStyles.headline
+                  .copyWith(color: colors.foreground),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),

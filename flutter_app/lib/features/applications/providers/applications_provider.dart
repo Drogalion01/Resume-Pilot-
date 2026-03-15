@@ -69,23 +69,21 @@ class ApplicationsNotifier extends AsyncNotifier<ApplicationsState> {
     if (cachedData != null) {
       try {
         final List<dynamic> jsonList = jsonDecode(cachedData);
-        cachedApps =
-            jsonList.map((j) => ApplicationResponse.fromJson(j)).toList();
+        cachedApps = jsonList.map((j) => ApplicationResponse.fromJson(j)).toList();
       } catch (_) {}
     }
 
     final service = ref.watch(applicationServiceProvider);
 
     final fetchFuture = service.getApplications().then((apps) async {
-      await prefs.setString(_kApplicationsCacheKey,
-          jsonEncode(apps.map((a) => a.toJson()).toList()));
+      await prefs.setString(
+          _kApplicationsCacheKey, jsonEncode(apps.map((a) => a.toJson()).toList()));
       if (cachedApps != null) {
         state = AsyncData(ApplicationsState(applications: apps));
       }
       return ApplicationsState(applications: apps);
     }).catchError((error, stackTrace) {
-      if (cachedApps != null)
-        return ApplicationsState(applications: cachedApps);
+      if (cachedApps != null) return ApplicationsState(applications: cachedApps);
       throw error;
     });
 
