@@ -21,6 +21,17 @@ class App extends ConsumerWidget {
       darkTheme: PremiumTheme.darkMode,
       // Driven by user settings — falls back to system until settings load
       themeMode: themeMode,
+      builder: (context, child) {
+        final content = child ?? const SizedBox.shrink();
+
+        // Temporary Android workaround for a recurring framework semantics
+        // assertion (`!semantics.parentDataDirty`) seen on the dashboard shell.
+        if (Theme.of(context).platform == TargetPlatform.android) {
+          return ExcludeSemantics(child: content);
+        }
+
+        return content;
+      },
       // GoRouter drives all navigation
       routerConfig: router,
     );

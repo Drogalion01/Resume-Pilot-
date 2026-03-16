@@ -1,18 +1,6 @@
-
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// AppBottomNav
-//
-// Blurred, Material-3-style bottom navigation bar.
-// Uses a custom painter approach (not NavigationBar) to achieve:
-//   • frosted-glass card background (BackdropFilter blur 20)
-//   • animated dot indicator under the active tab
-//   • icon + label layout, bold/normal based on active state
-// ─────────────────────────────────────────────────────────────────────────────
 
 class AppBottomNav extends StatelessWidget {
   const AppBottomNav({
@@ -24,155 +12,39 @@ class AppBottomNav extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onDestinationSelected;
 
-  static const _tabs = <_NavTab>[
-    _NavTab(
-        label: 'Home',
-        icon: Icons.home_rounded,
-        activeIcon: Icons.home_rounded),
-    _NavTab(
-        label: 'Resumes',
-        icon: Icons.description_outlined,
-        activeIcon: Icons.description_rounded),
-    _NavTab(
-        label: 'Applications',
-        icon: Icons.work_outline_rounded,
-        activeIcon: Icons.work_rounded),
-    _NavTab(
-        label: 'Settings',
-        icon: Icons.tune_outlined,
-        activeIcon: Icons.tune_rounded),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
-    final textTheme = Theme.of(context).textTheme;
-    final bottom = MediaQuery.paddingOf(context).bottom;
-    final barHeight = 62.0 + bottom;
 
-    return SizedBox(
-      height: barHeight,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Solid glass background 
-          Container(
-            decoration: BoxDecoration(
-              color: colors.surfacePrimary,
-              border: Border(
-                top: BorderSide(color: colors.borderSubtle, width: 1),
-              ),
-            ),
-          ),
-
-          // ── Tab row ───────────────────────────────────────────────────────
-          Padding(
-            padding: EdgeInsets.only(bottom: bottom),
-            child: Row(
-              children: List.generate(_tabs.length, (index) {
-                final tab = _tabs[index];
-                final isActive = currentIndex == index;
-                return Expanded(
-                  child: _NavItem(
-                    tab: tab,
-                    isActive: isActive,
-                    appColors: colors,
-                    textTheme: textTheme,
-                    onTap: () => onDestinationSelected(index),
-                  ),
-                );
-              }),
-            ),
-          ),
-        ],
-      ),
+    return BottomNavigationBar(
+      backgroundColor: colors.surfacePrimary,
+      currentIndex: currentIndex,
+      onTap: onDestinationSelected,
+      selectedItemColor: colors.primary,
+      unselectedItemColor: colors.foregroundTertiary,
+      type: BottomNavigationBarType.fixed,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined),
+          activeIcon: Icon(Icons.home_rounded),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.description_outlined),
+          activeIcon: Icon(Icons.description_rounded),
+          label: 'Resumes',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.work_outline_rounded),
+          activeIcon: Icon(Icons.work_rounded),
+          label: 'Applications',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.tune_outlined),
+          activeIcon: Icon(Icons.tune_rounded),
+          label: 'Settings',
+        ),
+      ],
     );
   }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// _NavItem — single tab button
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _NavItem extends StatelessWidget {
-  const _NavItem({
-    required this.tab,
-    required this.isActive,
-    required this.appColors,
-    required this.textTheme,
-    required this.onTap,
-  });
-
-  final _NavTab tab;
-  final bool isActive;
-  final AppColors appColors;
-  final TextTheme textTheme;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final activeColor = appColors.primary;
-    final inactiveColor = appColors.foregroundQuaternary;
-    final color = isActive ? activeColor : inactiveColor;
-    final baseLabelMedium =
-      textTheme.labelMedium ?? const TextStyle(fontSize: 12);
-    final baseLabelSmall =
-      textTheme.labelSmall ?? const TextStyle(fontSize: 11);
-
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            child: Icon(
-              isActive ? tab.activeIcon : tab.icon,
-              key: ValueKey(isActive),
-              color: color,
-              size: 24,
-            ),
-          ),
-          const SizedBox(height: 3),
-          // Animated dot indicator
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInOut,
-            width: isActive ? 18 : 0,
-            height: isActive ? 3 : 0,
-            decoration: BoxDecoration(
-              color: isActive ? activeColor : Colors.transparent,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 2),
-          AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 200),
-            style: (isActive
-                    ? baseLabelMedium
-                        .copyWith(fontWeight: FontWeight.w700)
-                    : baseLabelSmall)
-                .copyWith(color: color),
-            child: Text(tab.label),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Data class
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _NavTab {
-  const _NavTab({
-    required this.label,
-    required this.icon,
-    required this.activeIcon,
-  });
-  final String label;
-  final IconData icon;
-  final IconData activeIcon;
 }
