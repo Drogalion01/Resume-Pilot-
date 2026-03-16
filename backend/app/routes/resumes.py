@@ -24,6 +24,7 @@ def to_analysis_response_dict(db_analysis: AnalysisResult) -> dict:
         "id": db_analysis.id,
         "resume_id": db_analysis.resume_id,
         "resume_version_id": db_analysis.resume_version_id,
+        "status": db_analysis.status,
         "overall_score": db_analysis.overall_score,
         "ats_score": db_analysis.ats_score,
         "recruiter_score": db_analysis.recruiter_score,

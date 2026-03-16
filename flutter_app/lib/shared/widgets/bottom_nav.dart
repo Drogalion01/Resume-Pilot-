@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -56,17 +55,12 @@ class AppBottomNav extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // ── Frosted glass background ──────────────────────────────────────
-          ClipRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: colors.surfacePrimary.withValues(alpha: 0.98),
-                  border: Border(
-                    top: BorderSide(color: colors.borderSubtle, width: 1),
-                  ),
-                ),
+          // Solid glass background 
+          Container(
+            decoration: BoxDecoration(
+              color: colors.surfacePrimary,
+              border: Border(
+                top: BorderSide(color: colors.borderSubtle, width: 1),
               ),
             ),
           ),
@@ -120,6 +114,10 @@ class _NavItem extends StatelessWidget {
     final activeColor = appColors.primary;
     final inactiveColor = appColors.foregroundQuaternary;
     final color = isActive ? activeColor : inactiveColor;
+    final baseLabelMedium =
+      textTheme.labelMedium ?? const TextStyle(fontSize: 12);
+    final baseLabelSmall =
+      textTheme.labelSmall ?? const TextStyle(fontSize: 11);
 
     return GestureDetector(
       onTap: onTap,
@@ -152,9 +150,9 @@ class _NavItem extends StatelessWidget {
           AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 200),
             style: (isActive
-                    ? textTheme.labelMedium!
+                    ? baseLabelMedium
                         .copyWith(fontWeight: FontWeight.w700)
-                    : textTheme.labelSmall!)
+                    : baseLabelSmall)
                 .copyWith(color: color),
             child: Text(tab.label),
           ),

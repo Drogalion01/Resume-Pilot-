@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -207,17 +206,20 @@ class DashboardScreen extends ConsumerWidget {
                             top: Radius.circular(AppRadii.xl2),
                           ),
                           child: state.hasValue
-                              ? _DashboardContent(data: state.requireValue)
+                              ? _DashboardContent(
+                                  data: state.requireValue)
                               : state.when(
                                   skipLoadingOnRefresh: true,
                                   skipLoadingOnReload: true,
-                                  loading: () => const DashboardLoading(),
+                                  loading: () => const DashboardLoading(
+                                      ),
                                   error: (e, _) => DashboardError(
                                     error: e,
                                     onRetry: () =>
                                         ref.invalidate(dashboardProvider),
                                   ),
-                                  data: (data) => _DashboardContent(data: data),
+                                  data: (data) => _DashboardContent(
+                                      data: data),
                                 ),
                         ),
                       ),
@@ -324,3 +326,4 @@ class _DashboardContent extends StatelessWidget {
     );
   }
 }
+

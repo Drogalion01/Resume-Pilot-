@@ -47,8 +47,20 @@ final resumeDetailProvider =
 class ResumeAnalysisNotifier
     extends FamilyAsyncNotifier<AnalysisResultResponse, int> {
   @override
-  Future<AnalysisResultResponse> build(int resumeId) =>
-      ref.watch(resumeServiceProvider).getResumeAnalysis(resumeId);
+  Future<AnalysisResultResponse> build(int resumeId) async {
+    final service = ref.watch(resumeServiceProvider);
+    var result = await service.getResumeAnalysis(resumeId);
+
+    // If analysis is still in background processing, poll until terminal state.
+    var retries = 0;
+    while (result.status == 'processing' && retries < 30) {
+      await Future.delayed(const Duration(seconds: 2));
+      result = await service.checkAnalysisStatus(result.id);
+      retries++;
+    }
+
+    return result;
+  }
 
   Future<void> refresh() async {
     ref.invalidateSelf();

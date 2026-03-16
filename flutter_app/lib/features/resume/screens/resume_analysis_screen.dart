@@ -142,6 +142,65 @@ class _AnalysisContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
+
+    if (analysis.status == 'processing') {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pageH),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              Text(
+                'Your resume is still being analyzed...',
+                style: AppTextStyles.bodyMedium
+                    .copyWith(color: colors.foreground),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Pull to refresh in a few seconds.',
+                style: AppTextStyles.caption
+                    .copyWith(color: colors.foregroundSecondary),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (analysis.status == 'failed') {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pageH),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.error_outline,
+                  size: 42, color: colors.statusRejected),
+              const SizedBox(height: 14),
+              Text(
+                'Analysis failed for this resume.',
+                style: AppTextStyles.bodyMedium
+                    .copyWith(color: colors.foreground),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () => context.pushReplacement(
+                  AppRoutes.resumeAnalysis(resumeId),
+                ),
+                icon: const Icon(Icons.refresh_rounded, size: 18),
+                label: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final ats = (analysis.atsScore ?? 0).toDouble();
     final rec = (analysis.recruiterScore ?? 0).toDouble();
 

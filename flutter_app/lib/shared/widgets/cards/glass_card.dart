@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class GlassCard extends StatelessWidget {
@@ -19,20 +18,16 @@ class GlassCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          width: width,
-          height: height,
-          padding: const EdgeInsets.all(1.0), // Creates the 1px border visually
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
+    return Container(
+      width: width,
+      height: height,
+      padding: const EdgeInsets.all(1.0), // Creates the 1px border visually
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
                 Colors.white.withValues(alpha: 0.20),
                 Colors.white.withValues(alpha: 0.05),
               ],
@@ -48,8 +43,6 @@ class GlassCard extends StatelessWidget {
             ),
             child: child,
           ),
-        ),
-      ),
     );
   }
 }
