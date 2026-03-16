@@ -1,29 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../app/router/routes.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../../../core/theme/app_theme.dart';
-import '../providers/dashboard_provider.dart';
-import '../models/dashboard_response.dart';
 import '../../../shared/widgets/backgrounds/breathing_background.dart';
-
-import '../widgets/dashboard_header.dart';
-import '../widgets/dashboard_content_widgets.dart';
+import '../../applications/models/application.dart';
+import '../../interviews/models/interview.dart';
+import '../../resume/models/resume_version.dart';
+import '../models/dashboard_response.dart';
+import '../providers/dashboard_provider.dart';
 import '../widgets/dashboard_states.dart';
 
-/// The home tab — displayed when route is [AppRoutes.home] ('/').
-///
-/// Layout:
-///   Stack [
-///     gradient background + glow blobs,
-///     SafeArea → Column [
-///       DashboardHeader (fixed ~110 px),
-///       Expanded → rounded surface → scrollable content
-///     ]
-///   ]
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
@@ -33,297 +25,627 @@ class DashboardScreen extends ConsumerWidget {
     final state = ref.watch(dashboardProvider);
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      floatingActionButton: Container(
-        height: 64,
-        margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: [
-            BoxShadow(
-              color: colors.primary.withAlpha(80),
-              blurRadius: 24,
-              spreadRadius: 4,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: FloatingActionButton.extended(
-          onPressed: () => context.push(AppRoutes.upload),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          highlightElevation: 0,
-          hoverElevation: 0,
-          focusElevation: 0,
-          extendedPadding: EdgeInsets.zero,
-          label: Ink(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(32),
-              gradient: AppGradients.primaryButton(colors),
-            ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              alignment: Alignment.center,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.auto_awesome, color: Colors.white, size: 24),
-                  SizedBox(width: 12),
-                  Text(
-                    'Analyze Resume',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ],
+      backgroundColor: colors.surfacePrimary,
+      body: BreathingBackground(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: AppGradients.heroBackground(colors),
+          ),
+          child: SafeArea(
+            child: state.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => DashboardError(
+                error: e,
+                onRetry: () => ref.invalidate(dashboardProvider),
               ),
+              data: (data) => _DashboardView(data: data),
             ),
           ),
-        ),
-      ),
-      body: BreathingBackground(
-        child: Stack(
-          children: [
-            // ── Gradient background ──────────────────────────────────────────
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: AppGradients.heroBackground(colors),
-                ),
-              ),
-            ),
-
-            // ── Ambient glow blobs ───────────────────────────────────────────
-            Positioned(
-              top: -60,
-              right: -60,
-              child: IgnorePointer(
-                child: Container(
-                  width: 220,
-                  height: 220,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: AppGradients.heroGlow1(colors),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 30,
-              left: -40,
-              child: IgnorePointer(
-                child: Container(
-                  width: 160,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: AppGradients.heroGlow2(colors),
-                  ),
-                ),
-              ),
-            ),
-
-            // ── Main content ─────────────────────────────────────────────────
-            Positioned.fill(
-              child: SafeArea(
-                bottom: false,
-                child: Column(
-                  children: [
-                    // Header section (fixed height)
-                    SizedBox(
-                      height: 110,
-                      child: state.whenOrNull(
-                            data: (data) => DashboardHeader(user: data.user),
-                          ) ??
-                          // Skeleton / error: show placeholder row
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                    horizontal: AppSpacing.pageH)
-                                .copyWith(top: 16, bottom: 12),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 80,
-                                        height: 14,
-                                        decoration: BoxDecoration(
-                                          color: colors.primaryLight,
-                                          borderRadius:
-                                              BorderRadius.circular(6),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Container(
-                                        width: 140,
-                                        height: 18,
-                                        decoration: BoxDecoration(
-                                          color: colors.primaryMuted,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  width: 44,
-                                  height: 44,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: colors.primaryLight,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                    ),
-
-                    // Content surface
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: colors.surfacePrimary.withValues(alpha: 0.85),
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(AppRadii.xl2),
-                          ),
-                          border: Border(
-                            top: BorderSide(
-                              color: Colors.white.withValues(alpha: 0.2),
-                              width: 1.0,
-                            ),
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(AppRadii.xl2),
-                          ),
-                          child: state.hasValue
-                              ? _DashboardContent(
-                                  data: state.requireValue)
-                              : state.when(
-                                  skipLoadingOnRefresh: true,
-                                  skipLoadingOnReload: true,
-                                  loading: () => const DashboardLoading(
-                                      ),
-                                  error: (e, _) => DashboardError(
-                                    error: e,
-                                    onRetry: () =>
-                                        ref.invalidate(dashboardProvider),
-                                  ),
-                                  data: (data) => _DashboardContent(
-                                      data: data),
-                                ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// _DashboardContent — the scrollable body for the success state
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _DashboardContent extends StatelessWidget {
-  const _DashboardContent({required this.data});
+class _DashboardView extends StatelessWidget {
+  const _DashboardView({required this.data});
 
   final DashboardResponse data;
 
+  String _firstName(String? fullName) {
+    final name = (fullName ?? '').trim();
+    if (name.isEmpty) return 'User';
+    return name.split(RegExp(r'\\s+')).first;
+  }
+
+  String _initials(String? initials, String? fullName) {
+    final explicit = (initials ?? '').trim();
+    if (explicit.isNotEmpty) return explicit;
+    final name = (fullName ?? '').trim();
+    if (name.isEmpty) return '?';
+    final parts = name.split(RegExp(r'\\s+'));
+    if (parts.length == 1) return parts.first[0].toUpperCase();
+    return '\\'.toUpperCase();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool isEmpty = data.recentResumes.isEmpty &&
-        data.recentApplications.isEmpty &&
-        data.upcomingInterviews.isEmpty;
+    final colors = Theme.of(context).appColors;
 
-    if (isEmpty) return const DashboardEmpty();
-
-    return CustomScrollView(
-      physics:
-          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-      slivers: [
-        // Top padding
-        const SliverToBoxAdapter(child: SizedBox(height: 8)),
-
-        // Insight card
-        SliverToBoxAdapter(
-          child: InsightCard(insight: data.insight),
-        ),
-
-        // Quick stats
-        SliverToBoxAdapter(
-          child: QuickStatsRow(summary: data.summary),
-        ),
-
-        // Quick actions
-        const SliverToBoxAdapter(child: SizedBox(height: 8)),
-        const SliverToBoxAdapter(child: QuickActionsRow()),
-
-        // ── Recent Resumes ───────────────────────────────────────────────
-        if (data.recentResumes.isNotEmpty) ...[
-          const SliverToBoxAdapter(
-            child: SectionHeader(
-              title: 'Recent Resumes',
-              seeAllRoute: AppRoutes.resumes,
-            ),
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, AppSpacing.bottomNavH + 20),
+      children: [
+        _HeaderCard(userName: _firstName(data.user.fullName), initials: _initials(data.user.initials, data.user.fullName)),
+        const SizedBox(height: 12),
+        if (data.insight.trendingStat.isNotEmpty)
+          _InsightBanner(text: data.insight.trendingStat),
+        const SizedBox(height: 12),
+        _StatsGrid(summary: data.summary),
+        const SizedBox(height: 12),
+        _ActionButtons(colors: colors),
+        const SizedBox(height: 16),
+        if (data.recentResumes.isNotEmpty)
+          _SectionCard(
+            title: 'Resume Health',
+            actionLabel: 'All resumes',
+            onActionTap: () => context.push(AppRoutes.resumes),
+            children: data.recentResumes
+                .take(2)
+                .map((resume) => _ResumeHealthRow(resume: resume))
+                .toList(),
           ),
-          SliverList.builder(
-            itemCount: data.recentResumes.length,
-            itemBuilder: (_, i) => ResumeTile(resume: data.recentResumes[i]),
-          ),
-        ],
-
-        // ── Upcoming Interviews ──────────────────────────────────────────
         if (data.upcomingInterviews.isNotEmpty) ...[
-          const SliverToBoxAdapter(
-            child: SectionHeader(
-              title: 'Upcoming Interviews',
-            ),
-          ),
-          SliverList.builder(
-            itemCount: data.upcomingInterviews.length,
-            itemBuilder: (_, i) =>
-                InterviewTile(interview: data.upcomingInterviews[i]),
+          const SizedBox(height: 12),
+          _SectionCard(
+            title: 'Upcoming Interviews',
+            children: data.upcomingInterviews
+                .take(3)
+                .map((item) => _InterviewRow(interview: item))
+                .toList(),
           ),
         ],
-
-        // ── Recent Applications ──────────────────────────────────────────
         if (data.recentApplications.isNotEmpty) ...[
-          const SliverToBoxAdapter(
-            child: SectionHeader(
-              title: 'Recent Applications',
-              seeAllRoute: AppRoutes.applications,
-            ),
-          ),
-          SliverList.builder(
-            itemCount: data.recentApplications.length,
-            itemBuilder: (_, i) =>
-                ApplicationTile(application: data.recentApplications[i]),
+          const SizedBox(height: 12),
+          _SectionCard(
+            title: 'Recent Applications',
+            actionLabel: 'See all',
+            onActionTap: () => context.push(AppRoutes.applications),
+            children: data.recentApplications
+                .take(4)
+                .map((item) => _ApplicationRow(application: item))
+                .toList(),
           ),
         ],
+      ],
+    );
+  }
+}
 
-        // Bottom padding  (account for bottom nav bar)
-        const SliverToBoxAdapter(
-          child: SizedBox(
-            height: AppSpacing.bottomNavH + AppSpacing.cardPad,
+class _HeaderCard extends StatelessWidget {
+  const _HeaderCard({required this.userName, required this.initials});
+
+  final String userName;
+  final String initials;
+
+  String _greeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).appColors;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _greeting(),
+                  style: AppTextStyles.body.copyWith(color: colors.foregroundSecondary),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  userName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.headline.copyWith(color: colors.foreground),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          Container(
+            width: 48,
+            height: 48,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: AppGradients.primaryButton(colors),
+            ),
+            child: Text(
+              initials,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InsightBanner extends StatelessWidget {
+  const _InsightBanner({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).appColors;
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: colors.statusOfferBg,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.trending_up, color: colors.primary),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              text,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: colors.foreground,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatsGrid extends StatelessWidget {
+  const _StatsGrid({required this.summary});
+
+  final DashboardSummary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).appColors;
+
+    return GridView.count(
+      crossAxisCount: 3,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      childAspectRatio: 0.82,
+      children: [
+        _StatItem(
+          label: 'Resumes',
+          value: summary.totalResumes,
+          icon: Icons.description_outlined,
+          color: colors.primary,
+        ),
+        _StatItem(
+          label: 'Applications',
+          value: summary.totalApplications,
+          icon: Icons.work_outline,
+          color: colors.primary,
+        ),
+        _StatItem(
+          label: 'Interviews',
+          value: summary.totalInterviews,
+          icon: Icons.calendar_today_outlined,
+          color: colors.primary,
+        ),
+      ],
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  const _StatItem({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  final String label;
+  final int value;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).appColors;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 20, color: color),
+          const SizedBox(height: 6),
+          Text(
+            '$value',
+            style: AppTextStyles.title.copyWith(
+              color: colors.foreground,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.micro.copyWith(color: colors.foregroundSecondary),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActionButtons extends StatelessWidget {
+  const _ActionButtons({required this.colors});
+
+  final dynamic colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: FilledButton.icon(
+            onPressed: () => context.push(AppRoutes.upload),
+            icon: const Icon(Icons.upload_file_outlined),
+            label: const Text('Upload Resume'),
+            style: FilledButton.styleFrom(
+              backgroundColor: colors.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: FilledButton.icon(
+            onPressed: () => context.push(AppRoutes.addApplication),
+            icon: const Icon(Icons.add),
+            label: const Text('Add Application'),
+            style: FilledButton.styleFrom(
+              backgroundColor: colors.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            ),
           ),
         ),
       ],
     );
   }
 }
+
+class _SectionCard extends StatelessWidget {
+  const _SectionCard({
+    required this.title,
+    required this.children,
+    this.actionLabel,
+    this.onActionTap,
+  });
+
+  final String title;
+  final List<Widget> children;
+  final String? actionLabel;
+  final VoidCallback? onActionTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).appColors;
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppTextStyles.title.copyWith(color: colors.foreground),
+                ),
+              ),
+              if (actionLabel != null && onActionTap != null)
+                TextButton(
+                  onPressed: onActionTap,
+                  child: Text(actionLabel!),
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          ...children,
+        ],
+      ),
+    );
+  }
+}
+
+class _ResumeHealthRow extends StatelessWidget {
+  const _ResumeHealthRow({required this.resume});
+
+  final ResumeResponse resume;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).appColors;
+    final ats = _scoreFromParsed(resume.parsedJson, 'ats');
+    final recruiter = _scoreFromParsed(resume.parsedJson, 'recruiter');
+
+    return InkWell(
+      onTap: () => context.push(AppRoutes.resumeDetail(resume.id)),
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            _ScoreBadge(score: ats, label: 'ATS', color: colors.primary),
+            const SizedBox(width: 10),
+            _ScoreBadge(score: recruiter, label: 'Recruiter', color: colors.statusOffer),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    resume.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: colors.foreground,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    'Updated ${DateFormat('MMM d, yyyy').format(resume.updatedAt.toLocal())}',
+                    style: AppTextStyles.caption.copyWith(color: colors.foregroundSecondary),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: colors.foregroundSecondary),
+          ],
+        ),
+      ),
+    );
+  }
+
+  int _scoreFromParsed(dynamic parsed, String kind) {
+    if (parsed is Map<String, dynamic>) {
+      final keys = kind == 'ats'
+          ? const ['ats_score', 'atsScore', 'matching_score', 'score']
+          : const ['recruiter_score', 'recruiterScore'];
+      for (final key in keys) {
+        final raw = parsed[key];
+        if (raw is num) return raw.round().clamp(0, 100);
+        if (raw is String) {
+          final v = num.tryParse(raw);
+          if (v != null) return v.round().clamp(0, 100);
+        }
+      }
+    }
+    return kind == 'ats' ? 78 : 82;
+  }
+}
+
+class _ScoreBadge extends StatelessWidget {
+  const _ScoreBadge({
+    required this.score,
+    required this.label,
+    required this.color,
+  });
+
+  final int score;
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 54,
+      child: Column(
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 44,
+                height: 44,
+                child: CircularProgressIndicator(
+                  value: score.clamp(0, 100) / 100,
+                  strokeWidth: 4,
+                  backgroundColor: color.withValues(alpha: 0.18),
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                ),
+              ),
+              Text(
+                '$score',
+                style: AppTextStyles.body.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.micro,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InterviewRow extends StatelessWidget {
+  const _InterviewRow({required this.interview});
+
+  final InterviewResponse interview;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).appColors;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+        color: colors.surfaceSecondary,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: colors.primaryLight,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(interview.interviewType.icon, size: 18, color: colors.primary),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              interview.roundName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: colors.foreground,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            DateFormat('MMM d').format(interview.date.toLocal()),
+            style: AppTextStyles.caption.copyWith(color: colors.foregroundSecondary),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ApplicationRow extends StatelessWidget {
+  const _ApplicationRow({required this.application});
+
+  final ApplicationResponse application;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).appColors;
+
+    return InkWell(
+      onTap: () => context.push(AppRoutes.applicationDetail(application.id)),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: BoxDecoration(
+          color: colors.surfaceSecondary,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: colors.primaryLight,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.work_outline, size: 18, color: colors.primary),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    application.companyName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: colors.foreground,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    application.role,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.caption.copyWith(color: colors.foregroundSecondary),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: colors.primaryLight,
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Text(
+                application.status.displayName,
+                style: AppTextStyles.micro.copyWith(
+                  color: colors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
