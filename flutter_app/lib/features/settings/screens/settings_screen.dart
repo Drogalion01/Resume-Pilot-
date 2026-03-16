@@ -360,19 +360,21 @@ class _SettingsBody extends ConsumerWidget {
 
   // ── Dialogs ────────────────────────────────────────────────────────────────
 
-  void _confirmSignOut(BuildContext context, WidgetRef ref) {
-    showDialog<bool>(
+  Future<void> _confirmSignOut(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Sign Out'),
         content: const Text('Are you sure you want to sign out?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () =>
+                Navigator.of(dialogContext, rootNavigator: true).pop(false),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () =>
+                Navigator.of(dialogContext, rootNavigator: true).pop(true),
             child: Text(
               'Sign Out',
               style: TextStyle(color: colors.statusRejected),
@@ -380,17 +382,19 @@ class _SettingsBody extends ConsumerWidget {
           ),
         ],
       ),
-    ).then((confirmed) {
-      if (confirmed == true) {
-        ref.read(authNotifierProvider.notifier).logout();
-      }
-    });
+    );
+
+    if (confirmed == true) {
+      await ref.read(authNotifierProvider.notifier).logout();
+      if (!context.mounted) return;
+      context.go(AppRoutes.login);
+    }
   }
 
   void _confirmDeleteAccount(BuildContext context, WidgetRef ref) {
     showDialog<bool>(
       context: context,
-      builder: (_) {
+      builder: (dialogContext) {
             return AlertDialog(
               title: const Text('Unsubscribe'),
               content: const Text(
@@ -400,7 +404,9 @@ class _SettingsBody extends ConsumerWidget {
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.pop(context, false),
+                  onPressed: () => Navigator.of(dialogContext,
+                          rootNavigator: true)
+                      .pop(false),
                   child: const Text('Cancel'),
                 ),
                 FilledButton(
@@ -408,7 +414,8 @@ class _SettingsBody extends ConsumerWidget {
                     backgroundColor: Colors.red,
                   ),
                   onPressed: () async {
-                    Navigator.pop(context, true);
+                    Navigator.of(dialogContext, rootNavigator: true)
+                        .pop(true);
                     
                     final phone = ref.read(profileProvider).value?.phone;
                     if (phone == null || phone.isEmpty) {
@@ -567,12 +574,25 @@ class _SectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(left: 4),
-        child: Text(
-          label.toUpperCase(),
-          style: AppTextStyles.overline.copyWith(
-            color: colors.foregroundTertiary,
-            letterSpacing: 0.8,
-          ),
+        child: Row(
+          children: [
+            Container(
+              width: 3,
+              height: 14,
+              decoration: BoxDecoration(
+                color: colors.primary,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label.toUpperCase(),
+              style: AppTextStyles.overline.copyWith(
+                color: colors.foregroundTertiary,
+                letterSpacing: 0.8,
+              ),
+            ),
+          ],
         ),
       );
 }

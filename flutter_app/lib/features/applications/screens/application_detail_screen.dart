@@ -68,35 +68,49 @@ class ApplicationDetailScreen extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.pageH, vertical: 8),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.arrow_back_ios_new_rounded,
-                              color: colors.foreground, size: 20),
-                          onPressed: () => context.pop(),
-                        ),
-                        Expanded(
-                          child: detailAsync.maybeWhen(
-                            data: (d) => Text(
-                              d.application.companyName,
-                              style: AppTextStyles.headline
-                                  .copyWith(color: colors.foreground),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary.withAlpha(224),
+                        borderRadius: BorderRadius.circular(AppRadii.card),
+                        border: Border.all(color: colors.borderSubtle),
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.arrow_back_ios_new_rounded,
+                                color: colors.foreground, size: 20),
+                            onPressed: () {
+                              if (context.canPop()) {
+                                context.pop();
+                              } else {
+                                context.go(AppRoutes.applications);
+                              }
+                            },
+                          ),
+                          Expanded(
+                            child: detailAsync.maybeWhen(
+                              data: (d) => Text(
+                                d.application.companyName,
+                                style: AppTextStyles.headline
+                                    .copyWith(color: colors.foreground),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              orElse: () => const SizedBox.shrink(),
+                            ),
+                          ),
+                          // Delete button
+                          detailAsync.maybeWhen(
+                            data: (d) => IconButton(
+                              icon: Icon(Icons.delete_outline_rounded,
+                                  color: colors.destructive, size: 22),
+                              onPressed: () => _confirmDelete(context, ref),
                             ),
                             orElse: () => const SizedBox.shrink(),
                           ),
-                        ),
-                        // Delete button
-                        detailAsync.maybeWhen(
-                          data: (d) => IconButton(
-                            icon: Icon(Icons.delete_outline_rounded,
-                                color: colors.destructive, size: 22),
-                            onPressed: () => _confirmDelete(context, ref),
-                          ),
-                          orElse: () => const SizedBox.shrink(),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 
@@ -161,7 +175,13 @@ class ApplicationDetailScreen extends ConsumerWidget {
       await ref
           .read(applicationsProvider.notifier)
           .removeApplication(applicationId);
-      if (context.mounted) context.pop();
+      if (context.mounted) {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go(AppRoutes.applications);
+        }
+      }
     }
   }
 }
@@ -330,15 +350,31 @@ class _Section extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.pageH, vertical: 0)
-            .copyWith(top: 24),
+            .copyWith(top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: AppTextStyles.title.copyWith(color: colors.foreground),
+            Row(
+              children: [
+                Container(
+                  width: 3,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    color: colors.primary,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  title.toUpperCase(),
+                  style: AppTextStyles.overline.copyWith(
+                    color: colors.foregroundTertiary,
+                    letterSpacing: 0.8,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             child,
           ],
         ),
@@ -361,17 +397,25 @@ class _MetaTag extends StatelessWidget {
   final AppColors colors;
 
   @override
-  Widget build(BuildContext context) => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: colors.foregroundSecondary),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: AppTextStyles.caption
-                .copyWith(color: colors.foregroundSecondary),
-          ),
-        ],
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: colors.surfaceSecondary,
+          borderRadius: BorderRadius.circular(AppRadii.badge),
+          border: Border.all(color: colors.borderSubtle),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: colors.foregroundSecondary),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: AppTextStyles.caption
+                  .copyWith(color: colors.foregroundSecondary),
+            ),
+          ],
+        ),
       );
 }
 
@@ -445,38 +489,58 @@ class _LinkedResumeTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: colors.primaryLight,
+          color: colors.surfacePrimary,
           borderRadius: BorderRadius.circular(AppRadii.card),
-          border: Border.all(color: colors.primary.withAlpha(60)),
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.description_outlined, color: colors.primary, size: 24),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    version.versionName ??
-                        version.targetRole ??
-                        'Resume Version',
-                    style: AppTextStyles.bodyMedium.copyWith(
-                        color: colors.foreground, fontWeight: FontWeight.w600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (version.targetRole != null)
-                    Text(
-                      version.targetRole!,
-                      style: AppTextStyles.caption
-                          .copyWith(color: colors.foregroundSecondary),
-                    ),
-                ],
-              ),
+          border: Border.all(color: colors.primaryLight),
+          boxShadow: [
+            BoxShadow(
+              color: colors.primary.withAlpha(16),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
-            Icon(Icons.open_in_new_rounded, size: 16, color: colors.primary),
           ],
+        ),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                width: 4,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [colors.primary, colors.primaryHover],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Icon(Icons.description_outlined, color: colors.primary, size: 24),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      version.versionName ?? version.targetRole ?? 'Resume Version',
+                      style: AppTextStyles.bodyMedium.copyWith(
+                          color: colors.foreground, fontWeight: FontWeight.w600),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (version.targetRole != null)
+                      Text(
+                        version.targetRole!,
+                        style: AppTextStyles.caption
+                            .copyWith(color: colors.foregroundSecondary),
+                      ),
+                  ],
+                ),
+              ),
+              Icon(Icons.open_in_new_rounded, size: 16, color: colors.primary),
+            ],
+          ),
         ),
       ),
     );

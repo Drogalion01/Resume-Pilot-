@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../app/router/routes.dart';
+import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/theme/app_theme.dart';
@@ -21,9 +22,18 @@ class ApplicationsTrackerScreen extends ConsumerWidget {
     final stateAsync = ref.watch(applicationsProvider);
 
     return Scaffold(
-      backgroundColor: colors.surfacePrimary,
-      body: SafeArea(
-        child: Column(
+      backgroundColor: colors.background,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: AppGradients.heroBackground(colors),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ── Header ──────────────────────────────────────────────────
@@ -124,6 +134,8 @@ class ApplicationsTrackerScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+        ],
       ),
     );
   }
@@ -245,6 +257,8 @@ class _Chip extends StatelessWidget {
 
 // ── Application card ──────────────────────────────────────────────────────────
 
+// ── Application card ────────────────────────────────────────────────
+
 class _ApplicationCard extends StatelessWidget {
   const _ApplicationCard({required this.app});
 
@@ -256,83 +270,113 @@ class _ApplicationCard extends StatelessWidget {
     final dateLabel = app.applicationDate != null
         ? DateFormat('MMM d, yyyy').format(app.applicationDate!)
         : null;
+    final accentColor = app.status.foreground(colors);
 
-    return Card(
+    return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadii.card)),
-      elevation: 0,
-      color: colors.surfaceSecondary,
-      child: InkWell(
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
         borderRadius: BorderRadius.circular(AppRadii.card),
-        onTap: () =>
-            context.push(AppRoutes.applicationDetail(app.id)),
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          app.companyName,
-                          style: AppTextStyles.title.copyWith(
-                              color: colors.foreground),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          app.role,
-                          style: AppTextStyles.caption.copyWith(
-                              color: colors.foregroundSecondary),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+        border: Border.all(color: accentColor.withAlpha(45), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: accentColor.withAlpha(22),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadii.card),
+        child: Material(
+          color: Colors.transparent,
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(width: 4, color: accentColor),
+                Expanded(
+                  child: InkWell(
+                    onTap: () =>
+                        context.push(AppRoutes.applicationDetail(app.id)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      app.companyName,
+                                      style: AppTextStyles.title
+                                          .copyWith(color: colors.foreground),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      app.role,
+                                      style: AppTextStyles.caption.copyWith(
+                                          color: colors.foregroundSecondary),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              ApplicationStatusBadge(status: app.status),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              if (app.location != null) ...[
+                                Icon(Icons.location_on_outlined,
+                                    size: 13,
+                                    color: colors.foregroundTertiary),
+                                const SizedBox(width: 3),
+                                Text(
+                                  app.location!,
+                                  style: AppTextStyles.micro.copyWith(
+                                      color: colors.foregroundTertiary),
+                                ),
+                                const SizedBox(width: 12),
+                              ],
+                              if (dateLabel != null) ...[
+                                Icon(Icons.calendar_today_outlined,
+                                    size: 13,
+                                    color: colors.foregroundTertiary),
+                                const SizedBox(width: 3),
+                                Text(
+                                  dateLabel,
+                                  style: AppTextStyles.micro.copyWith(
+                                      color: colors.foregroundTertiary),
+                                ),
+                              ],
+                              const Spacer(),
+                              Icon(Icons.chevron_right_rounded,
+                                  size: 18,
+                                  color: colors.foregroundSecondary),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  ApplicationStatusBadge(status: app.status),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  if (app.location != null) ...[
-                    Icon(Icons.location_on_outlined,
-                        size: 13, color: colors.foregroundTertiary),
-                    const SizedBox(width: 3),
-                    Text(
-                      app.location!,
-                      style: AppTextStyles.micro
-                          .copyWith(color: colors.foregroundTertiary),
-                    ),
-                    const SizedBox(width: 12),
-                  ],
-                  if (dateLabel != null) ...[
-                    Icon(Icons.calendar_today_outlined,
-                        size: 13, color: colors.foregroundTertiary),
-                    const SizedBox(width: 3),
-                    Text(
-                      dateLabel,
-                      style: AppTextStyles.micro
-                          .copyWith(color: colors.foregroundTertiary),
-                    ),
-                  ],
-                  const Spacer(),
-                  Icon(Icons.chevron_right_rounded,
-                      size: 18, color: colors.foregroundSecondary),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+// ── Status filter row ─────────────────────────────────────────────────────────
+

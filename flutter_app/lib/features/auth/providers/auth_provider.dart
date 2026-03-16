@@ -71,8 +71,11 @@ class AuthNotifier extends Notifier<AuthState> {
   // ── Logout ────────────────────────────────────────────────────────────
 
   Future<void> logout() async {
-    await ref.read(authRepositoryProvider).logout();
-    state = const AuthState.unauthenticated();
+    try {
+      await ref.read(authRepositoryProvider).logout();
+    } finally {
+      state = const AuthState.unauthenticated();
+    }
   }
 
   // ── Force-unauthenticate (called by RefreshInterceptor on 401) ─────────────

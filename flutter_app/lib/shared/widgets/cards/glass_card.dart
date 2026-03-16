@@ -28,21 +28,21 @@ class GlassCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-                Colors.white.withValues(alpha: 0.20),
-                Colors.white.withValues(alpha: 0.05),
-              ],
-            ),
-          ),
-          child: Container(
-            padding: padding,
-            decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.white.withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: child,
-          ),
+            Colors.white.withValues(alpha: 0.20),
+            Colors.white.withValues(alpha: 0.05),
+          ],
+        ),
+      ),
+      child: Container(
+        padding: padding,
+        decoration: BoxDecoration(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.05)
+              : Colors.white.withValues(alpha: 0.4),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: child,
+      ),
     );
   }
 }

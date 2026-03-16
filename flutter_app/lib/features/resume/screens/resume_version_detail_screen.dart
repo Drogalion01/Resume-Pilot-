@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 
 import '../../../app/router/routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_gradients.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/theme/app_theme.dart';
@@ -21,97 +23,162 @@ class ResumeVersionDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).appColors;
+    final brightness = Theme.of(context).brightness;
     final resumeAsync = ref.watch(resumeDetailProvider(resumeId));
     final versionsAsync = ref.watch(resumeVersionsProvider(resumeId));
 
     return Scaffold(
-      backgroundColor: colors.surfacePrimary,
-      appBar: AppBar(
-        backgroundColor: colors.surfacePrimary,
-        surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-          onPressed: () => context.pop(),
-        ),
-        title: resumeAsync.maybeWhen(
-          data: (r) => Text(
-            r.title,
-            style: AppTextStyles.title.copyWith(color: colors.foreground),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          orElse: () => const SizedBox.shrink(),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.auto_awesome_outlined, color: colors.primary),
-            tooltip: 'View analysis',
-            onPressed: () => context.push(AppRoutes.resumeAnalysis(resumeId)),
-          ),
-          IconButton(
-            icon: Icon(Icons.add_outlined, color: colors.foreground),
-            tooltip: 'Save new version',
-            onPressed: () => _showSaveSheet(context, ref, resumeId),
-          ),
-        ],
-      ),
-      body: Column(
+      backgroundColor: colors.background,
+      body: Stack(
         children: [
-          // ── Resume metadata ──────────────────────────────────────────
-          resumeAsync.maybeWhen(
-            data: (resume) => _MetaRow(resume: resume, colors: colors),
-            orElse: () => const SizedBox.shrink(),
+          Positioned.fill(
+            child: Container(
+              decoration:
+                  BoxDecoration(gradient: AppGradients.heroBackground(colors)),
+            ),
           ),
-
-          // ── Versions list ────────────────────────────────────────────
-          Expanded(
-            child: versionsAsync.when(
-              loading: () => const ResumeListSkeleton(),
-              error: (e, _) => ResumeErrorState(
-                error: e,
-                onRetry: () => ref.invalidate(resumeVersionsProvider(resumeId)),
+          Positioned(
+            top: -44,
+            right: -44,
+            child: IgnorePointer(
+              child: Container(
+                width: 180,
+                height: 180,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: AppGradients.heroGlow1(colors),
+                ),
               ),
-              data: (versions) {
-                if (versions.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.layers_outlined,
-                              color: colors.foregroundSecondary, size: 40),
-                          const SizedBox(height: 12),
-                          Text(
-                            'No saved versions',
-                            style: AppTextStyles.title
-                                .copyWith(color: colors.foreground),
+            ),
+          ),
+          Positioned.fill(
+            child: SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.pageH, vertical: 8),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.arrow_back_ios_new_rounded,
+                              size: 20, color: colors.foreground),
+                          onPressed: () {
+                            if (context.canPop()) {
+                              context.pop();
+                            } else {
+                              context.go(AppRoutes.resumes);
+                            }
+                          },
+                        ),
+                        Expanded(
+                          child: resumeAsync.maybeWhen(
+                            data: (r) => Text(
+                              r.title,
+                              style: AppTextStyles.headline
+                                  .copyWith(color: colors.foreground),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            orElse: () => const SizedBox.shrink(),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Save a version to track iterations targeted at specific roles or companies.',
-                            style: AppTextStyles.caption
-                                .copyWith(color: colors.foregroundSecondary),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.auto_awesome_outlined,
+                              color: colors.primary),
+                          tooltip: 'View analysis',
+                          onPressed: () =>
+                              context.push(AppRoutes.resumeAnalysis(resumeId)),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add_outlined,
+                              color: colors.foregroundSecondary),
+                          tooltip: 'Save new version',
+                          onPressed: () => _showSaveSheet(context, ref, resumeId),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary,
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2)),
+                        boxShadow: AppShadows.elevated(brightness),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadii.xl2)),
+                        child: Column(
+                          children: [
+                            resumeAsync.maybeWhen(
+                              data: (resume) =>
+                                  _MetaRow(resume: resume, colors: colors),
+                              orElse: () => const SizedBox.shrink(),
+                            ),
+                            Expanded(
+                              child: versionsAsync.when(
+                                loading: () => const ResumeListSkeleton(),
+                                error: (e, _) => ResumeErrorState(
+                                  error: e,
+                                  onRetry: () =>
+                                      ref.invalidate(resumeVersionsProvider(resumeId)),
+                                ),
+                                data: (versions) {
+                                  if (versions.isEmpty) {
+                                    return Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(32),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.layers_outlined,
+                                                color: colors.foregroundSecondary,
+                                                size: 40),
+                                            const SizedBox(height: 12),
+                                            Text(
+                                              'No saved versions',
+                                              style: AppTextStyles.title
+                                                  .copyWith(color: colors.foreground),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              'Save a version to track iterations targeted at specific roles or companies.',
+                                              style: AppTextStyles.caption.copyWith(
+                                                  color: colors.foregroundSecondary),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return ListView.builder(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: AppSpacing.pageH,
+                                        vertical: 10),
+                                    itemCount: versions.length,
+                                    itemBuilder: (_, i) => _VersionTile(
+                                      version: versions[i],
+                                      resumeId: resumeId,
+                                      onDuplicate: () => ref
+                                          .read(resumeVersionsProvider(resumeId)
+                                              .notifier)
+                                          .duplicateVersion(versions[i].id),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  );
-                }
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.pageH, vertical: 12),
-                  itemCount: versions.length,
-                  itemBuilder: (_, i) => _VersionTile(
-                    version: versions[i],
-                    resumeId: resumeId,
-                    onDuplicate: () => ref
-                        .read(resumeVersionsProvider(resumeId).notifier)
-                        .duplicateVersion(versions[i].id),
                   ),
-                );
-              },
+                ],
+              ),
             ),
           ),
         ],
@@ -139,37 +206,39 @@ class _MetaRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final date = DateFormat('MMM d, yyyy').format(resume.createdAt.toLocal());
-    return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.pageH, vertical: 12),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom:
-              BorderSide(color: colors.primaryMuted.withAlpha(60), width: 1),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.pageH, 12, AppSpacing.pageH, AppSpacing.px8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: colors.surfaceSecondary,
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          border: Border.all(color: colors.primaryLight),
         ),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.calendar_today_outlined,
-              color: colors.foregroundSecondary, size: 16),
-          const SizedBox(width: 6),
-          Text(date,
-              style: AppTextStyles.caption
-                  .copyWith(color: colors.foregroundSecondary)),
-          const SizedBox(width: 16),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-            decoration: BoxDecoration(
-              color: colors.primaryLight,
-              borderRadius: BorderRadius.circular(AppRadii.badge),
+        child: Row(
+          children: [
+            Icon(Icons.calendar_today_outlined,
+                color: colors.foregroundSecondary, size: 16),
+            const SizedBox(width: 6),
+            Text(date,
+                style: AppTextStyles.caption
+                    .copyWith(color: colors.foregroundSecondary)),
+            const SizedBox(width: 16),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: colors.primaryLight,
+                borderRadius: BorderRadius.circular(AppRadii.badge),
+              ),
+              child: Text(
+                resume.fileTypeLabel,
+                style: AppTextStyles.micro
+                    .copyWith(color: colors.primary, fontWeight: FontWeight.w600),
+              ),
             ),
-            child: Text(
-              resume.fileTypeLabel,
-              style: AppTextStyles.micro
-                  .copyWith(color: colors.primary, fontWeight: FontWeight.w600),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -199,60 +268,92 @@ class _VersionTile extends StatelessWidget {
     ].join(' · ');
     final date = DateFormat('MMM d').format(version.createdAt.toLocal());
 
-    return Card(
+    return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadii.card)),
-      elevation: 0,
-      color: colors.surfaceSecondary,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-        leading: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: colors.primaryMuted,
-            borderRadius: BorderRadius.circular(10),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(AppRadii.card),
+        border: Border.all(color: colors.primaryLight, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: colors.primary.withAlpha(16),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
-          alignment: Alignment.center,
-          child: Icon(Icons.layers_outlined, color: colors.primary, size: 20),
-        ),
-        title: Text(
-          displayName,
-          style: AppTextStyles.bodyMedium
-              .copyWith(color: colors.foreground, fontWeight: FontWeight.w600),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: subtitle.isNotEmpty
-            ? Text(
-                subtitle,
-                style: AppTextStyles.caption
-                    .copyWith(color: colors.foregroundSecondary),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              )
-            : Text(
-                date,
-                style: AppTextStyles.caption
-                    .copyWith(color: colors.foregroundSecondary),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadii.card),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                width: 4,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [colors.primary, colors.primaryHover],
+                  ),
+                ),
               ),
-        trailing: PopupMenuButton<String>(
-          icon: Icon(Icons.more_vert_rounded,
-              color: colors.foregroundSecondary, size: 20),
-          onSelected: (v) {
-            if (v == 'duplicate') onDuplicate();
-          },
-          itemBuilder: (_) => const [
-            PopupMenuItem(
-              value: 'duplicate',
-              child: ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Icon(Icons.copy_all_outlined),
-                title: Text('Duplicate'),
+              Expanded(
+                child: ListTile(
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                  leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: colors.primaryMuted,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    alignment: Alignment.center,
+                    child:
+                        Icon(Icons.layers_outlined, color: colors.primary, size: 20),
+                  ),
+                  title: Text(
+                    displayName,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                        color: colors.foreground, fontWeight: FontWeight.w600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: subtitle.isNotEmpty
+                      ? Text(
+                          subtitle,
+                          style: AppTextStyles.caption
+                              .copyWith(color: colors.foregroundSecondary),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : Text(
+                          date,
+                          style: AppTextStyles.caption
+                              .copyWith(color: colors.foregroundSecondary),
+                        ),
+                  trailing: PopupMenuButton<String>(
+                    icon: Icon(Icons.more_vert_rounded,
+                        color: colors.foregroundSecondary, size: 20),
+                    onSelected: (v) {
+                      if (v == 'duplicate') onDuplicate();
+                    },
+                    itemBuilder: (_) => const [
+                      PopupMenuItem(
+                        value: 'duplicate',
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: Icon(Icons.copy_all_outlined),
+                          title: Text('Duplicate'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

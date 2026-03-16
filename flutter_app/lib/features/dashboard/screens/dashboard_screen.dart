@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +7,7 @@ import '../../../app/router/routes.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/backgrounds/breathing_background.dart';
 import '../../applications/models/application.dart';
@@ -251,13 +252,13 @@ class _StatsGrid extends StatelessWidget {
           label: 'Applications',
           value: summary.totalApplications,
           icon: Icons.work_outline,
-          color: colors.primary,
+          color: colors.statusOffer,
         ),
         _StatItem(
           label: 'Interviews',
           value: summary.totalInterviews,
           icon: Icons.calendar_today_outlined,
-          color: colors.primary,
+          color: colors.statusApplied,
         ),
       ],
     );
@@ -281,11 +282,24 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).appColors;
 
+    final Color tint = color.withValues(alpha: 0.13);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       decoration: BoxDecoration(
-        color: colors.surfacePrimary,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withValues(alpha: 0.28), width: 1),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [tint, colors.surfacePrimary.withValues(alpha: 0.92)],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.10),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -314,7 +328,7 @@ class _StatItem extends StatelessWidget {
 class _ActionButtons extends StatelessWidget {
   const _ActionButtons({required this.colors});
 
-  final dynamic colors;
+  final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
@@ -370,16 +384,34 @@ class _SectionCard extends StatelessWidget {
     final colors = Theme.of(context).appColors;
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.only(bottom: 2),
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
       decoration: BoxDecoration(
         color: colors.surfacePrimary,
         borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: colors.primaryLight, width: 1),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x12000000),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
+              Container(
+                width: 5,
+                height: 18,
+                decoration: BoxDecoration(
+                  color: colors.primary,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   title,

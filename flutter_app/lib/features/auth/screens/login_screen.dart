@@ -112,6 +112,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final otpData = await _sendOtp(phone);
 
       final success = otpData['success'] == true;
+      final alreadyRegistered = otpData['alreadyRegistered'] == true;
       final referenceNo = otpData['referenceNo']?.toString().trim() ?? '';
       final message = otpData['message']?.toString() ?? '';
       final statusDetail = otpData['statusDetail']?.toString() ?? '';
@@ -128,7 +129,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           },
         );
         return;
-      } else if (statusCode == 'E1351' ||
+      } else if (alreadyRegistered ||
+          statusCode == 'E1351' ||
+          statusDetail.toLowerCase().contains('already registered') ||
           message.toLowerCase().contains('already registered')) {
         _showMessage('ইতিমধ্যে রেজিস্টার করা! লগইন হচ্ছে...', isError: false);
         await Future.delayed(const Duration(milliseconds: 800));

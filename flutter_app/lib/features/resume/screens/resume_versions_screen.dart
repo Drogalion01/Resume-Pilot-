@@ -151,46 +151,96 @@ class _ResumeTile extends StatelessWidget {
     final dateLabel =
         DateFormat('MMM d, yyyy').format(resume.createdAt.toLocal());
 
-    return Card(
+    return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadii.card)),
-      elevation: 0,
-      color: colors.surfaceSecondary,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-        onTap: () => context.push(AppRoutes.resumeDetail(resume.id)),
-        leading: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: colors.primaryMuted,
-            borderRadius: BorderRadius.circular(10),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(AppRadii.card),
+        border: Border.all(color: colors.primaryLight, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: colors.primary.withAlpha(18),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
-          alignment: Alignment.center,
-          child:
-              Icon(Icons.description_outlined, color: colors.primary, size: 22),
-        ),
-        title: Text(
-          resume.title,
-          style: AppTextStyles.bodyMedium
-              .copyWith(color: colors.foreground, fontWeight: FontWeight.w600),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Text(
-          dateLabel,
-          style:
-              AppTextStyles.caption.copyWith(color: colors.foregroundSecondary),
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _Badge(label: resume.fileTypeLabel, colors: colors),
-            const SizedBox(width: 4),
-            Icon(Icons.chevron_right_rounded,
-                color: colors.foregroundSecondary, size: 20),
-          ],
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadii.card),
+        child: Material(
+          color: Colors.transparent,
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  width: 4,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [colors.primary, colors.primaryHover],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () =>
+                        context.push(AppRoutes.resumeDetail(resume.id)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 12),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: colors.primaryMuted,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            alignment: Alignment.center,
+                            child: Icon(Icons.description_outlined,
+                                color: colors.primary, size: 22),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  resume.title,
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    color: colors.foreground,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 3),
+                                Text(
+                                  dateLabel,
+                                  style: AppTextStyles.caption.copyWith(
+                                    color: colors.foregroundSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          _Badge(label: resume.fileTypeLabel, colors: colors),
+                          const SizedBox(width: 4),
+                          Icon(Icons.chevron_right_rounded,
+                              color: colors.foregroundSecondary, size: 20),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

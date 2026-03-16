@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// ResumePilot Design System — Color Tokens
 ///
@@ -96,37 +96,37 @@ class AppColorsLight extends AppColors {
 
   // Surfaces
   @override
-  Color get background => const Color(0xFFEDEBF0); // hsl(258 10% 94%)
+  Color get background => const Color(0xFFF0F5FF); // hsl(225 100% 97%)
   @override
   Color get backgroundPure => const Color(0xFFFFFFFF);
   @override
   Color get surfacePrimary => const Color(0xFFFFFFFF);
   @override
-  Color get surfaceSecondary => const Color(0xFFEAE8ED); // hsl(258 8% 93%)
+  Color get surfaceSecondary => const Color(0xFFE6EEFB); // hsl(218 70% 94%)
   @override
-  Color get surfaceSunken => const Color(0xFFE5E3E8); // hsl(256 7% 91%)
+  Color get surfaceSunken => const Color(0xFFDDE8F8); // hsl(216 72% 92%)
 
   // Text
   @override
-  Color get foreground => const Color(0xFF111117); // hsl(240 12% 8%)
+  Color get foreground => const Color(0xFF0D1630); // hsl(222 56% 12%)
   @override
-  Color get foregroundSecondary => const Color(0xFF565361); // hsl(250 8% 36%)
+  Color get foregroundSecondary => const Color(0xFF4A547A); // hsl(228 24% 38%)
   @override
-  Color get foregroundTertiary => const Color(0xFF7A7880); // hsl(252 6% 50%)
+  Color get foregroundTertiary => const Color(0xFF6E7A9C); // hsl(224 18% 52%)
   @override
-  Color get foregroundQuaternary => const Color(0xFF9F9DA6); // hsl(250 5% 64%)
+  Color get foregroundQuaternary => const Color(0xFF96A0BC); // hsl(220 18% 66%)
 
   // Primary — deep purple hsl(262 36% 36%)
   @override
-  Color get primary => const Color(0xFF4A3975); // hsl(262 36% 36%)
+  Color get primary => const Color(0xFF3B68D4); // hsl(220 62% 52%)
   @override
   Color get primaryForeground => const Color(0xFFFFFFFF);
   @override
-  Color get primaryHover => const Color(0xFF54428A); // hsl(262 38% 42%)
+  Color get primaryHover => const Color(0xFF4D78E4); // hsl(220 70% 60%)
   @override
-  Color get primaryLight => const Color(0xFFEDE9F5); // hsl(264 24% 94%)
+  Color get primaryLight => const Color(0xFFE2EDFB); // hsl(216 80% 93%)
   @override
-  Color get primaryMuted => const Color(0xFFCFC8E2); // hsl(262 18% 84%)
+  Color get primaryMuted => const Color(0xFFBBCCEE); // hsl(218 52% 83%)
 
   // Gold — hsl(34 85% 65%)
   @override
@@ -140,15 +140,15 @@ class AppColorsLight extends AppColors {
 
   // Borders / Inputs
   @override
-  Color get border => const Color(0xFFD4CFDE); // hsl(258 12% 86%)
+  Color get border => const Color(0xFFCCD6ED); // hsl(218 44% 87%)
   @override
-  Color get borderSubtle => const Color(0xFFDCD8E5); // hsl(258 10% 89%)
+  Color get borderSubtle => const Color(0xFFD8E2F5); // hsl(218 60% 91%)
   @override
-  Color get inputBorder => const Color(0xFFD4CFDE);
+  Color get inputBorder => const Color(0xFFCCD6ED);
   @override
-  Color get inputFocus => const Color(0xFF4A3975);
+  Color get inputFocus => const Color(0xFF3B68D4);
   @override
-  Color get ring => const Color(0xFF4A3975);
+  Color get ring => const Color(0xFF3B68D4);
 
   // Destructive
   @override
@@ -216,13 +216,13 @@ class AppColorsLight extends AppColors {
 
   // ── Hero gradients ───────────────────────────────────────────────────────
   @override
-  Color get heroGradient1 => const Color(0xFFBDB0D4); // hsl(268 30% 82%)
+  Color get heroGradient1 => const Color(0xFFB2C8F4); // hsl(218 76% 82%)
   @override
-  Color get heroGradient2 => const Color(0xFFC4BACE); // hsl(262 24% 85%)
+  Color get heroGradient2 => const Color(0xFFC0CEEE); // hsl(222 52% 85%)
   @override
-  Color get heroGradient3 => const Color(0xFFD3CCDA); // hsl(278 20% 89%)
+  Color get heroGradient3 => const Color(0xFFCDD9F4); // hsl(220 66% 88%)
   @override
-  Color get heroGradient4 => const Color(0xFFDEDBE6); // hsl(258 14% 93%)
+  Color get heroGradient4 => const Color(0xFFDEE8FB); // hsl(216 80% 93%)
   @override
   Color get heroGoldGlow => const Color(0xFFEDD0A4); // hsl(34 52% 86%)
 }
@@ -236,37 +236,37 @@ class AppColorsDark extends AppColors {
 
   // Surfaces  — rich graphite spectrum
   @override
-  Color get background => const Color(0xFF0E0E14); // hsl(240 14% 7%)
+  Color get background => const Color(0xFF080C1C); // hsl(228 44% 7%)
   @override
-  Color get backgroundPure => const Color(0xFF090910); // hsl(240 16% 5%)
+  Color get backgroundPure => const Color(0xFF050814); // hsl(228 52% 5%)
   @override
-  Color get surfacePrimary => const Color(0xFF181820); // hsl(240 12% 11%)
+  Color get surfacePrimary => const Color(0xFF0F1628); // hsl(226 44% 11%)
   @override
-  Color get surfaceSecondary => const Color(0xFF1C1C24); // hsl(240 10% 13%)
+  Color get surfaceSecondary => const Color(0xFF141C30); // hsl(226 38% 14%)
   @override
-  Color get surfaceSunken => const Color(0xFF121218); // hsl(240 12% 9%)
+  Color get surfaceSunken => const Color(0xFF0B1022); // hsl(228 48% 9%)
 
   // Text
   @override
-  Color get foreground => const Color(0xFFEEEDF4); // hsl(240 10% 94%)
+  Color get foreground => const Color(0xFFE8EEFF); // hsl(228 100% 95%)
   @override
-  Color get foregroundSecondary => const Color(0xFF8E8A9E); // hsl(250 6% 64%)
+  Color get foregroundSecondary => const Color(0xFF8090B8); // hsl(222 26% 61%)
   @override
-  Color get foregroundTertiary => const Color(0xFF706E7A); // hsl(252 5% 48%)
+  Color get foregroundTertiary => const Color(0xFF5C6888); // hsl(222 20% 45%)
   @override
-  Color get foregroundQuaternary => const Color(0xFF55535C); // hsl(250 4% 36%)
+  Color get foregroundQuaternary => const Color(0xFF404E72); // hsl(224 28% 35%)
 
   // Primary — vibrant lavender-purple  hsl(262 38% 58%)
   @override
-  Color get primary => const Color(0xFF8A6DC2); // hsl(262 38% 58%)
+  Color get primary => const Color(0xFF6080FF); // hsl(228 100% 68%)
   @override
   Color get primaryForeground => const Color(0xFFFFFFFF);
   @override
-  Color get primaryHover => const Color(0xFF9B7ED0); // hsl(262 40% 64%)
+  Color get primaryHover => const Color(0xFF7090FF); // hsl(228 100% 72%)
   @override
-  Color get primaryLight => const Color(0xFF252232); // hsl(262 24% 18%)
+  Color get primaryLight => const Color(0xFF182040); // hsl(228 44% 17%)
   @override
-  Color get primaryMuted => const Color(0xFF2E2A3E); // hsl(262 16% 24%)
+  Color get primaryMuted => const Color(0xFF202848); // hsl(228 38% 21%)
 
   // Gold
   @override
@@ -280,15 +280,15 @@ class AppColorsDark extends AppColors {
 
   // Borders / Inputs
   @override
-  Color get border => const Color(0xFF252530); // hsl(240 10% 18%)
+  Color get border => const Color(0xFF1E2848); // hsl(226 40% 20%)
   @override
-  Color get borderSubtle => const Color(0xFF1E1E27); // hsl(240 8% 15%)
+  Color get borderSubtle => const Color(0xFF161E3A); // hsl(228 40% 16%)
   @override
-  Color get inputBorder => const Color(0xFF252530);
+  Color get inputBorder => const Color(0xFF1E2848);
   @override
-  Color get inputFocus => const Color(0xFF8A6DC2);
+  Color get inputFocus => const Color(0xFF6080FF);
   @override
-  Color get ring => const Color(0xFF8A6DC2);
+  Color get ring => const Color(0xFF6080FF);
 
   // Destructive
   @override
@@ -356,13 +356,13 @@ class AppColorsDark extends AppColors {
 
   // ── Hero gradients ───────────────────────────────────────────────────────
   @override
-  Color get heroGradient1 => const Color(0xFF2A1D3A); // hsl(280 42% 14%)
+  Color get heroGradient1 => const Color(0xFF122248); // hsl(224 58% 18%)
   @override
-  Color get heroGradient2 => const Color(0xFF352840); // hsl(270 34% 20%)
+  Color get heroGradient2 => const Color(0xFF182858); // hsl(226 54% 22%)
   @override
-  Color get heroGradient3 => const Color(0xFF40384A); // hsl(262 28% 24%)
+  Color get heroGradient3 => const Color(0xFF203060); // hsl(228 50% 25%)
   @override
-  Color get heroGradient4 => const Color(0xFF0E0E14); // hsl(240 14% 7%)
+  Color get heroGradient4 => const Color(0xFF080C1C); // hsl(228 44% 7%)
   @override
   Color get heroGoldGlow => const Color(0xFF3A2C14); // hsl(34 45% 20%)
 }
