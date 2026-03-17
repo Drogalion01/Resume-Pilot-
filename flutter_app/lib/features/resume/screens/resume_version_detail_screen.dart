@@ -84,10 +84,7 @@ class ResumeVersionDetailScreen extends ConsumerWidget {
                             orElse: () => const SizedBox.shrink(),
                           ),
                         ),
-                        IconButton(
-                          icon: Icon(Icons.auto_awesome_outlined,
-                              color: colors.primary),
-                          tooltip: 'View analysis',
+                        _AnalyzeHeaderButton(
                           onPressed: () =>
                               context.push(AppRoutes.resumeAnalysis(resumeId)),
                         ),
@@ -191,6 +188,57 @@ class ResumeVersionDetailScreen extends ConsumerWidget {
       context: ctx,
       isScrollControlled: true,
       builder: (_) => _SaveVersionSheet(resumeId: resumeId),
+    );
+  }
+}
+
+class _AnalyzeHeaderButton extends StatelessWidget {
+  const _AnalyzeHeaderButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).appColors;
+
+    return Container(
+      margin: const EdgeInsets.only(right: 4),
+      decoration: BoxDecoration(
+        gradient: AppGradients.primaryButton(colors),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: colors.primary.withValues(alpha: 0.32),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.auto_awesome_rounded,
+                    color: Colors.white, size: 18),
+                const SizedBox(width: 6),
+                Text(
+                  'Analyze',
+                  style: AppTextStyles.caption.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../shared/widgets/backgrounds/breathing_background.dart';
-import '../../../core/theme/app_gradients.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -23,119 +21,66 @@ class ResumeVersionsScreen extends ConsumerWidget {
     final resumesAsync = ref.watch(resumeListProvider);
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: BreathingBackground(
-          child: Stack(
-        children: [
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: AppGradients.heroBackground(colors),
-              ),
-            ),
-          ),
-          Positioned(
-            top: -60,
-            right: -60,
-            child: IgnorePointer(
-              child: Container(
-                width: 220,
-                height: 220,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: AppGradients.heroGlow1(colors),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 30,
-            left: -40,
-            child: IgnorePointer(
-              child: Container(
-                width: 160,
-                height: 160,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: AppGradients.heroGlow2(colors),
-                ),
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: colors.surfacePrimary,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Header ──────────────────────────────────────────────────
+            Padding(
+              padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.pageH, vertical: 16)
+                  .copyWith(bottom: 8),
+              child: Row(
                 children: [
-                  // ── Header ──────────────────────────────────────────────────
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.pageH, vertical: 16)
-                        .copyWith(bottom: 8),
-                    child: Row(
-                      children: [
-                        if (context.canPop())
-                          Padding(
-                            padding: const EdgeInsets.only(right: 12),
-                            child: IconButton(
-                              icon:
-                                  const Icon(Icons.arrow_back_ios_new_rounded),
-                              color: colors.foreground,
-                              onPressed: () => context.pop(),
-                              tooltip: 'Back',
-                            ),
-                          ),
-                        Expanded(
-                          child: Text(
-                            'My Resumes',
-                            style: AppTextStyles.headline
-                                .copyWith(color: colors.foreground),
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.upload_file_outlined,
-                              color: colors.primary),
-                          tooltip: 'Upload new resume',
-                          onPressed: () => context.push(AppRoutes.upload),
-                        ),
-                      ],
+                  Expanded(
+                    child: Text(
+                      'My Resumes',
+                      style: AppTextStyles.headline
+                          .copyWith(color: colors.foreground),
                     ),
                   ),
-
-                  // ── List ────────────────────────────────────────────────────
-                  Expanded(
-                    child: resumesAsync.when(
-                      loading: () => const ResumeListSkeleton(),
-                      error: (e, _) => ResumeErrorState(
-                        error: e,
-                        onRetry: () => ref.invalidate(resumeListProvider),
-                      ),
-                      data: (resumes) {
-                        if (resumes.isEmpty) {
-                          return ResumesEmptyState(
-                            onUpload: () => context.push(AppRoutes.upload),
-                          );
-                        }
-                        return RefreshIndicator(
-                          onRefresh: () =>
-                              ref.read(resumeListProvider.notifier).refresh(),
-                          child: ListView.builder(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.pageH, vertical: 8),
-                            itemCount: resumes.length,
-                            itemBuilder: (_, i) =>
-                                _ResumeTile(resume: resumes[i]),
-                          ),
-                        );
-                      },
-                    ),
+                  IconButton(
+                    icon: Icon(Icons.upload_file_outlined,
+                        color: colors.primary),
+                    tooltip: 'Upload new resume',
+                    onPressed: () => context.push(AppRoutes.upload),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
-      )),
+
+            // ── List ────────────────────────────────────────────────────
+            Expanded(
+              child: resumesAsync.when(
+                loading: () => const ResumeListSkeleton(),
+                error: (e, _) => ResumeErrorState(
+                  error: e,
+                  onRetry: () => ref.invalidate(resumeListProvider),
+                ),
+                data: (resumes) {
+                  if (resumes.isEmpty) {
+                    return ResumesEmptyState(
+                      onUpload: () => context.push(AppRoutes.upload),
+                    );
+                  }
+                  return RefreshIndicator(
+                    onRefresh: () =>
+                        ref.read(resumeListProvider.notifier).refresh(),
+                    child: ListView.builder(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: AppSpacing.pageH, vertical: 8),
+                      itemCount: resumes.length,
+                      itemBuilder: (_, i) =>
+                          _ResumeTile(resume: resumes[i]),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -151,96 +96,48 @@ class _ResumeTile extends StatelessWidget {
     final dateLabel =
         DateFormat('MMM d, yyyy').format(resume.createdAt.toLocal());
 
-    return Container(
+    return Card(
       margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: colors.surfacePrimary,
-        borderRadius: BorderRadius.circular(AppRadii.card),
-        border: Border.all(color: colors.primaryLight, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: colors.primary.withAlpha(18),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadii.card)),
+      elevation: 0,
+      color: colors.surfaceSecondary,
+      child: ListTile(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        onTap: () => context.push(AppRoutes.resumeDetail(resume.id)),
+        leading: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: colors.primaryMuted,
+            borderRadius: BorderRadius.circular(10),
           ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadii.card),
-        child: Material(
-          color: Colors.transparent,
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  width: 4,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [colors.primary, colors.primaryHover],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () =>
-                        context.push(AppRoutes.resumeDetail(resume.id)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 12),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 44,
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color: colors.primaryMuted,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            alignment: Alignment.center,
-                            child: Icon(Icons.description_outlined,
-                                color: colors.primary, size: 22),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  resume.title,
-                                  style: AppTextStyles.bodyMedium.copyWith(
-                                    color: colors.foreground,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 3),
-                                Text(
-                                  dateLabel,
-                                  style: AppTextStyles.caption.copyWith(
-                                    color: colors.foregroundSecondary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          _Badge(label: resume.fileTypeLabel, colors: colors),
-                          const SizedBox(width: 4),
-                          Icon(Icons.chevron_right_rounded,
-                              color: colors.foregroundSecondary, size: 20),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          alignment: Alignment.center,
+          child: Icon(Icons.description_outlined,
+              color: colors.primary, size: 22),
+        ),
+        title: Text(
+          resume.title,
+          style: AppTextStyles.bodyMedium.copyWith(
+              color: colors.foreground, fontWeight: FontWeight.w600),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          dateLabel,
+          style: AppTextStyles.caption
+              .copyWith(color: colors.foregroundSecondary),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _Badge(
+                label: resume.fileTypeLabel, colors: colors),
+            const SizedBox(width: 4),
+            Icon(Icons.chevron_right_rounded,
+                color: colors.foregroundSecondary, size: 20),
+          ],
         ),
       ),
     );
@@ -262,8 +159,8 @@ class _Badge extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: AppTextStyles.micro
-              .copyWith(color: colors.primary, fontWeight: FontWeight.w600),
+          style: AppTextStyles.micro.copyWith(
+              color: colors.primary, fontWeight: FontWeight.w600),
         ),
       );
 }

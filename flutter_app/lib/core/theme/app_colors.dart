@@ -96,15 +96,15 @@ class AppColorsLight extends AppColors {
 
   // Surfaces
   @override
-  Color get background => const Color(0xFFF0F5FF); // hsl(225 100% 97%)
+  Color get background => const Color(0xFFF8F9FA); // Reduced blue hue
   @override
   Color get backgroundPure => const Color(0xFFFFFFFF);
   @override
   Color get surfacePrimary => const Color(0xFFFFFFFF);
   @override
-  Color get surfaceSecondary => const Color(0xFFE6EEFB); // hsl(218 70% 94%)
+  Color get surfaceSecondary => const Color(0xFFF1F3F5); // Reduced blue hue
   @override
-  Color get surfaceSunken => const Color(0xFFDDE8F8); // hsl(216 72% 92%)
+  Color get surfaceSunken => const Color(0xFFE9ECEF); // Reduced blue hue
 
   // Text
   @override
