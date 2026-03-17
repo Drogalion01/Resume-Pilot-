@@ -8,6 +8,7 @@ import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../dashboard/providers/dashboard_provider.dart';
 import '../providers/resume_list_provider.dart';
 import '../providers/upload_provider.dart';
 
@@ -58,7 +59,8 @@ class _ResumeUploadScreenState extends ConsumerState<ResumeUploadScreen> {
     ref.listen<UploadState>(uploadProvider, (_, next) {
       if (next is UploadSuccess) {
         ref.invalidate(resumeListProvider);
-        context.pushReplacement(
+            ref.invalidate(dashboardProvider);
+            context.pushReplacement(
           AppRoutes.resumeAnalysis(next.analysis.resumeId),
         );
       }

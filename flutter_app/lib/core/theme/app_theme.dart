@@ -326,13 +326,17 @@ abstract class AppTheme {
     // ── Snackbar ──────────────────────────────────────────────────────────
     final snackBarTheme = SnackBarThemeData(
       backgroundColor: isDark
-          ? const Color(0xFFEEEDF4) // light surface on dark
+          ? c.surfaceSecondary
           : const Color(0xFF181820), // dark surface on light
       contentTextStyle: AppTextStyles.bodyMedium.copyWith(
-        color: isDark ? const Color(0xFF111117) : const Color(0xFFEEEDF4),
+        color: isDark ? c.foreground : const Color(0xFFEEEDF4),
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadii.snackbar),
+        side: BorderSide(
+          color: isDark ? c.border : Colors.transparent,
+          width: isDark ? 1 : 0,
+        ),
       ),
       behavior: SnackBarBehavior.floating,
       elevation: 4,
@@ -399,12 +403,15 @@ abstract class AppTheme {
     final tooltipTheme = TooltipThemeData(
       decoration: BoxDecoration(
         color: isDark
-            ? const Color(0xFFEEEDF4).withValues(alpha: 0.95)
+            ? c.surfaceSecondary.withValues(alpha: 0.96)
             : const Color(0xFF181820).withValues(alpha: 0.92),
         borderRadius: BorderRadius.circular(AppRadii.xs),
+        border: Border.all(
+          color: isDark ? c.borderSubtle : Colors.transparent,
+        ),
       ),
       textStyle: AppTextStyles.micro.copyWith(
-        color: isDark ? const Color(0xFF111117) : const Color(0xFFEEEDF4),
+        color: isDark ? c.foreground : const Color(0xFFEEEDF4),
       ),
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.px8,

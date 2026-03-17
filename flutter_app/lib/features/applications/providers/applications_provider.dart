@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/auth/auth_state.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../dashboard/providers/dashboard_provider.dart';
 import '../data/application_service.dart';
 import '../models/application.dart';
 
@@ -128,6 +129,7 @@ class ApplicationsNotifier extends AsyncNotifier<ApplicationsState> {
         applications: [created, ...current.applications],
       ));
     }
+    ref.invalidate(dashboardProvider);
     return created;
   }
 
@@ -139,6 +141,7 @@ class ApplicationsNotifier extends AsyncNotifier<ApplicationsState> {
         applications: current.applications.where((a) => a.id != id).toList(),
       ));
     }
+    ref.invalidate(dashboardProvider);
   }
 }
 

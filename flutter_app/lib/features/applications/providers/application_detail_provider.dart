@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/error/app_exception.dart';
+import '../../dashboard/providers/dashboard_provider.dart';
 import '../data/application_service.dart';
 import '../models/application.dart';
 import '../models/application_detail.dart';
@@ -134,6 +135,7 @@ class AddApplicationNotifier extends AutoDisposeNotifier<AddApplicationState> {
       final result =
           await ref.read(applicationServiceProvider).createApplication(body);
       ref.invalidate(applicationsProvider);
+      ref.invalidate(dashboardProvider);
       return result;
     } on AppException catch (e) {
       state = state.copyWith(

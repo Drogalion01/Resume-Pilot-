@@ -201,8 +201,9 @@ class _AnalysisContent extends StatelessWidget {
       );
     }
 
-    final ats = (analysis.atsScore ?? 0).toDouble();
-    final rec = (analysis.recruiterScore ?? 0).toDouble();
+    final ats = analysis.atsScore?.toDouble();
+    final rec = analysis.recruiterScore?.toDouble();
+    final hasScores = ats != null && rec != null;
 
     return CustomScrollView(
       physics:
@@ -215,7 +216,7 @@ class _AnalysisContent extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  analysis.overallLabel ?? ScoreHelper.labelFromScore(ats),
+                  analysis.overallLabel ?? (hasScores ? ScoreHelper.labelFromScore(ats) : 'Analysis Result'),
                   style:
                       AppTextStyles.display.copyWith(color: colors.foreground),
                 ),
@@ -229,20 +230,41 @@ class _AnalysisContent extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _ScoreCol(
-                      score: ats,
-                      label: 'ATS Score',
-                      size: 110,
-                      strokeWidth: 9,
-                    ),
-                    _ScoreCol(
-                      score: rec,
-                      label: 'Recruiter Score',
-                      size: 110,
-                      strokeWidth: 9,
-                    ),
+                    if (ats != null)
+                      _ScoreCol(
+                        score: ats,
+                        label: 'ATS Score',
+                        size: 110,
+                        strokeWidth: 9,
+                      )
+                    else
+                      const _UnavailableScoreCol(
+                        label: 'ATS Score',
+                        size: 110,
+                      ),
+                    if (rec != null)
+                      _ScoreCol(
+                        score: rec,
+                        label: 'Recruiter Score',
+                        size: 110,
+                        strokeWidth: 9,
+                      )
+                    else
+                      const _UnavailableScoreCol(
+                        label: 'Recruiter Score',
+                        size: 110,
+                      ),
                   ],
                 ),
+                if (!hasScores) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    'Scores are temporarily unavailable for this analysis.',
+                    style: AppTextStyles.caption
+                        .copyWith(color: colors.foregroundSecondary),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ],
             ),
           ),
@@ -359,6 +381,49 @@ class _ScoreCol extends StatelessWidget {
           size: size,
           strokeWidth: strokeWidth,
           showTier: false,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style:
+              AppTextStyles.caption.copyWith(color: colors.foregroundSecondary),
+        ),
+      ],
+    );
+  }
+}
+
+class _UnavailableScoreCol extends StatelessWidget {
+  const _UnavailableScoreCol({
+    required this.label,
+    required this.size,
+  });
+
+  final String label;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).appColors;
+
+    return Column(
+      children: [
+        Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: colors.surfaceSecondary,
+            border: Border.all(color: colors.primaryLight),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            'N/A',
+            style: AppTextStyles.title.copyWith(
+              color: colors.foregroundSecondary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
         const SizedBox(height: 8),
         Text(

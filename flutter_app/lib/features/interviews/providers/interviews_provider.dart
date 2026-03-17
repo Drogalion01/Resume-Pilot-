@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../applications/providers/application_detail_provider.dart';
+import '../../dashboard/providers/dashboard_provider.dart';
 import '../data/interview_service.dart';
 import '../models/interview.dart';
 
@@ -87,6 +88,7 @@ class InterviewFormNotifier extends FamilyNotifier<InterviewFormState, int> {
             reminderEnabled: reminderEnabled,
           );
       ref.invalidate(applicationDetailProvider(arg));
+          ref.invalidate(dashboardProvider);
       state = state.copyWith(isLoading: false, isSaved: true);
       return true;
     } catch (e) {
@@ -109,6 +111,7 @@ class InterviewFormNotifier extends FamilyNotifier<InterviewFormState, int> {
           .read(interviewServiceProvider)
           .updateInterview(interviewId, fields);
       ref.invalidate(applicationDetailProvider(arg));
+        ref.invalidate(dashboardProvider);
       state = state.copyWith(isLoading: false, isSaved: true);
       return true;
     } catch (e) {
@@ -139,6 +142,7 @@ Future<void> toggleInterviewReminder(
       .read(interviewServiceProvider)
       .updateInterview(interviewId, {'reminder_enabled': enabled});
   ref.invalidate(applicationDetailProvider(applicationId));
+  ref.invalidate(dashboardProvider);
 }
 
 /// Updates the status of an interview.
@@ -152,6 +156,7 @@ Future<void> updateInterviewStatus(
       .read(interviewServiceProvider)
       .updateInterview(interviewId, {'status': newStatus.name});
   ref.invalidate(applicationDetailProvider(applicationId));
+  ref.invalidate(dashboardProvider);
 }
 
 /// Deletes an interview.
@@ -162,4 +167,5 @@ Future<void> deleteInterview(
 }) async {
   await ref.read(interviewServiceProvider).deleteInterview(interviewId);
   ref.invalidate(applicationDetailProvider(applicationId));
+  ref.invalidate(dashboardProvider);
 }
