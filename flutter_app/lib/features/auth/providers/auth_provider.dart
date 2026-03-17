@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/auth/auth_repository.dart';
 import '../../../core/auth/auth_state.dart';
@@ -11,6 +12,18 @@ import '../../../core/auth/auth_state.dart';
 // ─────────────────────────────────────────────────────────────────
 
 class AuthNotifier extends Notifier<AuthState> {
+  static const _cachePrefixesToClear = [
+    'dashboard_cache_data_user_',
+    'resume_list_cache_user_',
+    'applications_list_cache_user_',
+  ];
+
+  static const _legacyCacheKeysToClear = [
+    'dashboard_cache_data',
+    'resume_list_cache',
+    'applications_list_cache',
+  ];
+
   @override
   AuthState build() {
     // Defer bootstrap until AFTER build() returns.
@@ -73,8 +86,27 @@ class AuthNotifier extends Notifier<AuthState> {
   Future<void> logout() async {
     try {
       await ref.read(authRepositoryProvider).logout();
+      await _clearCachedUserData();
     } finally {
       state = const AuthState.unauthenticated();
+    }
+  }
+
+  Future<void> _clearCachedUserData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final keys = prefs.getKeys();
+
+      for (final key in keys) {
+        final isUserScopedCache =
+            _cachePrefixesToClear.any((prefix) => key.startsWith(prefix));
+        final isLegacyCache = _legacyCacheKeysToClear.contains(key);
+        if (isUserScopedCache || isLegacyCache) {
+          await prefs.remove(key);
+        }
+      }
+    } catch (_) {
+      // Keep logout resilient even if local cache cleanup fails.
     }
   }
 

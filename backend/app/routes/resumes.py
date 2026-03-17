@@ -169,7 +169,13 @@ async def process_resume_background(
         # 5. Update Resume parsed data
         db_resume = db.query(Resume).filter(Resume.id == resume_id).first()
         if db_resume:
-            db_resume.parsed_json = parsed_data
+            parsed_payload = parsed_data if isinstance(parsed_data, dict) else {}
+            parsed_payload = dict(parsed_payload)
+            parsed_payload["ats_score"] = analysis_dict.get("ats_score")
+            parsed_payload["recruiter_score"] = analysis_dict.get("recruiter_score")
+            parsed_payload["overall_score"] = analysis_dict.get("overall_score")
+            parsed_payload["overall_label"] = analysis_dict.get("overall_label")
+            db_resume.parsed_json = parsed_payload
             db.commit()
 
     except Exception as e:

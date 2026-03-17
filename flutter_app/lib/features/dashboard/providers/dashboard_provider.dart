@@ -2,20 +2,26 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/auth/auth_state.dart';
+import '../../auth/providers/auth_provider.dart';
 import '../../../core/error/app_exception.dart';
 import '../data/dashboard_service.dart';
 import '../models/dashboard_response.dart';
 
-const _kDashboardCacheKey = 'dashboard_cache_data';
+const _kDashboardCacheKeyPrefix = 'dashboard_cache_data_user_';
 
 class DashboardNotifier extends AsyncNotifier<DashboardResponse> {
   @override
   Future<DashboardResponse> build() async {
+    final auth = ref.watch(authNotifierProvider);
+    final userId = auth is AuthStateAuthenticated ? auth.userId : 0;
+    final cacheKey = '$_kDashboardCacheKeyPrefix$userId';
+
     final prefs = await SharedPreferences.getInstance();
     DashboardResponse? cachedResponse;
 
     // 1. Optimistic UI: Try to load from cache first
-    final cachedData = prefs.getString(_kDashboardCacheKey);
+    final cachedData = prefs.getString(cacheKey);
     if (cachedData != null) {
       try {
         final json = jsonDecode(cachedData);
@@ -35,7 +41,7 @@ class DashboardNotifier extends AsyncNotifier<DashboardResponse> {
       ),
     ).then((response) async {
       // 3. Update cache with fresh data
-      await prefs.setString(_kDashboardCacheKey, jsonEncode(response.toJson()));
+      await prefs.setString(cacheKey, jsonEncode(response.toJson()));
       
       // If we yielded cache initially, we update the state with the fresh data now
       if (cachedResponse != null) {

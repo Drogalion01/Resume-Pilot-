@@ -2,9 +2,33 @@ from sqlalchemy.orm import Session
 from datetime import date
 
 from app.models.user import User
-from app.models.resume import Resume
+from app.models.resume import Resume, AnalysisResult
 from app.models.tracker import Application, Interview, InterviewStatus
 from app.schemas.dashboard import DashboardResponse, DashboardSummary, DashboardInsight
+
+
+def _enrich_resume_scores(db: Session, resumes: list[Resume]) -> None:
+    """Attach latest analysis scores into resume.parsed_json for dashboard rendering."""
+    for resume in resumes:
+        latest = (
+            db.query(AnalysisResult)
+            .filter(
+                AnalysisResult.resume_id == resume.id,
+                AnalysisResult.status == "completed",
+            )
+            .order_by(AnalysisResult.created_at.desc())
+            .first()
+        )
+        if not latest:
+            continue
+
+        parsed = resume.parsed_json if isinstance(resume.parsed_json, dict) else {}
+        parsed = dict(parsed)
+        parsed["ats_score"] = latest.ats_score
+        parsed["recruiter_score"] = latest.recruiter_score
+        parsed["overall_score"] = latest.overall_score
+        parsed["overall_label"] = latest.overall_label
+        resume.parsed_json = parsed
 
 def get_dashboard_data(db: Session, user: User) -> DashboardResponse:
     """
@@ -30,6 +54,7 @@ def get_dashboard_data(db: Session, user: User) -> DashboardResponse:
         .limit(3)
         .all()
     )
+    _enrich_resume_scores(db, recent_resumes)
 
     # 3. Fetch recent applications (limit 3)
     recent_applications = (

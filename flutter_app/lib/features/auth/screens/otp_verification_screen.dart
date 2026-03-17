@@ -70,33 +70,6 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     }
   }
 
-  Future<bool> _waitForSubscriptionSync() async {
-    for (var i = 0; i < 5; i++) {
-      await Future.delayed(const Duration(seconds: 1));
-      try {
-        final response = await http.post(
-          Uri.parse('${_bdappsPhpBaseUrl}check_subscription.php'),
-          body: {'user_mobile': widget.subscriberId},
-        ).timeout(const Duration(seconds: 5));
-
-        if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          if (data is Map<String, dynamic>) {
-            final status = (data['subscriptionStatus']?.toString() ?? '')
-                .trim()
-                .toUpperCase();
-            if (status == 'REGISTERED') {
-              return true;
-            }
-          }
-        }
-      } catch (e) {
-        // ignore and retry
-      }
-    }
-    return false;
-  }
-
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() {
@@ -106,17 +79,6 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
 
     try {
       await _verifyOtpWithPhp();
-
-      final subscribed = await _waitForSubscriptionSync();
-      if (!mounted) return;
-
-      if (!subscribed) {
-        _showMessage(
-            'সাবস্ক্রিপশন চলছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।',
-            isError: true);
-        setState(() => _loading = false);
-        return;
-      }
 
       await ref
           .read(authNotifierProvider.notifier)

@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/auth/auth_state.dart';
+import '../../auth/providers/auth_provider.dart';
 import '../data/application_service.dart';
 import '../models/application.dart';
 
-const _kApplicationsCacheKey = 'applications_list_cache';
+const _kApplicationsCacheKeyPrefix = 'applications_list_cache_user_';
 
 // ── State ─────────────────────────────────────────────────────────────────────
 
@@ -62,10 +64,14 @@ class ApplicationsState {
 class ApplicationsNotifier extends AsyncNotifier<ApplicationsState> {
   @override
   Future<ApplicationsState> build() async {
+    final auth = ref.watch(authNotifierProvider);
+    final userId = auth is AuthStateAuthenticated ? auth.userId : 0;
+    final cacheKey = '$_kApplicationsCacheKeyPrefix$userId';
+
     final prefs = await SharedPreferences.getInstance();
     List<ApplicationResponse>? cachedApps;
 
-    final cachedData = prefs.getString(_kApplicationsCacheKey);
+    final cachedData = prefs.getString(cacheKey);
     if (cachedData != null) {
       try {
         final List<dynamic> jsonList = jsonDecode(cachedData);
@@ -77,7 +83,7 @@ class ApplicationsNotifier extends AsyncNotifier<ApplicationsState> {
 
     final fetchFuture = service.getApplications().then((apps) async {
       await prefs.setString(
-          _kApplicationsCacheKey, jsonEncode(apps.map((a) => a.toJson()).toList()));
+          cacheKey, jsonEncode(apps.map((a) => a.toJson()).toList()));
       if (cachedApps != null) {
         state = AsyncData(ApplicationsState(applications: apps));
       }
