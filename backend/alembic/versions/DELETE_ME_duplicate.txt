@@ -1,0 +1,12 @@
+DEPRECATED MIGRATION FILE
+
+This file (add_subscription_status_to_user.py) is a duplicate of:
+  a1b2c3d4e5f6_add_subscription_status_to_user.py
+
+It should be deleted manually or through Git.
+The properly named file with revision ID should be used instead.
+
+Commands to clean up:
+  git rm backend/alembic/versions/add_subscription_status_to_user.py
+  git commit -m "Remove duplicate migration file"
+  git push
