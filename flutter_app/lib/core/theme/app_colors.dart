@@ -94,17 +94,17 @@ abstract class AppColors {
 class AppColorsLight extends AppColors {
   const AppColorsLight();
 
-  // Surfaces
+  // Surfaces — refined with warm undertones
   @override
-  Color get background => const Color(0xFFF8F9FA); // Reduced blue hue
+  Color get background => const Color(0xFFFAFBFC); // Warm neutral white
   @override
   Color get backgroundPure => const Color(0xFFFFFFFF);
   @override
   Color get surfacePrimary => const Color(0xFFFFFFFF);
   @override
-  Color get surfaceSecondary => const Color(0xFFF1F3F5); // Reduced blue hue
+  Color get surfaceSecondary => const Color(0xFFF5F7FA); // Subtle warm
   @override
-  Color get surfaceSunken => const Color(0xFFE9ECEF); // Reduced blue hue
+  Color get surfaceSunken => const Color(0xFFEEF1F6); // Refined depth
 
   // Text
   @override
@@ -116,115 +116,115 @@ class AppColorsLight extends AppColors {
   @override
   Color get foregroundQuaternary => const Color(0xFF96A0BC); // hsl(220 18% 66%)
 
-  // Primary — deep purple hsl(262 36% 36%)
+  // Primary — refined deep indigo for premium feel
   @override
-  Color get primary => const Color(0xFF3B68D4); // hsl(220 62% 52%)
+  Color get primary => const Color(0xFF2D5AA8); // hsl(214 58% 42%) — sophisticated indigo
   @override
   Color get primaryForeground => const Color(0xFFFFFFFF);
   @override
-  Color get primaryHover => const Color(0xFF4D78E4); // hsl(220 70% 60%)
+  Color get primaryHover => const Color(0xFF3965B8); // hsl(214 58% 48%) — elevated hover
   @override
-  Color get primaryLight => const Color(0xFFE2EDFB); // hsl(216 80% 93%)
+  Color get primaryLight => const Color(0xFFE0E8F5); // hsl(214 56% 92%) — subtle background
   @override
-  Color get primaryMuted => const Color(0xFFBBCCEE); // hsl(218 52% 83%)
+  Color get primaryMuted => const Color(0xFFB0BEDD); // hsl(214 50% 80%) — refined muted
 
-  // Gold — hsl(34 85% 65%)
+  // Gold — luxe refined bronze
   @override
-  Color get gold => const Color(0xFFF0AA4B); // hsl(34 85% 65%)
+  Color get gold => const Color(0xFFD4A574); // hsl(30 60% 62%) — warm sophisticated bronze
   @override
-  Color get goldForeground => const Color(0xFF4A2E0E); // hsl(30 50% 18%)
+  Color get goldForeground => const Color(0xFFFFFFFF);
   @override
-  Color get goldMuted => const Color(0xFFECDEC7); // hsl(34 40% 88%)
+  Color get goldMuted => const Color(0xFFEBDECD); // hsl(30 38% 87%) — elegant muted
   @override
-  Color get goldLight => const Color(0xFFF9F3E8); // hsl(34 50% 95%)
+  Color get goldLight => const Color(0xFFF8F3ED); // hsl(30 50% 96%) — pristine background
 
-  // Borders / Inputs
+  // Borders / Inputs — refined with new primary color
   @override
-  Color get border => const Color(0xFFCCD6ED); // hsl(218 44% 87%)
+  Color get border => const Color(0xFFC9D6E8); // hsl(214 48% 86%) — sophisticated border
   @override
-  Color get borderSubtle => const Color(0xFFD8E2F5); // hsl(218 60% 91%)
+  Color get borderSubtle => const Color(0xFFD9E3F0); // hsl(214 60% 90%) — refined subtle
   @override
-  Color get inputBorder => const Color(0xFFCCD6ED);
+  Color get inputBorder => const Color(0xFFC9D6E8);
   @override
-  Color get inputFocus => const Color(0xFF3B68D4);
+  Color get inputFocus => const Color(0xFF2D5AA8);
   @override
-  Color get ring => const Color(0xFF3B68D4);
+  Color get ring => const Color(0xFF2D5AA8);
 
-  // Destructive
+  // Destructive — refined red-brown
   @override
-  Color get destructive => const Color(0xFF8F3A36); // hsl(4 52% 50%)
+  Color get destructive => const Color(0xFF944432); // hsl(4 55% 50%) — dignified destructive
   @override
   Color get destructiveForeground => const Color(0xFFFFFFFF);
   @override
-  Color get destructiveLight => const Color(0xFFF5E9E8); // hsl(4 45% 95%)
+  Color get destructiveLight => const Color(0xFFF6E8E5); // hsl(4 55% 94%) — soft tone
 
-  // ── Score colors ─────────────────────────────────────────────────────────
+  // ── Score colors — refined elegant palette ─────────────────────────────
   @override
-  Color get scoreExcellent => const Color(0xFF2E7D5A); // hsl(152 42% 34%)
+  Color get scoreExcellent => const Color(0xFF2E8B6A); // hsl(152 45% 38%) — sophisticated green
   @override
-  Color get scoreExcellentBg => const Color(0xFFDCF0E5); // hsl(152 30% 92%)
+  Color get scoreExcellentBg => const Color(0xFFDEF4EA); // hsl(152 38% 92%) — pristine bg
   @override
-  Color get scoreGood => const Color(0xFF3A8A62); // hsl(152 32% 42%)
+  Color get scoreGood => const Color(0xFF3A9970); // hsl(152 38% 44%) — refined growth
   @override
-  Color get scoreGoodBg => const Color(0xFFDEEFE5); // hsl(152 24% 93%)
+  Color get scoreGoodBg => const Color(0xFFDEF1E8); // hsl(152 32% 93%) — subtle backdrop
   @override
-  Color get scoreAverage => const Color(0xFFAA7020); // hsl(36 56% 46%)
+  Color get scoreAverage => const Color(0xFFB68E3D); // hsl(36 55% 50%) — warm competent
   @override
-  Color get scoreAverageBg => const Color(0xFFF0E5D4); // hsl(36 40% 93%)
+  Color get scoreAverageBg => const Color(0xFFF2EBD9); // hsl(36 50% 93%) — warm tone bg
   @override
-  Color get scorePoor => const Color(0xFF8A3430); // hsl(4 52% 48%)
+  Color get scorePoor => const Color(0xFF944436); // hsl(4 50% 50%) — dignified caution
   @override
-  Color get scorePoorBg => const Color(0xFFF5E4E2); // hsl(4 38% 94%)
+  Color get scorePoorBg => const Color(0xFFF5E6E3); // hsl(4 45% 94%) — soft red tone
 
-  // ── Status colors ────────────────────────────────────────────────────────
+  // ── Status colors — refined intelligent palette ───────────────────────────
   @override
-  Color get statusApplied => const Color(0xFF3E6DB8); // hsl(218 46% 48%)
+  Color get statusApplied => const Color(0xFF3E6FB8); // hsl(214 50% 48%) — professional blue
   @override
-  Color get statusAppliedBg => const Color(0xFFDDE6F5); // hsl(218 34% 93%)
+  Color get statusAppliedBg => const Color(0xFFDEE7F3); // hsl(214 35% 92%)
   @override
-  Color get statusInterview => const Color(0xFF694EB2); // hsl(270 32% 44%)
+  Color get statusInterview => const Color(0xFF704EB8); // hsl(270 35% 47%) — insightful purple
   @override
-  Color get statusInterviewBg => const Color(0xFFE5DFEE); // hsl(270 22% 92%)
+  Color get statusInterviewBg => const Color(0xFFE5DEEE); // hsl(270 25% 92%)
   @override
-  Color get statusOffer => const Color(0xFF2C7D54); // hsl(152 40% 36%)
+  Color get statusOffer => const Color(0xFF2E8B6D); // hsl(152 48% 40%) — success green
   @override
-  Color get statusOfferBg => const Color(0xFFDCF0E5); // hsl(152 30% 92%)
+  Color get statusOfferBg => const Color(0xFFDEF4EA); // hsl(152 38% 92%)
   @override
-  Color get statusRejected => const Color(0xFF8A3838); // hsl(4 48% 48%)
+  Color get statusRejected => const Color(0xFF944432); // hsl(4 55% 50%) — dignified red
   @override
-  Color get statusRejectedBg => const Color(0xFFF5E3E3); // hsl(4 36% 94%)
+  Color get statusRejectedBg => const Color(0xFFF6E8E5); // hsl(4 55% 94%)
   @override
-  Color get statusSaved => const Color(0xFFA87030); // hsl(36 52% 46%)
+  Color get statusSaved => const Color(0xFFB68A40); // hsl(36 55% 50%) — warm bronze
   @override
-  Color get statusSavedBg => const Color(0xFFEFE4D4); // hsl(36 38% 93%)
+  Color get statusSavedBg => const Color(0xFFF2EBDA); // hsl(36 50% 93%)
   @override
-  Color get statusAssessment => const Color(0xFF7E3DB2); // hsl(286 36% 48%)
+  Color get statusAssessment => const Color(0xFF8A58CC); // hsl(286 35% 55%) — creative purple
   @override
-  Color get statusAssessmentBg => const Color(0xFFEADEF0); // hsl(286 26% 93%)
+  Color get statusAssessmentBg => const Color(0xFFEBDEF2); // hsl(286 28% 93%)
   @override
-  Color get statusHr => const Color(0xFF3680A0); // hsl(200 42% 44%)
+  Color get statusHr => const Color(0xFF3A8DB0); // hsl(200 48% 48%) — trustworthy teal
   @override
-  Color get statusHrBg => const Color(0xFFDAECF2); // hsl(200 30% 92%)
+  Color get statusHrBg => const Color(0xFFDEECF3); // hsl(200 35% 92%)
   @override
-  Color get statusTechnical => const Color(0xFF4A3899); // hsl(262 34% 42%)
+  Color get statusTechnical => const Color(0xFF523A99); // hsl(262 44% 45%) — logical purple
   @override
-  Color get statusTechnicalBg => const Color(0xFFE1DCF0); // hsl(262 24% 92%)
+  Color get statusTechnicalBg => const Color(0xFFE5DFF0); // hsl(262 30% 92%)
   @override
-  Color get statusFinal => const Color(0xFF3C3E99); // hsl(242 36% 46%)
+  Color get statusFinal => const Color(0xFF3E3E99); // hsl(242 43% 48%) — final purpose blue
   @override
-  Color get statusFinalBg => const Color(0xFFDDDEF0); // hsl(242 26% 93%)
+  Color get statusFinalBg => const Color(0xFFDEDEF0); // hsl(242 30% 92%)
 
-  // ── Hero gradients ───────────────────────────────────────────────────────
+  // Hero gradients — refined premium aesthetic
   @override
-  Color get heroGradient1 => const Color(0xFFB2C8F4); // hsl(218 76% 82%)
+  Color get heroGradient1 => const Color(0xFF9FC3F5); // hsl(214 80% 80%) — soft luxury
   @override
-  Color get heroGradient2 => const Color(0xFFC0CEEE); // hsl(222 52% 85%)
+  Color get heroGradient2 => const Color(0xADBBC9F0); // hsl(218 60% 84%) — refined blend
   @override
-  Color get heroGradient3 => const Color(0xFFCDD9F4); // hsl(220 66% 88%)
+  Color get heroGradient3 => const Color(0xFFD1DBEF); // hsl(216 70% 88%) — elegant light
   @override
-  Color get heroGradient4 => const Color(0xFFDEE8FB); // hsl(216 80% 93%)
+  Color get heroGradient4 => const Color(0xFFE8EFFA); // hsl(214 76% 94%) — pristine
   @override
-  Color get heroGoldGlow => const Color(0xFFEDD0A4); // hsl(34 52% 86%)
+  Color get heroGoldGlow => const Color(0xFFEADCCA); // hsl(30 52% 88%) — luxe glow
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -256,113 +256,113 @@ class AppColorsDark extends AppColors {
   @override
   Color get foregroundQuaternary => const Color(0xFF4E5F86); // hsl(222 26% 42%)
 
-  // Primary — luminous sapphire accent
+  // Primary — luminous refined indigo accent
   @override
-  Color get primary => const Color(0xFF7A98FF); // hsl(224 100% 74%)
+  Color get primary => const Color(0xFF89B3FF); // hsl(214 100% 72%) — sophisticated bright
   @override
   Color get primaryForeground => const Color(0xFFFFFFFF);
   @override
-  Color get primaryHover => const Color(0xFF8CABFF); // hsl(220 100% 77%)
+  Color get primaryHover => const Color(0xFF9AC1FF); // hsl(214 100% 76%) — elevated accent
   @override
-  Color get primaryLight => const Color(0xFF1A2A52); // hsl(224 52% 21%)
+  Color get primaryLight => const Color(0xFF172949); // hsl(214 52% 20%) — refined container
   @override
-  Color get primaryMuted => const Color(0xFF26365F); // hsl(222 42% 26%)
+  Color get primaryMuted => const Color(0xFF1F3354); // hsl(214 48% 23%) — muted container
 
-  // Gold
+  // Gold — warm luxe bronze
   @override
-  Color get gold => const Color(0xFFE6AE64); // hsl(34 72% 65%)
+  Color get gold => const Color(0xFFD9A876); // hsl(30 60% 63%) — warm luxury accent
   @override
   Color get goldForeground => const Color(0xFFFFFFFF);
   @override
-  Color get goldMuted => const Color(0xFF3A3020); // hsl(35 30% 24%)
+  Color get goldMuted => const Color(0xFF3C2F23); // hsl(30 28% 22%) — refined muted
   @override
-  Color get goldLight => const Color(0xFF2E2416); // hsl(34 34% 18%)
+  Color get goldLight => const Color(0xFF2A1F18); // hsl(30 32% 17%) — dark container
 
-  // Borders / Inputs
+  // Borders / Inputs — refined with new premium colors
   @override
-  Color get border => const Color(0xFF29375A); // hsl(222 38% 26%)
+  Color get border => const Color(0xFF2B384E); // hsl(214 35% 27%) — sophisticated border
   @override
-  Color get borderSubtle => const Color(0xFF1D2846); // hsl(224 42% 20%)
+  Color get borderSubtle => const Color(0xFF1F2C40); // hsl(214 40% 20%) — refined subtle
   @override
-  Color get inputBorder => const Color(0xFF29375A);
+  Color get inputBorder => const Color(0xFF2B384E);
   @override
-  Color get inputFocus => const Color(0xFF7A98FF);
+  Color get inputFocus => const Color(0xFF89B3FF);
   @override
-  Color get ring => const Color(0xFF7A98FF);
+  Color get ring => const Color(0xFF89B3FF);
 
-  // Destructive
+  // Destructive — refined dignified red
   @override
-  Color get destructive => const Color(0xFF994444); // hsl(4 50% 55%)
+  Color get destructive => const Color(0xFFC96A62); // hsl(4 55% 62%) — warm dignity
   @override
   Color get destructiveForeground => const Color(0xFFFFFFFF);
   @override
-  Color get destructiveLight => const Color(0xFF2A1A1A); // hsl(4 36% 16%)
+  Color get destructiveLight => const Color(0xFF2B1A18); // hsl(4 30% 16%) — warm shadow
 
-  // ── Score colors (brightened for dark) ──────────────────────────────────
+  // ── Score colors (refined for dark mode) ───────────────────────────────
   @override
-  Color get scoreExcellent => const Color(0xFF4AAA7A); // hsl(152 40% 48%)
+  Color get scoreExcellent => const Color(0xFF5CBFA8); // hsl(152 45% 60%) — refined green
   @override
-  Color get scoreExcellentBg => const Color(0xFF1A2B22); // hsl(152 28% 14%)
+  Color get scoreExcellentBg => const Color(0xFF1B2F28); // hsl(152 30% 16%)
   @override
-  Color get scoreGood => const Color(0xFF52B880); // hsl(152 30% 52%)
+  Color get scoreGood => const Color(0xFF62C5B0); // hsl(152 38% 64%) — polished growth
   @override
-  Color get scoreGoodBg => const Color(0xFF1B2C23); // hsl(152 22% 15%)
+  Color get scoreGoodBg => const Color(0xFF1C3230); // hsl(152 28% 17%)
   @override
-  Color get scoreAverage => const Color(0xFFBB8A42); // hsl(36 48% 55%)
+  Color get scoreAverage => const Color(0xFFC9A04C); // hsl(36 60% 60%) — refined bronze
   @override
-  Color get scoreAverageBg => const Color(0xFF28201A); // hsl(36 32% 14%)
+  Color get scoreAverageBg => const Color(0xFF2B2218); // hsl(36 32% 16%)
   @override
-  Color get scorePoor => const Color(0xFFBB5050); // hsl(4 44% 55%)
+  Color get scorePoor => const Color(0xFFC96A62); // hsl(4 50% 62%) — warm warning
   @override
-  Color get scorePoorBg => const Color(0xFF2A1A1A); // hsl(4 30% 14%)
+  Color get scorePoorBg => const Color(0xFF2B1A18); // hsl(4 30% 16%)
 
-  // ── Status colors ────────────────────────────────────────────────────────
+  // ── Status colors (refined dark mode) ───────────────────────────────────
   @override
-  Color get statusApplied => const Color(0xFF5E88CC); // hsl(218 40% 58%)
+  Color get statusApplied => const Color(0xFF6B96D8); // hsl(214 50% 62%) — refined professional
   @override
-  Color get statusAppliedBg => const Color(0xFF1C2438); // hsl(218 30% 16%)
+  Color get statusAppliedBg => const Color(0xFF1D2540); // hsl(214 32% 18%)
   @override
-  Color get statusInterview => const Color(0xFF7E62CC); // hsl(270 30% 58%)
+  Color get statusInterview => const Color(0xFF9C80D8); // hsl(270 35% 65%) — uplifting purple
   @override
-  Color get statusInterviewBg => const Color(0xFF222030); // hsl(270 22% 16%)
+  Color get statusInterviewBg => const Color(0xFF262238); // hsl(270 24% 18%)
   @override
-  Color get statusOffer => const Color(0xFF4AA87A); // hsl(152 36% 48%)
+  Color get statusOffer => const Color(0xFF5CBFA8); // hsl(152 48% 60%) — success green
   @override
-  Color get statusOfferBg => const Color(0xFF1A2B22); // hsl(152 28% 14%)
+  Color get statusOfferBg => const Color(0xFF1B2F28); // hsl(152 30% 16%)
   @override
-  Color get statusRejected => const Color(0xFFBB5050); // hsl(4 40% 55%)
+  Color get statusRejected => const Color(0xFFC96A62); // hsl(4 55% 62%) — warm dignity
   @override
-  Color get statusRejectedBg => const Color(0xFF2A1A1A); // hsl(4 30% 14%)
+  Color get statusRejectedBg => const Color(0xFF2B1A18); // hsl(4 30% 16%)
   @override
-  Color get statusSaved => const Color(0xFFBB8844); // hsl(36 42% 55%)
+  Color get statusSaved => const Color(0xFFC9A04C); // hsl(36 60% 60%) — luxe bronze
   @override
-  Color get statusSavedBg => const Color(0xFF281F18); // hsl(36 30% 14%)
+  Color get statusSavedBg => const Color(0xFF2B2218); // hsl(36 32% 16%)
   @override
-  Color get statusAssessment => const Color(0xFF9A58CC); // hsl(286 30% 56%)
+  Color get statusAssessment => const Color(0xFFB080E0); // hsl(286 35% 66%) — creative flair
   @override
-  Color get statusAssessmentBg => const Color(0xFF22203A); // hsl(286 22% 16%)
+  Color get statusAssessmentBg => const Color(0xFF2A2238); // hsl(286 24% 18%)
   @override
-  Color get statusHr => const Color(0xFF4E9AB0); // hsl(200 36% 52%)
+  Color get statusHr => const Color(0xFF62B0D0); // hsl(200 48% 62%) — trustworthy refined
   @override
-  Color get statusHrBg => const Color(0xFF182228); // hsl(200 26% 14%)
+  Color get statusHrBg => const Color(0xFF1C2630); // hsl(200 32% 18%)
   @override
-  Color get statusTechnical => const Color(0xFF7068B0); // hsl(262 28% 54%)
+  Color get statusTechnical => const Color(0xFF8A78D0); // hsl(262 44% 62%) — logical elegance
   @override
-  Color get statusTechnicalBg => const Color(0xFF20202E); // hsl(262 20% 16%)
+  Color get statusTechnicalBg => const Color(0xFF242230); // hsl(262 26% 18%)
   @override
-  Color get statusFinal => const Color(0xFF6068AA); // hsl(242 30% 56%)
+  Color get statusFinal => const Color(0xFF7A78D0); // hsl(242 43% 62%) — assured finality
   @override
-  Color get statusFinalBg => const Color(0xFF1E2030); // hsl(242 22% 16%)
+  Color get statusFinalBg => const Color(0xFF22212E); // hsl(242 26% 18%)
 
-  // ── Hero gradients ───────────────────────────────────────────────────────
+  // ── Hero gradients — premium dark aesthetic ──────────────────────────────
   @override
-  Color get heroGradient1 => const Color(0xFF132B56); // hsl(220 62% 21%)
+  Color get heroGradient1 => const Color(0xFF0F2A52); // hsl(214 68% 19%) — refined deep
   @override
-  Color get heroGradient2 => const Color(0xFF1A3262); // hsl(222 58% 24%)
+  Color get heroGradient2 => const Color(0xFF15305C); // hsl(218 60% 22%) — ethereal layer
   @override
-  Color get heroGradient3 => const Color(0xFF21386A); // hsl(222 52% 27%)
+  Color get heroGradient3 => const Color(0xFF1B3866); // hsl(216 64% 25%) — luxe depth
   @override
-  Color get heroGradient4 => const Color(0xFF0A1020); // hsl(224 52% 8%)
+  Color get heroGradient4 => const Color(0xFF0A1020); // hsl(224 52% 8%) — midnight anchor
   @override
-  Color get heroGoldGlow => const Color(0xFF463419); // hsl(35 46% 24%)
+  Color get heroGoldGlow => const Color(0xFF3F2F20); // hsl(30 40% 22%) — warm shadow
 }
