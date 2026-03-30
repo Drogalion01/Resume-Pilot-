@@ -10,8 +10,10 @@ import '../../features/auth/screens/onboarding_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/otp_verification_screen.dart';
 import '../../features/dashboard/screens/dashboard_screen.dart';
-import '../../features/resume/screens/resume_versions_screen.dart';
+import '../../features/resume_lab/screens/resume_lab_screen.dart';
 import '../../features/applications/screens/applications_tracker_screen.dart';
+import '../../features/interviews/screens/interview_calendar_screen.dart';
+import '../../features/interviews/screens/add_interview_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import '../../features/profile/screens/user_profile_screen.dart';
 import '../../features/resume/screens/resume_upload_screen.dart';
@@ -19,7 +21,6 @@ import '../../features/resume/screens/resume_version_detail_screen.dart';
 import '../../features/resume/screens/resume_analysis_screen.dart';
 import '../../features/applications/screens/add_application_screen.dart';
 import '../../features/applications/screens/application_detail_screen.dart';
-import '../../features/interviews/screens/add_interview_screen.dart';
 import '../screens/splash_screen.dart';
 import 'routes.dart';
 import 'shell_scaffold.dart';
@@ -136,41 +137,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
 
-          // Tab 1 — Resumes
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.resumes,
-                name: 'resumes',
-                builder: (_, __) => const ResumeVersionsScreen(),
-                routes: [
-                  GoRoute(
-                    path: ':id',
-                    name: 'resume-detail',
-                    builder: (_, state) => ResumeVersionDetailScreen(
-                      resumeId: int.parse(state.pathParameters['id']!),
-                    ),
-                  ),
-                  GoRoute(
-                    path: ':id/versions',
-                    name: 'resume-versions',
-                    builder: (_, state) => ResumeVersionDetailScreen(
-                      resumeId: int.parse(state.pathParameters['id']!),
-                    ),
-                  ),
-                  GoRoute(
-                    path: ':id/analysis',
-                    name: 'resume-analysis',
-                    builder: (_, state) => ResumeAnalysisScreen(
-                      resumeId: int.parse(state.pathParameters['id']!),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-
-          // Tab 2 — Applications
+          // Tab 1 — Applications (Kanban/Tracker)
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -208,13 +175,13 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
 
-          // Tab 3 — Settings
+          // Tab 2 — Resume Lab (unified resume management)
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: AppRoutes.settings,
-                name: 'settings',
-                builder: (_, __) => const SettingsScreen(),
+                path: AppRoutes.resumeLab,
+                name: 'resume-lab',
+                builder: (_, __) => const ResumeLab(),
               ),
             ],
           ),
@@ -222,16 +189,58 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
 
       // ── Full-screen push routes (no tab bar) ───────────────────────────────
+      // Resume management (full screens)
+      GoRoute(
+        path: AppRoutes.resumeDetailPath,
+        name: 'resume-detail',
+        builder: (_, state) => ResumeVersionDetailScreen(
+          resumeId: int.parse(state.pathParameters['id']!),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.resumeVersionsPath,
+        name: 'resume-versions',
+        builder: (_, state) => ResumeVersionDetailScreen(
+          resumeId: int.parse(state.pathParameters['id']!),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.resumeAnalysisPath,
+        name: 'resume-analysis',
+        builder: (_, state) => ResumeAnalysisScreen(
+          resumeId: int.parse(state.pathParameters['id']!),
+        ),
+      ),
+      
+      // Interview Calendar
+      GoRoute(
+        path: AppRoutes.interviewCalendar,
+        name: 'interview-calendar',
+        builder: (_, __) => const InterviewCalendarScreen(),
+      ),
+      
+      // Settings moved to drawer (push-over-shell)
+      GoRoute(
+        path: AppRoutes.settings,
+        name: 'settings',
+        builder: (_, __) => const SettingsScreen(),
+      ),
+      
+      // Upload resume
       GoRoute(
         path: AppRoutes.upload,
         name: 'upload',
         builder: (_, __) => const ResumeUploadScreen(),
       ),
+      
+      // Add application
       GoRoute(
         path: AppRoutes.addApplication,
         name: 'add-application',
         builder: (_, __) => const AddApplicationScreen(),
       ),
+      
+      // Profile
       GoRoute(
         path: AppRoutes.profile,
         name: 'profile',

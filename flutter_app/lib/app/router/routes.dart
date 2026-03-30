@@ -12,19 +12,20 @@
 ///     /otp-verification
 ///
 ///   Shell (authenticated bottom-nav tabs):
-///     /             — Dashboard (tab 0)
-///     /resumes      — Resumes   (tab 1)
-///     /applications — Tracker   (tab 2)
-///     /settings     — Settings  (tab 3)
+///     /                — Dashboard      (tab 0)
+///     /applications    — Track (Kanban) (tab 1)
+///     /resume-lab      — Resume Lab     (tab 2)
 ///
 ///   Push-over-shell (no tab bar visible):
 ///     /resumes/:id
 ///     /resumes/:id/versions
 ///     /resumes/:id/analysis
+///     /interview-calendar
 ///     /upload
 ///     /add-application
 ///     /applications/:id
 ///     /applications/:id/interviews/add
+///     /settings
 ///     /profile
 abstract class AppRoutes {
   // ── Unauthenticated flow ─────────────────────────────────────────────────
@@ -39,12 +40,13 @@ abstract class AppRoutes {
   // ── Authenticated shell (bottom nav) ──────────────────────────────────
 
   static const dashboard = '/';
-  static const resumes = '/resumes';
   static const applications = '/applications';
-  static const settings = '/settings';
+  static const resumeLab = '/resume-lab';
 
   // ── Push destinations (no tab bar) ─────────────────────────────────
 
+  static const interviewCalendar = '/interview-calendar';
+  static const settings = '/settings';
   static const upload = '/upload';
   static const addApplication = '/add-application';
   static const profile = '/profile';

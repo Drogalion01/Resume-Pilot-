@@ -55,19 +55,14 @@ class AppBottomNav extends StatelessWidget {
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.description_outlined),
-                    activeIcon: Icon(Icons.description_rounded),
-                    label: 'Resumes',
-                  ),
-                  BottomNavigationBarItem(
                     icon: Icon(Icons.work_outline_rounded),
                     activeIcon: Icon(Icons.work_rounded),
-                    label: 'Applications',
+                    label: 'Track',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.tune_outlined),
-                    activeIcon: Icon(Icons.tune_rounded),
-                    label: 'Settings',
+                    icon: Icon(Icons.school_outlined),
+                    activeIcon: Icon(Icons.school_rounded),
+                    label: 'Resume Lab',
                   ),
                 ],
               ),
