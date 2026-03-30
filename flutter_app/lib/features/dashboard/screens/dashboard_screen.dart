@@ -223,7 +223,7 @@ class DashboardScreen extends ConsumerWidget {
                     _PremiumSectionCard(
                       title: 'Resume Health',
                       actionLabel: 'All resumes',
-                      onActionTap: () => context.push(AppRoutes.resumes),
+                      onActionTap: () => context.push(AppRoutes.resumeLab),
                       children: data.recentResumes
                           .take(2)
                           .map((resume) => _ResumeHealthTile(resume: resume))

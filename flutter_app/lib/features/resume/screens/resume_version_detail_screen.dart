@@ -68,7 +68,7 @@ class ResumeVersionDetailScreen extends ConsumerWidget {
                             if (context.canPop()) {
                               context.pop();
                             } else {
-                              context.go(AppRoutes.resumes);
+                              context.go(AppRoutes.resumeLab);
                             }
                           },
                         ),
