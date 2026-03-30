@@ -43,3 +43,16 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Development/utility scripts (should not be committed)
+/fix_*.py
+/gen_*.py
+/remove_*.py
+/*.py
+!pubspec.yaml
+
+# Analysis and debug output files
+analysis*.txt
+**/analyze_output*.txt
+crash_log.txt
+force_cache.py
