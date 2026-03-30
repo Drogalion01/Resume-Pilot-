@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/routes.dart';
+import '../../../core/auth/auth_state.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_shadows.dart';
@@ -426,11 +427,30 @@ class _SettingsBody extends ConsumerWidget {
                   }
 
                   try {
-                    // Call backend unsubscribe endpoint
+                    // Get the JWT token from auth provider
+                    final authState = ref.read(authNotifierProvider);
+                    String? token;
+                    
+                    if (authState is AuthStateAuthenticated) {
+                      token = authState.accessToken;
+                    }
+
+                    if (token == null || token.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Session expired. Please log in again.')),
+                      );
+                      return;
+                    }
+
+                    // Call backend unsubscribe endpoint WITH JWT token
                     final response = await http.post(
                       Uri.parse(
                           'https://resume-pilot-lc1i.onrender.com/api/v1/auth/phone/unsubscribe'),
-                      headers: {'Content-Type': 'application/json'},
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer $token',
+                      },
                       body: jsonEncode({'phone': phone}),
                     );
 
@@ -440,12 +460,26 @@ class _SettingsBody extends ConsumerWidget {
                       ref.read(authNotifierProvider.notifier).logout();
                       if (!context.mounted) return;
                       context.go(AppRoutes.login);
+                      
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text(
+                                'Successfully unsubscribed. Your data is preserved.')),
+                      );
                     } else {
                       if (!context.mounted) return;
+                      
+                      String errorMessage = 'Failed to unsubscribe';
+                      try {
+                        final errorBody = jsonDecode(response.body);
+                        errorMessage =
+                            errorBody['detail'] ?? errorBody['message'] ?? errorMessage;
+                      } catch (_) {
+                        errorMessage = 'Server error: ${response.statusCode}';
+                      }
+                      
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(
-                                'Failed to unsubscribe. Server returned: ${response.statusCode}')),
+                        SnackBar(content: Text(errorMessage)),
                       );
                     }
                   } catch (e) {
