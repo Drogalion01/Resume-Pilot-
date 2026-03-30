@@ -76,7 +76,8 @@ class ApplicationsNotifier extends AsyncNotifier<ApplicationsState> {
     if (cachedData != null) {
       try {
         final List<dynamic> jsonList = jsonDecode(cachedData);
-        cachedApps = jsonList.map((j) => ApplicationResponse.fromJson(j)).toList();
+        cachedApps =
+            jsonList.map((j) => ApplicationResponse.fromJson(j)).toList();
       } catch (_) {}
     }
 
@@ -90,7 +91,8 @@ class ApplicationsNotifier extends AsyncNotifier<ApplicationsState> {
       }
       return ApplicationsState(applications: apps);
     }).catchError((error, stackTrace) {
-      if (cachedApps != null) return ApplicationsState(applications: cachedApps);
+      if (cachedApps != null)
+        return ApplicationsState(applications: cachedApps);
       throw error;
     });
 

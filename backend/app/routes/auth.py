@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 import requests
-from app.schemas.auth import PhoneCheckRequest, PhoneVerifyRequest, PhoneSessionRequest
+from app.schemas.auth import PhoneCheckRequest, PhoneVerifyRequest, PhoneSessionRequest, UnsubscribeRequest, UnsubscribeResponse
 
 from app.database import get_db
-from app.dependencies import get_current_active_user
+from app.dependencies import get_current_active_user, get_current_user_allow_unsubscribed
 from app.limiter import limiter
 from app.models.user import User, UserSettings
 from app.schemas.user import UserResponse
@@ -189,4 +189,60 @@ def phone_session(request: Request, body: PhoneSessionRequest, db: Session = Dep
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/phone/unsubscribe", response_model=UnsubscribeResponse)
+@limiter.limit("5/minute")
+def phone_unsubscribe(
+    request: Request,
+    body: UnsubscribeRequest,
+    current_user: User = Depends(get_current_user_allow_unsubscribed),
+    db: Session = Depends(get_db)
+):
+    """
+    Unsubscribe a user from the service via BDApps.
+    - Calls BDApps unsubscription.php
+    - Marks user as inactive in database (preserves data for potential re-subscription)
+    - User data is NOT deleted (they can resubscribe later)
+    """
+    phone = _normalize_phone(body.phone)
+    
+    # Verify the phone matches the authenticated user
+    if current_user.phone != phone:
+        raise HTTPException(
+            status_code=403,
+            detail="Cannot unsubscribe a different user's phone number"
+        )
+    
+    try:
+        # Call BDApps unsubscription endpoint
+        unsub_data = _post_php_endpoint(
+            "unsubscription.php",
+            {"user_mobile": phone}
+        )
+        
+        status_code = (unsub_data.get("statusCode") or "").strip().upper()
+        subscription_status = (unsub_data.get("subscriptionStatus") or "").strip().upper()
+        
+        # Consider it successful if status code is S1000 or subscription is already UNREGISTERED
+        success = status_code == "S1000" or subscription_status == "UNREGISTERED"
+        
+        if success:
+            # Mark user as unsubscribed in the database
+            current_user.is_subscribed = False
+            db.commit()
+            
+            return UnsubscribeResponse(
+                success=True,
+                message="Successfully unsubscribed. Your account data is preserved.",
+                phone=phone
+            )
+        else:
+            detail = unsub_data.get("statusDetail") or "Failed to unsubscribe with BDApps"
+            raise HTTPException(status_code=400, detail=str(detail))
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unsubscription error: {str(e)}")
 

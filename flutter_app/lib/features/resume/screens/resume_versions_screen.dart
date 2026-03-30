@@ -28,7 +28,7 @@ class ResumeVersionsScreen extends ConsumerWidget {
           children: [
             // ── Header ──────────────────────────────────────────────────
             Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.pageH, vertical: 16)
                   .copyWith(bottom: 8),
               child: Row(
@@ -41,8 +41,8 @@ class ResumeVersionsScreen extends ConsumerWidget {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.upload_file_outlined,
-                        color: colors.primary),
+                    icon:
+                        Icon(Icons.upload_file_outlined, color: colors.primary),
                     tooltip: 'Upload new resume',
                     onPressed: () => context.push(AppRoutes.upload),
                   ),
@@ -68,11 +68,10 @@ class ResumeVersionsScreen extends ConsumerWidget {
                     onRefresh: () =>
                         ref.read(resumeListProvider.notifier).refresh(),
                     child: ListView.builder(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.pageH, vertical: 8),
                       itemCount: resumes.length,
-                      itemBuilder: (_, i) =>
-                          _ResumeTile(resume: resumes[i]),
+                      itemBuilder: (_, i) => _ResumeTile(resume: resumes[i]),
                     ),
                   );
                 },
@@ -103,8 +102,7 @@ class _ResumeTile extends StatelessWidget {
       elevation: 0,
       color: colors.surfaceSecondary,
       child: ListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         onTap: () => context.push(AppRoutes.resumeDetail(resume.id)),
         leading: Container(
           width: 44,
@@ -114,26 +112,25 @@ class _ResumeTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           alignment: Alignment.center,
-          child: Icon(Icons.description_outlined,
-              color: colors.primary, size: 22),
+          child:
+              Icon(Icons.description_outlined, color: colors.primary, size: 22),
         ),
         title: Text(
           resume.title,
-          style: AppTextStyles.bodyMedium.copyWith(
-              color: colors.foreground, fontWeight: FontWeight.w600),
+          style: AppTextStyles.bodyMedium
+              .copyWith(color: colors.foreground, fontWeight: FontWeight.w600),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text(
           dateLabel,
-          style: AppTextStyles.caption
-              .copyWith(color: colors.foregroundSecondary),
+          style:
+              AppTextStyles.caption.copyWith(color: colors.foregroundSecondary),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _Badge(
-                label: resume.fileTypeLabel, colors: colors),
+            _Badge(label: resume.fileTypeLabel, colors: colors),
             const SizedBox(width: 4),
             Icon(Icons.chevron_right_rounded,
                 color: colors.foregroundSecondary, size: 20),
@@ -159,8 +156,8 @@ class _Badge extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: AppTextStyles.micro.copyWith(
-              color: colors.primary, fontWeight: FontWeight.w600),
+          style: AppTextStyles.micro
+              .copyWith(color: colors.primary, fontWeight: FontWeight.w600),
         ),
       );
 }

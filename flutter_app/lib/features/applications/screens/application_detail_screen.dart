@@ -523,9 +523,12 @@ class _LinkedResumeTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      version.versionName ?? version.targetRole ?? 'Resume Version',
+                      version.versionName ??
+                          version.targetRole ??
+                          'Resume Version',
                       style: AppTextStyles.bodyMedium.copyWith(
-                          color: colors.foreground, fontWeight: FontWeight.w600),
+                          color: colors.foreground,
+                          fontWeight: FontWeight.w600),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

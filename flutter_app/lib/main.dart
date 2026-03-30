@@ -24,9 +24,9 @@ void main() async {
     debugPrintStack(stackTrace: stack);
     return false;
   };
-  
+
   final dir = await getApplicationDocumentsDirectory();
-  
+
   runApp(
     ProviderScope(
       overrides: [

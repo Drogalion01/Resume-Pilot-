@@ -11,6 +11,7 @@ class User(Base, TimestampMixin):
     phone = Column(String, unique=True, index=True, nullable=True)
     password_hash = Column(String, nullable=True)
     initials = Column(String)
+    is_subscribed = Column(Boolean, default=True, index=True)
 
     # Relationships
     settings = relationship("UserSettings", back_populates="user", uselist=False, cascade="all, delete-orphan")

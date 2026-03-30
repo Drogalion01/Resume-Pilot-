@@ -154,8 +154,8 @@ class _AnalysisContent extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 'Your resume is still being analyzed...',
-                style: AppTextStyles.bodyMedium
-                    .copyWith(color: colors.foreground),
+                style:
+                    AppTextStyles.bodyMedium.copyWith(color: colors.foreground),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 6),
@@ -178,13 +178,12 @@ class _AnalysisContent extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.error_outline,
-                  size: 42, color: colors.statusRejected),
+              Icon(Icons.error_outline, size: 42, color: colors.statusRejected),
               const SizedBox(height: 14),
               Text(
                 'Analysis failed for this resume.',
-                style: AppTextStyles.bodyMedium
-                    .copyWith(color: colors.foreground),
+                style:
+                    AppTextStyles.bodyMedium.copyWith(color: colors.foreground),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
@@ -216,7 +215,10 @@ class _AnalysisContent extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  analysis.overallLabel ?? (hasScores ? ScoreHelper.labelFromScore(ats) : 'Analysis Result'),
+                  analysis.overallLabel ??
+                      (hasScores
+                          ? ScoreHelper.labelFromScore(ats)
+                          : 'Analysis Result'),
                   style:
                       AppTextStyles.display.copyWith(color: colors.foreground),
                 ),

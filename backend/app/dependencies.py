@@ -44,11 +44,24 @@ def get_current_active_user(
     current_user: User = Depends(get_current_user),
 ) -> User:
     """
-    Dependency returning the currently authenticated user.
-    Can be expanded later to check if user is 'active', 'suspended', etc.
+    Dependency returning the currently authenticated and subscribed user.
+    Throws 403 if user is not subscribed (prevents access to main app features).
     """
-    # For MVP, all decoded valid users are 'active'
+    if not current_user.is_subscribed:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Your subscription has been cancelled. Please re-subscribe to continue.",
+        )
+    return current_user
+
+def get_current_user_allow_unsubscribed(
+    current_user: User = Depends(get_current_user),
+) -> User:
+    """
+    Dependency for endpoints that should work for both subscribed and unsubscribed users.
+    Used for unsubscribe endpoint and logout.
+    """
     return current_user
 
 # Exposing dependencies for easy importing in routes
-__all__ = ["get_db", "get_current_user", "get_current_active_user"]
+__all__ = ["get_db", "get_current_user", "get_current_active_user", "get_current_user_allow_unsubscribed"]

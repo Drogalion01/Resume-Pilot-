@@ -393,75 +393,73 @@ class _SettingsBody extends ConsumerWidget {
 
   void _confirmDeleteAccount(BuildContext context, WidgetRef ref) {
     showDialog<bool>(
-      context: context,
-      builder: (dialogContext) {
-            return AlertDialog(
-              title: const Text('Unsubscribe'),
-              content: const Text(
-                'This will cancel your premium subscription. You will also be logged out. '
-                'To use this app again, you will need to subscribe again.\n\n'
-                'Are you sure you want to proceed?',
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text('Unsubscribe'),
+            content: const Text(
+              'This will cancel your premium subscription. You will also be logged out. '
+              'To use this app again, you will need to subscribe again.\n\n'
+              'Are you sure you want to proceed?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(dialogContext, rootNavigator: true).pop(false),
+                child: const Text('Cancel'),
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(dialogContext,
-                          rootNavigator: true)
-                      .pop(false),
-                  child: const Text('Cancel'),
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.red,
                 ),
-                FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.red,
-                  ),
-                  onPressed: () async {
-                    Navigator.of(dialogContext, rootNavigator: true)
-                        .pop(true);
-                    
-                    final phone = ref.read(profileProvider).value?.phone;
-                    if (phone == null || phone.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Cannot identify phone number to unsubscribe.')),
-                      );
-                      return;
-                    }
+                onPressed: () async {
+                  Navigator.of(dialogContext, rootNavigator: true).pop(true);
 
-                    try {
-                      String subId = phone.startsWith('880') ? phone : '8801$phone';
-                      if (subId.startsWith('8801880')) {
-                          subId = phone; // Handle if double prepended
-                      }
-                      // actually it should probably just be tel:880xxxxxxxx
-                      // The backend usually expects tel:8801xxxxxxx
-                      String finalSubId = 'tel:$phone'; // bdapps_api handles prepending if missing
-                      
-                      final response = await http.post(
-                        Uri.parse('https://www.flicksize.com/resumepilot/unsubscribe.php'),
-                        headers: {'Content-Type': 'application/json'},
-                        body: jsonEncode({'subscriberId': finalSubId}),
-                      );
-                      
-                      if (response.statusCode >= 200 && response.statusCode < 300) {
-                        // Unsubscribed successfully, log out locally
-                        ref.read(authNotifierProvider.notifier).logout();
-                      } else {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Failed to unsubscribe. Server returned: ${response.statusCode}')),
-                        );
-                      }
-                    } catch (e) {
+                  final phone = ref.read(profileProvider).value?.phone;
+                  if (phone == null || phone.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text(
+                              'Cannot identify phone number to unsubscribe.')),
+                    );
+                    return;
+                  }
+
+                  try {
+                    // Call backend unsubscribe endpoint
+                    final response = await http.post(
+                      Uri.parse(
+                          'https://resume-pilot-lc1i.onrender.com/api/v1/auth/phone/unsubscribe'),
+                      headers: {'Content-Type': 'application/json'},
+                      body: jsonEncode({'phone': phone}),
+                    );
+
+                    if (response.statusCode >= 200 &&
+                        response.statusCode < 300) {
+                      // Unsubscribed successfully, log out locally
+                      ref.read(authNotifierProvider.notifier).logout();
+                      if (!context.mounted) return;
+                      context.go(AppRoutes.login);
+                    } else {
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error: $e')),
+                        SnackBar(
+                            content: Text(
+                                'Failed to unsubscribe. Server returned: ${response.statusCode}')),
                       );
                     }
-                  },
-                  child: const Text('Unsubscribe'),
-                ),
-              ],
-            );
-      }
-    );
+                  } catch (e) {
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error: $e')),
+                    );
+                  }
+                },
+                child: const Text('Unsubscribe'),
+              ),
+            ],
+          );
+        });
   }
 }
 
@@ -882,5 +880,3 @@ class _SettingsErrorBanner extends StatelessWidget {
         ),
       );
 }
-
-

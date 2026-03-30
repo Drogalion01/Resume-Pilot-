@@ -88,7 +88,7 @@ class InterviewFormNotifier extends FamilyNotifier<InterviewFormState, int> {
             reminderEnabled: reminderEnabled,
           );
       ref.invalidate(applicationDetailProvider(arg));
-          ref.invalidate(dashboardProvider);
+      ref.invalidate(dashboardProvider);
       state = state.copyWith(isLoading: false, isSaved: true);
       return true;
     } catch (e) {
@@ -111,7 +111,7 @@ class InterviewFormNotifier extends FamilyNotifier<InterviewFormState, int> {
           .read(interviewServiceProvider)
           .updateInterview(interviewId, fields);
       ref.invalidate(applicationDetailProvider(arg));
-        ref.invalidate(dashboardProvider);
+      ref.invalidate(dashboardProvider);
       state = state.copyWith(isLoading: false, isSaved: true);
       return true;
     } catch (e) {

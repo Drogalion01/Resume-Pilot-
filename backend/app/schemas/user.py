@@ -6,6 +6,7 @@ class UserBase(BaseModel):
     full_name: str | None = None
     phone: str | None = None
     initials: str | None = None
+    is_subscribed: bool = True
 
 class UserUpdate(BaseModel):
     full_name: str | None = None

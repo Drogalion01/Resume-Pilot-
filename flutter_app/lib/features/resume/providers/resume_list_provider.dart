@@ -23,7 +23,8 @@ class ResumeListNotifier extends AsyncNotifier<List<ResumeResponse>> {
     if (cachedData != null) {
       try {
         final List<dynamic> jsonList = jsonDecode(cachedData);
-        cachedResumes = jsonList.map((j) => ResumeResponse.fromJson(j)).toList();
+        cachedResumes =
+            jsonList.map((j) => ResumeResponse.fromJson(j)).toList();
       } catch (_) {}
     }
 

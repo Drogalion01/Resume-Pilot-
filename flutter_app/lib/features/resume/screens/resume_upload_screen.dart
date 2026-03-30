@@ -59,8 +59,8 @@ class _ResumeUploadScreenState extends ConsumerState<ResumeUploadScreen> {
     ref.listen<UploadState>(uploadProvider, (_, next) {
       if (next is UploadSuccess) {
         ref.invalidate(resumeListProvider);
-            ref.invalidate(dashboardProvider);
-            context.pushReplacement(
+        ref.invalidate(dashboardProvider);
+        context.pushReplacement(
           AppRoutes.resumeAnalysis(next.analysis.resumeId),
         );
       }

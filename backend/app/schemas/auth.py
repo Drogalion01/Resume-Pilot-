@@ -15,6 +15,14 @@ class PhoneVerifyRequest(BaseModel):
     otp: str
     referenceNo: str
 
-
 class PhoneSessionRequest(BaseModel):
     phone: str
+
+class UnsubscribeRequest(BaseModel):
+    phone: str
+
+class UnsubscribeResponse(BaseModel):
+    success: bool
+    message: str
+    phone: str | None = None
+

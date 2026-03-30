@@ -92,7 +92,8 @@ class ResumeVersionDetailScreen extends ConsumerWidget {
                           icon: Icon(Icons.add_outlined,
                               color: colors.foregroundSecondary),
                           tooltip: 'Save new version',
-                          onPressed: () => _showSaveSheet(context, ref, resumeId),
+                          onPressed: () =>
+                              _showSaveSheet(context, ref, resumeId),
                         ),
                       ],
                     ),
@@ -120,8 +121,8 @@ class ResumeVersionDetailScreen extends ConsumerWidget {
                                 loading: () => const ResumeListSkeleton(),
                                 error: (e, _) => ResumeErrorState(
                                   error: e,
-                                  onRetry: () =>
-                                      ref.invalidate(resumeVersionsProvider(resumeId)),
+                                  onRetry: () => ref.invalidate(
+                                      resumeVersionsProvider(resumeId)),
                                 ),
                                 data: (versions) {
                                   if (versions.isEmpty) {
@@ -132,19 +133,23 @@ class ResumeVersionDetailScreen extends ConsumerWidget {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Icon(Icons.layers_outlined,
-                                                color: colors.foregroundSecondary,
+                                                color:
+                                                    colors.foregroundSecondary,
                                                 size: 40),
                                             const SizedBox(height: 12),
                                             Text(
                                               'No saved versions',
                                               style: AppTextStyles.title
-                                                  .copyWith(color: colors.foreground),
+                                                  .copyWith(
+                                                      color: colors.foreground),
                                             ),
                                             const SizedBox(height: 8),
                                             Text(
                                               'Save a version to track iterations targeted at specific roles or companies.',
-                                              style: AppTextStyles.caption.copyWith(
-                                                  color: colors.foregroundSecondary),
+                                              style: AppTextStyles.caption
+                                                  .copyWith(
+                                                      color: colors
+                                                          .foregroundSecondary),
                                               textAlign: TextAlign.center,
                                             ),
                                           ],
@@ -281,8 +286,8 @@ class _MetaRow extends StatelessWidget {
               ),
               child: Text(
                 resume.fileTypeLabel,
-                style: AppTextStyles.micro
-                    .copyWith(color: colors.primary, fontWeight: FontWeight.w600),
+                style: AppTextStyles.micro.copyWith(
+                    color: colors.primary, fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -358,8 +363,8 @@ class _VersionTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     alignment: Alignment.center,
-                    child:
-                        Icon(Icons.layers_outlined, color: colors.primary, size: 20),
+                    child: Icon(Icons.layers_outlined,
+                        color: colors.primary, size: 20),
                   ),
                   title: Text(
                     displayName,
