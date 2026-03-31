@@ -69,31 +69,12 @@ class AppBottomNav extends StatelessWidget {
                           activeIcon: Icon(Icons.school_rounded),
                           label: 'Resume Lab',
                         ),
-                      ],
-                    ),
-                  ),
-                  // Settings button — improved touch target and visual design
-                  Material(
-                    color: Colors.transparent,
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: colors.foreground.withValues(alpha: 0.03),
-                      ),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(14),
-                        onTap: () => context.push(AppRoutes.settings),
-                        splashColor: colors.primary.withValues(alpha: 0.12),
-                        highlightColor: colors.primary.withValues(alpha: 0.06),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                          child: Icon(
-                            Icons.settings_rounded,
-                            color: colors.foregroundSecondary,
-                            size: 26,
-                          ),
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.settings_outlined),
+                          activeIcon: Icon(Icons.settings_rounded),
+                          label: 'Settings',
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ],

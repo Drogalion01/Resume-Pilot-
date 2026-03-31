@@ -33,12 +33,18 @@ class ShellScaffold extends StatelessWidget {
       // a blurred container inside BottomNav itself.
       bottomNavigationBar: AppBottomNav(
         currentIndex: navigationShell.currentIndex,
-        onDestinationSelected: _onTabTap,
+        onDestinationSelected: (index) => _onTabTap(context, index),
       ),
     );
   }
 
-  void _onTabTap(int index) {
+  void _onTabTap(BuildContext context, int index) {
+    // Settings tab (index 3) navigates to settings screen
+    if (index == 3) {
+      context.push(AppRoutes.settings);
+      return;
+    }
+
     // goBranch preserves deep-link state per branch.
     // initialLocation: true resets a branch to its root when re-tapping
     // the already-active tab (matches iOS/Android convention).
