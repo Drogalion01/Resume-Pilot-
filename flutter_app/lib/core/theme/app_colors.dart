@@ -94,69 +94,69 @@ abstract class AppColors {
 class AppColorsLight extends AppColors {
   const AppColorsLight();
 
-  // Surfaces — refined with warm undertones
+  // Surfaces — refined minimal with warm undertones
   @override
-  Color get background => const Color(0xFFFAFBFC); // Warm neutral white
+  Color get background => const Color(0xFFFCFDFE); // Pristine minimal
   @override
   Color get backgroundPure => const Color(0xFFFFFFFF);
   @override
   Color get surfacePrimary => const Color(0xFFFFFFFF);
   @override
-  Color get surfaceSecondary => const Color(0xFFF5F7FA); // Subtle warm
+  Color get surfaceSecondary => const Color(0xFFF7F9FB); // Refined subtle
   @override
-  Color get surfaceSunken => const Color(0xFFEEF1F6); // Refined depth
+  Color get surfaceSunken => const Color(0xFFF0F4F7); // Soft depth
 
-  // Text
+  // Text — minimal refined grays
   @override
-  Color get foreground => const Color(0xFF0D1630); // hsl(222 56% 12%)
+  Color get foreground => const Color(0xFF1F2937); // hsl(217 26% 18%) — minimal dark
   @override
-  Color get foregroundSecondary => const Color(0xFF4A547A); // hsl(228 24% 38%)
+  Color get foregroundSecondary => const Color(0xFF6B7280); // hsl(217 14% 45%) — soft gray
   @override
-  Color get foregroundTertiary => const Color(0xFF6E7A9C); // hsl(224 18% 52%)
+  Color get foregroundTertiary => const Color(0xFF9CA3AF); // hsl(217 12% 65%) — refined gray
   @override
-  Color get foregroundQuaternary => const Color(0xFF96A0BC); // hsl(220 18% 66%)
+  Color get foregroundQuaternary => const Color(0xFFD1D5DB); // hsl(217 14% 82%) — light gray
 
-  // Primary — refined deep indigo for premium feel
+  // Primary — refined minimal indigo (less vibrant, more sophisticated)
   @override
-  Color get primary => const Color(0xFF2D5AA8); // hsl(214 58% 42%) — sophisticated indigo
+  Color get primary => const Color(0xFF475569); // hsl(216 18% 34%) — muted sophisticated
   @override
   Color get primaryForeground => const Color(0xFFFFFFFF);
   @override
-  Color get primaryHover => const Color(0xFF3965B8); // hsl(214 58% 48%) — elevated hover
+  Color get primaryHover => const Color(0xFF5A6B82); // hsl(216 18% 42%) — elevated muted
   @override
-  Color get primaryLight => const Color(0xFFE0E8F5); // hsl(214 56% 92%) — subtle background
+  Color get primaryLight => const Color(0xFFE8EDF4); // hsl(216 28% 92%) — soft background
   @override
-  Color get primaryMuted => const Color(0xFFB0BEDD); // hsl(214 50% 80%) — refined muted
+  Color get primaryMuted => const Color(0xFFC1C9D6); // hsl(216 20% 78%) — refined muted
 
-  // Gold — luxe refined bronze
+  // Gold — warm refined taupe (less bright, more minimal)
   @override
-  Color get gold => const Color(0xFFD4A574); // hsl(30 60% 62%) — warm sophisticated bronze
+  Color get gold => const Color(0xFFB8A398); // hsl(18 20% 65%) — warm taupe
   @override
   Color get goldForeground => const Color(0xFFFFFFFF);
   @override
-  Color get goldMuted => const Color(0xFFEBDECD); // hsl(30 38% 87%) — elegant muted
+  Color get goldMuted => const Color(0xFFE4DDD6); // hsl(18 18% 87%) — soft taupe
   @override
-  Color get goldLight => const Color(0xFFF8F3ED); // hsl(30 50% 96%) — pristine background
+  Color get goldLight => const Color(0xFFFAF8F6); // hsl(18 30% 97%) — pristine warm
 
-  // Borders / Inputs — refined with new primary color
+  // Borders / Inputs — minimal refined
   @override
-  Color get border => const Color(0xFFC9D6E8); // hsl(214 48% 86%) — sophisticated border
+  Color get border => const Color(0xFFE5E7EB); // hsl(217 14% 90%) — minimal border
   @override
-  Color get borderSubtle => const Color(0xFFD9E3F0); // hsl(214 60% 90%) — refined subtle
+  Color get borderSubtle => const Color(0xFFF3F4F6); // hsl(217 14% 96%) — subtle edge
   @override
-  Color get inputBorder => const Color(0xFFC9D6E8);
+  Color get inputBorder => const Color(0xFFE5E7EB);
   @override
-  Color get inputFocus => const Color(0xFF2D5AA8);
+  Color get inputFocus => const Color(0xFF475569);
   @override
-  Color get ring => const Color(0xFF2D5AA8);
+  Color get ring => const Color(0xFF475569);
 
-  // Destructive — refined red-brown
+  // Destructive — refined minimal red
   @override
-  Color get destructive => const Color(0xFF944432); // hsl(4 55% 50%) — dignified destructive
+  Color get destructive => const Color(0xFF7A5454); // hsl(0 20% 45%) — minimal red tone
   @override
   Color get destructiveForeground => const Color(0xFFFFFFFF);
   @override
-  Color get destructiveLight => const Color(0xFFF6E8E5); // hsl(4 55% 94%) — soft tone
+  Color get destructiveLight => const Color(0xFFF5EDED); // hsl(0 18% 94%) — soft tone
 
   // ── Score colors — refined elegant palette ─────────────────────────────
   @override
@@ -214,17 +214,17 @@ class AppColorsLight extends AppColors {
   @override
   Color get statusFinalBg => const Color(0xFFDEDEF0); // hsl(242 30% 92%)
 
-  // Hero gradients — refined premium aesthetic
+  // ── Hero gradients — minimal refined aesthetic
   @override
-  Color get heroGradient1 => const Color(0xFF9FC3F5); // hsl(214 80% 80%) — soft luxury
+  Color get heroGradient1 => const Color(0xFFF5F7FA); // Soft neutral light
   @override
-  Color get heroGradient2 => const Color(0xADBBC9F0); // hsl(218 60% 84%) — refined blend
+  Color get heroGradient2 => const Color(0xFFF1F5F9); // Refined neutral
   @override
-  Color get heroGradient3 => const Color(0xFFD1DBEF); // hsl(216 70% 88%) — elegant light
+  Color get heroGradient3 => const Color(0xFFEFF4F8); // Subtle tone
   @override
-  Color get heroGradient4 => const Color(0xFFE8EFFA); // hsl(214 76% 94%) — pristine
+  Color get heroGradient4 => const Color(0xFFF8FAFB); // Pristine
   @override
-  Color get heroGoldGlow => const Color(0xFFEADCCA); // hsl(30 52% 88%) — luxe glow
+  Color get heroGoldGlow => const Color(0xFFEBE5DF); // Soft warm tone
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -234,125 +234,125 @@ class AppColorsLight extends AppColors {
 class AppColorsDark extends AppColors {
   const AppColorsDark();
 
-  // Surfaces — richer midnight spectrum with clearer elevation steps
+  // Surfaces — refined minimal dark (NOT too dark, more usable)
   @override
-  Color get background => const Color(0xFF0A1020); // hsl(224 52% 8%)
+  Color get background => const Color(0xFF0F1318); // hsl(217 20% 7%) — minimal night
   @override
-  Color get backgroundPure => const Color(0xFF060A16); // hsl(228 50% 6%)
+  Color get backgroundPure => const Color(0xFF0A0E12); // hsl(217 26% 5%) — pure dark
   @override
-  Color get surfacePrimary => const Color(0xFF111B31); // hsl(224 48% 13%)
+  Color get surfacePrimary => const Color(0xFF16202B); // hsl(217 33% 13%) — refined surface
   @override
-  Color get surfaceSecondary => const Color(0xFF17243C); // hsl(222 44% 16%)
+  Color get surfaceSecondary => const Color(0xFF1F2A37); // hsl(217 33% 17%) — elevated surface
   @override
-  Color get surfaceSunken => const Color(0xFF0C152B); // hsl(224 54% 11%)
+  Color get surfaceSunken => const Color(0xFF0D1620); // hsl(217 35% 10%) — subtle depth
 
-  // Text
+  // Text — minimal refined grays for dark
   @override
-  Color get foreground => const Color(0xFFF0F4FF); // hsl(224 100% 97%)
+  Color get foreground => const Color(0xFFE5E7EB); // hsl(217 14% 90%) — minimal light
   @override
-  Color get foregroundSecondary => const Color(0xFF93A3C9); // hsl(220 32% 68%)
+  Color get foregroundSecondary => const Color(0xFFA6ADBB); // hsl(217 12% 68%) — soft gray
   @override
-  Color get foregroundTertiary => const Color(0xFF7282A6); // hsl(220 24% 55%)
+  Color get foregroundTertiary => const Color(0xFF7F8A9A); // hsl(217 14% 53%) — refined gray
   @override
-  Color get foregroundQuaternary => const Color(0xFF4E5F86); // hsl(222 26% 42%)
+  Color get foregroundQuaternary => const Color(0xFF575D6B); // hsl(217 12% 38%) — deep gray
 
-  // Primary — luminous refined indigo accent
+  // Primary — minimal muted accent for dark (matches light mode muted tone)
   @override
-  Color get primary => const Color(0xFF89B3FF); // hsl(214 100% 72%) — sophisticated bright
+  Color get primary => const Color(0xFF8B95A5); // hsl(216 14% 60%) — minimal accent
   @override
   Color get primaryForeground => const Color(0xFFFFFFFF);
   @override
-  Color get primaryHover => const Color(0xFF9AC1FF); // hsl(214 100% 76%) — elevated accent
+  Color get primaryHover => const Color(0xFF9DA8B8); // hsl(216 14% 68%) — elevated accent
   @override
-  Color get primaryLight => const Color(0xFF172949); // hsl(214 52% 20%) — refined container
+  Color get primaryLight => const Color(0xFF1E293B); // hsl(217 32% 16%) — refined container
   @override
-  Color get primaryMuted => const Color(0xFF1F3354); // hsl(214 48% 23%) — muted container
+  Color get primaryMuted => const Color(0xFF2D3748); // hsl(217 26% 21%) — muted container
 
-  // Gold — warm luxe bronze
+  // Gold — minimal warm taupe for dark
   @override
-  Color get gold => const Color(0xFFD9A876); // hsl(30 60% 63%) — warm luxury accent
+  Color get gold => const Color(0xFFC9B8AA); // hsl(18 20% 75%) — warm taupe tone
   @override
   Color get goldForeground => const Color(0xFFFFFFFF);
   @override
-  Color get goldMuted => const Color(0xFF3C2F23); // hsl(30 28% 22%) — refined muted
+  Color get goldMuted => const Color(0xFF3A322B); // hsl(18 18% 23%) — minimal muted
   @override
-  Color get goldLight => const Color(0xFF2A1F18); // hsl(30 32% 17%) — dark container
+  Color get goldLight => const Color(0xFF252219); // hsl(18 18% 15%) — dark container
 
-  // Borders / Inputs — refined with new premium colors
+  // Borders / Inputs — minimal refined dark
   @override
-  Color get border => const Color(0xFF2B384E); // hsl(214 35% 27%) — sophisticated border
+  Color get border => const Color(0xFF38444F); // hsl(217 20% 28%) — minimal border
   @override
-  Color get borderSubtle => const Color(0xFF1F2C40); // hsl(214 40% 20%) — refined subtle
+  Color get borderSubtle => const Color(0xFF252E38); // hsl(217 26% 19%) — subtle edge
   @override
-  Color get inputBorder => const Color(0xFF2B384E);
+  Color get inputBorder => const Color(0xFF38444F);
   @override
-  Color get inputFocus => const Color(0xFF89B3FF);
+  Color get inputFocus => const Color(0xFF8B95A5);
   @override
-  Color get ring => const Color(0xFF89B3FF);
+  Color get ring => const Color(0xFF8B95A5);
 
-  // Destructive — refined dignified red
+  // Destructive — minimal refined red for dark
   @override
-  Color get destructive => const Color(0xFFC96A62); // hsl(4 55% 62%) — warm dignity
+  Color get destructive => const Color(0xFF9B7472); // hsl(0 20% 60%) — minimal red tone
   @override
   Color get destructiveForeground => const Color(0xFFFFFFFF);
   @override
-  Color get destructiveLight => const Color(0xFF2B1A18); // hsl(4 30% 16%) — warm shadow
+  Color get destructiveLight => const Color(0xFF1F1514); // hsl(0 18% 12%) — dark tone
 
-  // ── Score colors (refined for dark mode) ───────────────────────────────
+  // ── Score colors — minimal refined ─────────────────────────────────────
   @override
-  Color get scoreExcellent => const Color(0xFF5CBFA8); // hsl(152 45% 60%) — refined green
+  Color get scoreExcellent => const Color(0xFF70938B); // hsl(152 20% 56%) — refined green
   @override
-  Color get scoreExcellentBg => const Color(0xFF1B2F28); // hsl(152 30% 16%)
+  Color get scoreExcellentBg => const Color(0xFF172316); // hsl(152 26% 10%)
   @override
-  Color get scoreGood => const Color(0xFF62C5B0); // hsl(152 38% 64%) — polished growth
+  Color get scoreGood => const Color(0xFF7FA896); // hsl(152 18% 62%) — minimal growth
   @override
-  Color get scoreGoodBg => const Color(0xFF1C3230); // hsl(152 28% 17%)
+  Color get scoreGoodBg => const Color(0xFF1A281F); // hsl(152 24% 12%)
   @override
-  Color get scoreAverage => const Color(0xFFC9A04C); // hsl(36 60% 60%) — refined bronze
+  Color get scoreAverage => const Color(0xFF9B8B6B); // hsl(36 20% 58%) — minimal bronze
   @override
-  Color get scoreAverageBg => const Color(0xFF2B2218); // hsl(36 32% 16%)
+  Color get scoreAverageBg => const Color(0xFF231D13); // hsl(36 30% 12%)
   @override
-  Color get scorePoor => const Color(0xFFC96A62); // hsl(4 50% 62%) — warm warning
+  Color get scorePoor => const Color(0xFF9B7472); // hsl(4 20% 60%) — minimal warning
   @override
-  Color get scorePoorBg => const Color(0xFF2B1A18); // hsl(4 30% 16%)
+  Color get scorePoorBg => const Color(0xFF201614); // hsl(4 26% 10%)
 
-  // ── Status colors (refined dark mode) ───────────────────────────────────
+  // ── Status colors — minimal refined ──────────────────────────────────
   @override
-  Color get statusApplied => const Color(0xFF6B96D8); // hsl(214 50% 62%) — refined professional
+  Color get statusApplied => const Color(0xFF748EA0); // hsl(214 20% 58%) — minimal professional
   @override
-  Color get statusAppliedBg => const Color(0xFF1D2540); // hsl(214 32% 18%)
+  Color get statusAppliedBg => const Color(0xFF1B2533); // hsl(214 28% 16%)
   @override
-  Color get statusInterview => const Color(0xFF9C80D8); // hsl(270 35% 65%) — uplifting purple
+  Color get statusInterview => const Color(0xFF8E7FA0); // hsl(270 18% 58%) — minimal purple
   @override
-  Color get statusInterviewBg => const Color(0xFF262238); // hsl(270 24% 18%)
+  Color get statusInterviewBg => const Color(0xFF202230); // hsl(270 22% 16%)
   @override
-  Color get statusOffer => const Color(0xFF5CBFA8); // hsl(152 48% 60%) — success green
+  Color get statusOffer => const Color(0xFF70938B); // hsl(152 20% 56%) — minimal green
   @override
-  Color get statusOfferBg => const Color(0xFF1B2F28); // hsl(152 30% 16%)
+  Color get statusOfferBg => const Color(0xFF172316); // hsl(152 26% 10%)
   @override
-  Color get statusRejected => const Color(0xFFC96A62); // hsl(4 55% 62%) — warm dignity
+  Color get statusRejected => const Color(0xFF9B7472); // hsl(4 20% 60%) — minimal red
   @override
-  Color get statusRejectedBg => const Color(0xFF2B1A18); // hsl(4 30% 16%)
+  Color get statusRejectedBg => const Color(0xFF201614); // hsl(4 26% 10%)
   @override
-  Color get statusSaved => const Color(0xFFC9A04C); // hsl(36 60% 60%) — luxe bronze
+  Color get statusSaved => const Color(0xFF9B8B6B); // hsl(36 20% 58%) — minimal bronze
   @override
-  Color get statusSavedBg => const Color(0xFF2B2218); // hsl(36 32% 16%)
+  Color get statusSavedBg => const Color(0xFF231D13); // hsl(36 30% 12%)
   @override
-  Color get statusAssessment => const Color(0xFFB080E0); // hsl(286 35% 66%) — creative flair
+  Color get statusAssessment => const Color(0xFF8E7FA0); // hsl(286 18% 58%) — minimal creativity
   @override
-  Color get statusAssessmentBg => const Color(0xFF2A2238); // hsl(286 24% 18%)
+  Color get statusAssessmentBg => const Color(0xFF1F1F2A); // hsl(286 20% 16%)
   @override
-  Color get statusHr => const Color(0xFF62B0D0); // hsl(200 48% 62%) — trustworthy refined
+  Color get statusHr => const Color(0xFF6B8a9b); // hsl(200 18% 55%) — minimal trustworthy
   @override
-  Color get statusHrBg => const Color(0xFF1C2630); // hsl(200 32% 18%)
+  Color get statusHrBg => const Color(0xFF1A2431); // hsl(200 26% 16%)
   @override
-  Color get statusTechnical => const Color(0xFF8A78D0); // hsl(262 44% 62%) — logical elegance
+  Color get statusTechnical => const Color(0xFF7F7A9a); // hsl(262 14% 56%) — minimal logic
   @override
-  Color get statusTechnicalBg => const Color(0xFF242230); // hsl(262 26% 18%)
+  Color get statusTechnicalBg => const Color(0xFF1E1E2A); // hsl(262 20% 16%)
   @override
-  Color get statusFinal => const Color(0xFF7A78D0); // hsl(242 43% 62%) — assured finality
+  Color get statusFinal => const Color(0xFF7A7A9a); // hsl(242 14% 56%) — minimal final
   @override
-  Color get statusFinalBg => const Color(0xFF22212E); // hsl(242 26% 18%)
+  Color get statusFinalBg => const Color(0xFF1D1D2A); // hsl(242 20% 16%)
 
   // ── Hero gradients — premium dark aesthetic ──────────────────────────────
   @override
