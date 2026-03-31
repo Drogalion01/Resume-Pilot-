@@ -185,6 +185,20 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+
+          // Tab 3 — Settings
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.settings,
+                name: 'settings',
+                builder: (context, state) {
+                  final offline = state.uri.queryParameters['offline'] == 'true';
+                  return SettingsScreen(offline: offline);
+                },
+              ),
+            ],
+          ),
         ],
       ),
 
@@ -217,13 +231,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.interviewCalendar,
         name: 'interview-calendar',
         builder: (_, __) => const InterviewCalendarScreen(),
-      ),
-      
-      // Settings moved to drawer (push-over-shell)
-      GoRoute(
-        path: AppRoutes.settings,
-        name: 'settings',
-        builder: (_, __) => const SettingsScreen(),
       ),
       
       // Upload resume

@@ -26,43 +26,14 @@ class WelcomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Spacer(flex: 2),
-                // Brand mark
-                Container(
-                  width: 88,
-                  height: 88,
-                  decoration: BoxDecoration(
-                    gradient: AppGradients.primaryButton(colors),
-                    borderRadius: BorderRadius.circular(AppRadii.xl2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: colors.primary.withValues(alpha: 0.4),
-                        blurRadius: 32,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'R',
-                      style: TextStyle(
-                        fontSize: 46,
-                        fontWeight: FontWeight.w800,
-                        color: colors.primaryForeground,
-                        height: 1,
-                      ),
-                    ),
-                  ),
+                // Brand logo
+                Image.asset(
+                  'assets/images/Logo.png',
+                  width: 200,
+                  height: 200,
+                  fit: BoxFit.contain,
                 ),
                 const SizedBox(height: AppSpacing.px20),
-                Text(
-                  'ResumePilot',
-                  style: textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: colors.foreground,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.px12),
                 Text(
                   'AI-powered resume analysis\nthat gets you hired.',
                   textAlign: TextAlign.center,

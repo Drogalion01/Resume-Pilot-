@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_gradients.dart';
-import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/app_theme.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -92,25 +91,16 @@ class _SplashScreenState extends State<SplashScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Animated logo mark
+                  // Animated logo (with text)
                   FadeTransition(
                     opacity: _fadeIn,
                     child: ScaleTransition(
                       scale: _scaleIn,
-                      child: _LogoMark(colors: colors),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // App name
-                  FadeTransition(
-                    opacity: _fadeIn,
-                    child: Text(
-                      'ResumePilot',
-                      style: AppTextStyles.display.copyWith(
-                        color: colors.foreground,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.5,
+                      child: Image.asset(
+                        'assets/images/Logo.png',
+                        width: 240,
+                        height: 240,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
@@ -125,45 +115,6 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// _LogoMark — gradient rounded-square with a stylised "P" glyph
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _LogoMark extends StatelessWidget {
-  const _LogoMark({required this.colors});
-  final dynamic colors; // AppColors
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        gradient: AppGradients.primaryButton(colors),
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: [
-          BoxShadow(
-            color: colors.primary.withValues(alpha: 0.35),
-            blurRadius: 28,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Center(
-        child: Text(
-          'P',
-          style: TextStyle(
-            fontSize: 42,
-            fontWeight: FontWeight.w800,
-            color: colors.primaryForeground,
-            height: 1,
-          ),
         ),
       ),
     );

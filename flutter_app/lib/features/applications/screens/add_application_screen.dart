@@ -194,7 +194,8 @@ class _AddApplicationScreenState extends ConsumerState<AddApplicationScreen> {
                                               BorderRadius.circular(20),
                                           border: Border.all(
                                             color:
-                                                active ? fg : fg.withAlpha(60),
+                                                active ? fg : fg.withAlpha(120),
+                                            width: active ? 0 : 1.5,
                                           ),
                                         ),
                                         child: Text(
@@ -203,6 +204,8 @@ class _AddApplicationScreenState extends ConsumerState<AddApplicationScreen> {
                                             color: active ? Colors.white : fg,
                                             fontWeight: FontWeight.w600,
                                           ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     );

@@ -180,39 +180,39 @@ class AppColorsLight extends AppColors {
   @override
   Color get statusApplied => const Color(0xFF3E6FB8); // hsl(214 50% 48%) — professional blue
   @override
-  Color get statusAppliedBg => const Color(0xFFDEE7F3); // hsl(214 35% 92%)
+  Color get statusAppliedBg => const Color(0xFFBDCBE8); // hsl(214 35% 82%) — improved contrast
   @override
   Color get statusInterview => const Color(0xFF704EB8); // hsl(270 35% 47%) — insightful purple
   @override
-  Color get statusInterviewBg => const Color(0xFFE5DEEE); // hsl(270 25% 92%)
+  Color get statusInterviewBg => const Color(0xFFC8BEDC); // hsl(270 25% 82%) — improved contrast
   @override
   Color get statusOffer => const Color(0xFF2E8B6D); // hsl(152 48% 40%) — success green
   @override
-  Color get statusOfferBg => const Color(0xFFDEF4EA); // hsl(152 38% 92%)
+  Color get statusOfferBg => const Color(0xFFBCE5D8); // hsl(152 38% 82%) — improved contrast
   @override
   Color get statusRejected => const Color(0xFF944432); // hsl(4 55% 50%) — dignified red
   @override
-  Color get statusRejectedBg => const Color(0xFFF6E8E5); // hsl(4 55% 94%)
+  Color get statusRejectedBg => const Color(0xFFEDD0C8); // hsl(4 55% 84%) — improved contrast
   @override
   Color get statusSaved => const Color(0xFFB68A40); // hsl(36 55% 50%) — warm bronze
   @override
-  Color get statusSavedBg => const Color(0xFFF2EBDA); // hsl(36 50% 93%)
+  Color get statusSavedBg => const Color(0xFFE9D0B0); // hsl(36 50% 81%) — improved contrast
   @override
   Color get statusAssessment => const Color(0xFF8A58CC); // hsl(286 35% 55%) — creative purple
   @override
-  Color get statusAssessmentBg => const Color(0xFFEBDEF2); // hsl(286 28% 93%)
+  Color get statusAssessmentBg => const Color(0xFFD8C5E0); // hsl(286 28% 82%) — improved contrast
   @override
   Color get statusHr => const Color(0xFF3A8DB0); // hsl(200 48% 48%) — trustworthy teal
   @override
-  Color get statusHrBg => const Color(0xFFDEECF3); // hsl(200 35% 92%)
+  Color get statusHrBg => const Color(0xFFBDD8E5); // hsl(200 35% 82%) — improved contrast
   @override
   Color get statusTechnical => const Color(0xFF523A99); // hsl(262 44% 45%) — logical purple
   @override
-  Color get statusTechnicalBg => const Color(0xFFE5DFF0); // hsl(262 30% 92%)
+  Color get statusTechnicalBg => const Color(0xFFC8BFD8); // hsl(262 30% 82%) — improved contrast
   @override
   Color get statusFinal => const Color(0xFF3E3E99); // hsl(242 43% 48%) — final purpose blue
   @override
-  Color get statusFinalBg => const Color(0xFFDEDEF0); // hsl(242 30% 92%)
+  Color get statusFinalBg => const Color(0xFFBDBDE0); // hsl(242 30% 82%) — improved contrast
 
   // ── Hero gradients — minimal refined aesthetic
   @override

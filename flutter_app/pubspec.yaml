@@ -78,6 +78,17 @@ dev_dependencies:
   riverpod_generator: ^2.4.0
   custom_lint: ^0.6.4
   riverpod_lint: ^2.3.10
+  flutter_launcher_icons: ^0.14.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  image_path: "assets/icons/Logo.png"
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "assets/icons/Logo.png"
+    background_color: "#FFFFFF"
+    theme_color: "#3E6FB8"
 
 flutter:
   uses-material-design: true

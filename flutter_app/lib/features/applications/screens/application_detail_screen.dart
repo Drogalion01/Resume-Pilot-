@@ -409,10 +409,14 @@ class _MetaTag extends StatelessWidget {
           children: [
             Icon(icon, size: 14, color: colors.foregroundSecondary),
             const SizedBox(width: 4),
-            Text(
-              label,
-              style: AppTextStyles.caption
-                  .copyWith(color: colors.foregroundSecondary),
+            Flexible(
+              child: Text(
+                label,
+                style: AppTextStyles.caption
+                    .copyWith(color: colors.foregroundSecondary),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
@@ -450,7 +454,10 @@ class _StatusPicker extends ConsumerWidget {
             decoration: BoxDecoration(
               color: active ? fg : bg,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: active ? fg : fg.withAlpha(60)),
+              border: Border.all(
+                color: active ? fg : fg.withAlpha(120),
+                width: active ? 0 : 1.5,
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -463,6 +470,8 @@ class _StatusPicker extends ConsumerWidget {
                     color: active ? Colors.white : fg,
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

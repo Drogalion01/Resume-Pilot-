@@ -39,12 +39,6 @@ class ShellScaffold extends StatelessWidget {
   }
 
   void _onTabTap(BuildContext context, int index) {
-    // Settings tab (index 3) navigates to settings screen
-    if (index == 3) {
-      context.push(AppRoutes.settings);
-      return;
-    }
-
     // goBranch preserves deep-link state per branch.
     // initialLocation: true resets a branch to its root when re-tapping
     // the already-active tab (matches iOS/Android convention).
@@ -92,7 +86,7 @@ class ShellScaffold extends StatelessWidget {
               title: const Text('Settings'),
               onTap: () {
                 Navigator.pop(context);
-                context.push(AppRoutes.settings);
+                context.go(AppRoutes.settings);
               },
             ),
           ],

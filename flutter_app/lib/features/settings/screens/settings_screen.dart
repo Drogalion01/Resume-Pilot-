@@ -24,7 +24,9 @@ import '../providers/settings_provider.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 
 class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({super.key, this.offline = false});
+  
+  final bool offline;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,6 +54,38 @@ class SettingsScreen extends ConsumerWidget {
             child: CustomScrollView(
               physics: const BouncingScrollPhysics(),
               slivers: [
+                // ── Offline banner (if offline) ────────────────────────
+                if (offline)
+                  SliverToBoxAdapter(
+                    child: Container(
+                      margin: const EdgeInsets.all(AppSpacing.px12),
+                      padding: const EdgeInsets.all(AppSpacing.px12),
+                      decoration: BoxDecoration(
+                        color: colors.statusRejected.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: colors.statusRejected),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.cloud_off_outlined,
+                            size: 18,
+                            color: colors.statusRejected,
+                          ),
+                          const SizedBox(width: AppSpacing.px8),
+                          Expanded(
+                            child: Text(
+                              'Offline mode: Some features are unavailable',
+                              style: AppTextStyles.caption.copyWith(
+                                color: colors.statusRejected,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
                 // ── Header ─────────────────────────────────────────────
                 SliverToBoxAdapter(
                   child: _SettingsHeader(colors: colors),
@@ -61,7 +95,11 @@ class SettingsScreen extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: profileAsync.when(
                     data: (p) => _ProfileSummaryCard(
-                        profile: p, colors: colors, isDark: isDark),
+                      profile: p,
+                      colors: colors,
+                      isDark: isDark,
+                      offline: offline,
+                    ),
                     loading: () => const _ProfileSummaryShimmer(),
                     error: (_, __) => const SizedBox.shrink(),
                   ),
@@ -75,7 +113,11 @@ class SettingsScreen extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: settingsAsync.when(
                     data: (s) => _SettingsBody(
-                        settings: s, colors: colors, isDark: isDark),
+                      settings: s,
+                      colors: colors,
+                      isDark: isDark,
+                      offline: offline,
+                    ),
                     loading: () => const _SettingsBodyShimmer(),
                     error: (e, _) => _SettingsErrorBanner(
                         message: e.toString(), colors: colors),
@@ -128,11 +170,13 @@ class _ProfileSummaryCard extends ConsumerWidget {
     required this.profile,
     required this.colors,
     required this.isDark,
+    required this.offline,
   });
 
   final UserProfile profile;
   final AppColors colors;
   final bool isDark;
+  final bool offline;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -180,23 +224,28 @@ class _ProfileSummaryCard extends ConsumerWidget {
 
               // Edit Profile button
               TextButton.icon(
-                onPressed: () => context.push(AppRoutes.profile),
+                onPressed: offline
+                    ? null
+                    : () => context.push(AppRoutes.profile),
                 icon: Icon(
                   Icons.edit_outlined,
                   size: 16,
-                  color: colors.primary,
+                  color: offline ? colors.foregroundTertiary : colors.primary,
                 ),
                 label: Text(
                   'Edit',
-                  style:
-                      AppTextStyles.buttonLabel.copyWith(color: colors.primary),
+                  style: AppTextStyles.buttonLabel.copyWith(
+                    color: offline ? colors.foregroundTertiary : colors.primary,
+                  ),
                 ),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.px10,
                     vertical: AppSpacing.px6,
                   ),
-                  backgroundColor: colors.primaryLight,
+                  backgroundColor: offline
+                      ? colors.surfaceSecondary
+                      : colors.primaryLight,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -219,11 +268,13 @@ class _SettingsBody extends ConsumerWidget {
     required this.settings,
     required this.colors,
     required this.isDark,
+    required this.offline,
   });
 
   final UserSettings settings;
   final AppColors colors;
   final bool isDark;
+  final bool offline;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -277,9 +328,14 @@ class _SettingsBody extends ConsumerWidget {
                   subtitle: 'Receive application activity updates via email',
                   value: settings.emailNotificationsEnabled,
                   colors: colors,
-                  onChanged: (_) => ref
-                      .read(settingsProvider.notifier)
-                      .toggleEmailNotifications(),
+                  enabled: !offline,
+                  onChanged: (_) {
+                    if (!offline) {
+                      ref
+                          .read(settingsProvider.notifier)
+                          .toggleEmailNotifications();
+                    }
+                  },
                 ),
                 _Divider(colors: colors),
                 _ToggleTile(
@@ -288,9 +344,14 @@ class _SettingsBody extends ConsumerWidget {
                   subtitle: 'Push reminders before scheduled interviews',
                   value: settings.interviewRemindersEnabled,
                   colors: colors,
-                  onChanged: (_) => ref
-                      .read(settingsProvider.notifier)
-                      .toggleInterviewReminders(),
+                  enabled: !offline,
+                  onChanged: (_) {
+                    if (!offline) {
+                      ref
+                          .read(settingsProvider.notifier)
+                          .toggleInterviewReminders();
+                    }
+                  },
                 ),
                 _Divider(colors: colors),
                 _ToggleTile(
@@ -299,9 +360,14 @@ class _SettingsBody extends ConsumerWidget {
                   subtitle: 'Tips, product updates & promotions',
                   value: settings.marketingEmailsEnabled,
                   colors: colors,
-                  onChanged: (_) => ref
-                      .read(settingsProvider.notifier)
-                      .toggleMarketingEmails(),
+                  enabled: !offline,
+                  onChanged: (_) {
+                    if (!offline) {
+                      ref
+                          .read(settingsProvider.notifier)
+                          .toggleMarketingEmails();
+                    }
+                  },
                 ),
               ],
             ),
@@ -321,6 +387,7 @@ class _SettingsBody extends ConsumerWidget {
                   icon: Icons.person_outline,
                   title: 'Edit Profile',
                   colors: colors,
+                  enabled: !offline,
                   onTap: () => context.push(AppRoutes.profile),
                 ),
                 _Divider(colors: colors),
@@ -349,6 +416,7 @@ class _SettingsBody extends ConsumerWidget {
                   colors: colors,
                   iconColor: colors.destructive,
                   titleColor: colors.destructive,
+                  enabled: !offline,
                   onTap: () => _confirmDeleteAccount(context, ref),
                 ),
               ],
@@ -660,6 +728,7 @@ class _ToggleTile extends StatelessWidget {
     required this.colors,
     required this.onChanged,
     this.subtitle,
+    this.enabled = true,
   });
 
   final IconData icon;
@@ -668,44 +737,48 @@ class _ToggleTile extends StatelessWidget {
   final bool value;
   final AppColors colors;
   final ValueChanged<bool> onChanged;
+  final bool enabled;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.px16,
-          vertical: AppSpacing.px12,
-        ),
-        child: Row(
-          children: [
-            Icon(icon, size: 20, color: colors.foregroundSecondary),
-            const SizedBox(width: AppSpacing.px12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: AppTextStyles.bodyMedium
-                        .copyWith(color: colors.foreground),
-                  ),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 1),
+  Widget build(BuildContext context) => Opacity(
+        opacity: enabled ? 1.0 : 0.45,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.px16,
+            vertical: AppSpacing.px12,
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 20, color: colors.foregroundSecondary),
+              const SizedBox(width: AppSpacing.px12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      subtitle!,
-                      style: AppTextStyles.caption.copyWith(
-                        color: colors.foregroundTertiary,
-                      ),
+                      title,
+                      style: AppTextStyles.bodyMedium
+                          .copyWith(color: colors.foreground),
                     ),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 1),
+                      Text(
+                        subtitle!,
+                        style: AppTextStyles.caption.copyWith(
+                          color: colors.foregroundTertiary,
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-            Switch.adaptive(
-              value: value,
-              activeThumbColor: colors.primary,
-              onChanged: onChanged,
-            ),
-          ],
+              Switch.adaptive(
+                value: value,
+                activeThumbColor: colors.primary,
+                onChanged: enabled ? onChanged : null,
+              ),
+            ],
+          ),
         ),
       );
 }
