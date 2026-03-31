@@ -8,6 +8,9 @@ import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../settings/providers/settings_provider.dart';
+import '../../auth/providers/auth_provider.dart';
 import '../providers/dashboard_provider.dart';
 import '../models/dashboard_response.dart';
 import '../../interviews/models/interview.dart';
@@ -796,22 +799,10 @@ class _HomeHero extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                width: 48,
-                height: 48,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: colors.surfacePrimary,
-                  border: Border.all(color: colors.primaryLight, width: 1),
-                ),
-                child: Text(
-                  initials(),
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: colors.primary,
-                  ),
-                ),
+              // Profile quick-access menu
+              _ProfileMenuButton(
+                initials: initials(),
+                colors: colors,
               ),
             ],
           ),
@@ -824,6 +815,137 @@ class _HomeHero extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Quick-access profile menu button with theme toggle and account options
+class _ProfileMenuButton extends ConsumerWidget {
+  final String initials;
+  final AppColors colors;
+
+  const _ProfileMenuButton({
+    required this.initials,
+    required this.colors,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return PopupMenuButton<String>(
+      tooltip: 'Profile & Settings',
+      offset: const Offset(0, 8),
+      itemBuilder: (context) => [
+        // Theme toggle
+        PopupMenuItem<String>(
+          value: 'theme',
+          child: Row(
+            children: [
+              Icon(
+                isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                size: 18,
+                color: colors.foreground,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                isDarkMode ? 'Light Mode' : 'Dark Mode',
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: colors.foreground,
+                ),
+              ),
+            ],
+          ),
+          onTap: () {
+            // Cycle through theme modes: System → Light → Dark → System
+            final nextMode = themeMode == ThemeMode.system
+                ? ThemeMode.light
+                : themeMode == ThemeMode.light
+                    ? ThemeMode.dark
+                    : ThemeMode.system;
+            
+            ref.read(themeModeProvider.notifier).state = nextMode;
+          },
+        ),
+        PopupMenuDivider(height: 8),
+        // Edit profile
+        PopupMenuItem<String>(
+          value: 'profile',
+          child: Row(
+            children: [
+              Icon(Icons.person_outline, size: 18, color: colors.foreground),
+              const SizedBox(width: 12),
+              Text(
+                'Edit Profile',
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: colors.foreground,
+                ),
+              ),
+            ],
+          ),
+          onTap: () => context.go(AppRoutes.profile),
+        ),
+        // Settings
+        PopupMenuItem<String>(
+          value: 'settings',
+          child: Row(
+            children: [
+              Icon(Icons.settings_outlined, size: 18, color: colors.foreground),
+              const SizedBox(width: 12),
+              Text(
+                'Settings',
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: colors.foreground,
+                ),
+              ),
+            ],
+          ),
+          onTap: () => context.go(AppRoutes.settings),
+        ),
+        PopupMenuDivider(height: 8),
+        // Sign out
+        PopupMenuItem<String>(
+          value: 'logout',
+          child: Row(
+            children: [
+              Icon(Icons.logout_outlined, size: 18, color: colors.destructive),
+              const SizedBox(width: 12),
+              Text(
+                'Sign Out',
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: colors.destructive,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          onTap: () {
+            ref.read(authNotifierProvider.notifier).logout();
+            context.go(AppRoutes.login);
+          },
+        ),
+      ],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: colors.surfaceSecondary,
+      elevation: 8,
+      child: Container(
+        width: 48,
+        height: 48,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: colors.surfacePrimary,
+          border: Border.all(color: colors.primaryLight, width: 1),
+        ),
+        child: Text(
+          initials,
+          style: AppTextStyles.bodyMedium.copyWith(
+            fontWeight: FontWeight.w800,
+            color: colors.primary,
+          ),
+        ),
       ),
     );
   }
