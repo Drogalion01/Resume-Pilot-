@@ -76,9 +76,9 @@ class DashboardScreen extends ConsumerWidget {
                 ),
                 padding: const EdgeInsets.fromLTRB(
                   AppSpacing.pageH,
-                  4,
+                  8,
                   AppSpacing.pageH,
-                  AppSpacing.bottomNavH + 18,
+                  AppSpacing.bottomNavH + 24,
                 ),
                 children: [
                   _HomeHero(user: data.user, summary: data.summary),
@@ -86,8 +86,8 @@ class DashboardScreen extends ConsumerWidget {
                   // ATS improvement banner
                   if (data.insight.trendingStat.isNotEmpty)
                     Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      padding: const EdgeInsets.all(14),
+                      margin: const EdgeInsets.only(top: 14),
+                      padding: const EdgeInsets.all(16),
                       decoration: _sectionDecoration(
                         colors.statusOfferBg,
                         colors.primaryLight,
@@ -119,10 +119,10 @@ class DashboardScreen extends ConsumerWidget {
                       ),
                     ),
 
-                  // Stats + quick actions block (solid premium surface, no glass effect)
+                  // Stats + quick actions block
                   Container(
-                    margin: const EdgeInsets.only(top: 12),
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    margin: const EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
                     decoration: BoxDecoration(
                       color: colors.surfacePrimary,
                       borderRadius: BorderRadius.circular(18),
@@ -147,7 +147,7 @@ class DashboardScreen extends ConsumerWidget {
                                 color: colors.primary,
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 12),
                             Flexible(
                               child: _StatCard(
                                 label: 'Applications',
@@ -156,7 +156,7 @@ class DashboardScreen extends ConsumerWidget {
                                 color: colors.statusOffer,
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 12),
                             Flexible(
                               child: _StatCard(
                                 label: 'Interviews',
@@ -167,7 +167,7 @@ class DashboardScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 14),
                         Row(
                           children: [
                             Expanded(
@@ -191,24 +191,24 @@ class DashboardScreen extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: FilledButton.icon(
                                 onPressed: () =>
                                     context.push(AppRoutes.addApplication),
-                                icon: const Icon(Icons.add, size: 20),
+                                icon: const Icon(Icons.add_rounded, size: 20),
                                 label: const Text('Add Application'),
                                 style: FilledButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(14),
                                     side:
-                                        BorderSide(color: colors.primaryLight),
+                                        BorderSide(color: colors.ring.withValues(alpha: 0.4)),
                                   ),
                                   elevation: 0,
                                   backgroundColor: colors.surfaceSecondary,
                                   foregroundColor: colors.primary,
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 13),
+                                      const EdgeInsets.symmetric(vertical: 14),
                                   textStyle: AppTextStyles.bodyMedium.copyWith(
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -286,16 +286,16 @@ class _StatCard extends StatelessWidget {
       elevation: 0,
       color: colors.surfacePrimary,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: colors.surfacePrimary,
-          border: Border.all(color: colors.borderSubtle, width: 1),
+          border: Border.all(color: colors.borderSubtle, width: 0.5),
           boxShadow: [
             BoxShadow(
-              color: colors.foreground.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 3),
+              color: colors.foreground.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -303,39 +303,33 @@ class _StatCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 34,
-              height: 34,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.14),
-                borderRadius: BorderRadius.circular(10),
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
               ),
               alignment: Alignment.center,
-              child: Icon(icon, color: color, size: 18),
+              child: Icon(icon, color: color, size: 20),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
               '$value',
               style: AppTextStyles.scoreNumber.copyWith(
-                fontSize: 22,
+                fontSize: 24,
                 height: 1.0,
                 letterSpacing: -0.35,
                 fontWeight: FontWeight.w900,
                 color: colors.foreground,
-                shadows: [
-                  Shadow(
-                    color: colors.foreground.withValues(alpha: 0.10),
-                    blurRadius: 2,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
               ),
             ),
+            const SizedBox(height: 4),
             Text(
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.micro
-                  .copyWith(color: colors.foregroundSecondary),
+              style: AppTextStyles.caption
+                  .copyWith(color: colors.foregroundSecondary, fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -498,12 +492,12 @@ class _InterviewPreviewTile extends StatelessWidget {
     final colors = Theme.of(context).appColors;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       decoration: BoxDecoration(
         color: colors.surfaceSecondary,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colors.primaryLight, width: 1),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: colors.borderSubtle, width: 0.5),
       ),
       child: Row(
         children: [
@@ -570,24 +564,24 @@ class _ApplicationPreviewTile extends StatelessWidget {
     final String status = application.status.displayName;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       decoration: BoxDecoration(
         color: colors.surfaceSecondary,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colors.primaryLight, width: 1),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: colors.borderSubtle, width: 0.5),
       ),
       child: Row(
         children: [
           Container(
-            width: 38,
-            height: 38,
+            width: 42,
+            height: 42,
             decoration: BoxDecoration(
-              color: colors.primaryLight,
-              shape: BoxShape.circle,
+              color: colors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
             alignment: Alignment.center,
-            child: Icon(Icons.work_outline, color: colors.primary, size: 18),
+            child: Icon(Icons.work_rounded, color: colors.primary, size: 20),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -654,17 +648,17 @@ class _PremiumSectionCard extends StatelessWidget {
     final colors = Theme.of(context).appColors;
 
     return Container(
-      margin: const EdgeInsets.only(top: 12),
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
+      margin: const EdgeInsets.only(top: 18),
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
       decoration: BoxDecoration(
         color: colors.surfacePrimary.withValues(alpha: 0.95),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colors.primaryLight, width: 1),
-        boxShadow: const [
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: colors.borderSubtle, width: 0.5),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x14000000),
-            blurRadius: 12,
-            offset: Offset(0, 5),
+            color: colors.foreground.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -674,14 +668,14 @@ class _PremiumSectionCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 6,
-                height: 20,
+                width: 5,
+                height: 22,
                 decoration: BoxDecoration(
                   color: colors.primary,
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   title,
