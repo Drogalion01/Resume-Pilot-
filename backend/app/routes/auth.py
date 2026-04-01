@@ -122,6 +122,7 @@ def phone_verify_otp(request: Request, body: PhoneVerifyRequest, db: Session = D
             new_user = User(
                 phone=phone,
                 initials='U',
+                is_subscribed=True
             )
             db.add(new_user)
             db.commit()
@@ -131,6 +132,12 @@ def phone_verify_otp(request: Request, body: PhoneVerifyRequest, db: Session = D
             db.add(default_settings)
             db.commit()
             user = new_user
+        else:
+            # Existing user - if they were unsubscribed, re-enable subscription
+            # (they've successfully verified OTP after re-subscribing)
+            if not user.is_subscribed:
+                user.is_subscribed = True
+                db.commit()
             
         access_token = create_access_token(data={"sub": str(user.id)})
         return {
@@ -165,6 +172,7 @@ def phone_session(request: Request, body: PhoneSessionRequest, db: Session = Dep
             new_user = User(
                 phone=phone,
                 initials='U',
+                is_subscribed=True
             )
             db.add(new_user)
             db.commit()
@@ -174,6 +182,12 @@ def phone_session(request: Request, body: PhoneSessionRequest, db: Session = Dep
             db.add(default_settings)
             db.commit()
             user = new_user
+        else:
+            # Existing user - if they were unsubscribed, re-enable subscription
+            # (they're accessing the app after re-subscribing)
+            if not user.is_subscribed:
+                user.is_subscribed = True
+                db.commit()
 
         access_token = create_access_token(data={"sub": str(user.id)})
         return {

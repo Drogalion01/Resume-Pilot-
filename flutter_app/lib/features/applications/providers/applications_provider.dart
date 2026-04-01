@@ -91,8 +91,9 @@ class ApplicationsNotifier extends AsyncNotifier<ApplicationsState> {
       }
       return ApplicationsState(applications: apps);
     }).catchError((error, stackTrace) {
-      if (cachedApps != null)
+      if (cachedApps != null) {
         return ApplicationsState(applications: cachedApps);
+      }
       throw error;
     });
 

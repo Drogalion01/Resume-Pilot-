@@ -193,7 +193,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: AppRoutes.settings,
                 name: 'settings',
                 builder: (context, state) {
-                  final offline = state.uri.queryParameters['offline'] == 'true';
+                  final offline =
+                      state.uri.queryParameters['offline'] == 'true';
                   return SettingsScreen(offline: offline);
                 },
               ),
@@ -225,28 +226,28 @@ final routerProvider = Provider<GoRouter>((ref) {
           resumeId: int.parse(state.pathParameters['id']!),
         ),
       ),
-      
+
       // Interview Calendar
       GoRoute(
         path: AppRoutes.interviewCalendar,
         name: 'interview-calendar',
         builder: (_, __) => const InterviewCalendarScreen(),
       ),
-      
+
       // Upload resume
       GoRoute(
         path: AppRoutes.upload,
         name: 'upload',
         builder: (_, __) => const ResumeUploadScreen(),
       ),
-      
+
       // Add application
       GoRoute(
         path: AppRoutes.addApplication,
         name: 'add-application',
         builder: (_, __) => const AddApplicationScreen(),
       ),
-      
+
       // Profile
       GoRoute(
         path: AppRoutes.profile,

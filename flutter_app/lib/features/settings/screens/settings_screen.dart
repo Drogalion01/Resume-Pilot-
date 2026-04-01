@@ -25,7 +25,7 @@ import '../providers/settings_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key, this.offline = false});
-  
+
   final bool offline;
 
   @override
@@ -224,9 +224,8 @@ class _ProfileSummaryCard extends ConsumerWidget {
 
               // Edit Profile button
               TextButton.icon(
-                onPressed: offline
-                    ? null
-                    : () => context.push(AppRoutes.profile),
+                onPressed:
+                    offline ? null : () => context.push(AppRoutes.profile),
                 icon: Icon(
                   Icons.edit_outlined,
                   size: 16,
@@ -243,9 +242,8 @@ class _ProfileSummaryCard extends ConsumerWidget {
                     horizontal: AppSpacing.px10,
                     vertical: AppSpacing.px6,
                   ),
-                  backgroundColor: offline
-                      ? colors.surfaceSecondary
-                      : colors.primaryLight,
+                  backgroundColor:
+                      offline ? colors.surfaceSecondary : colors.primaryLight,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -498,7 +496,7 @@ class _SettingsBody extends ConsumerWidget {
                     // Get the JWT token from auth provider
                     final authState = ref.read(authNotifierProvider);
                     String? token;
-                    
+
                     if (authState is AuthStateAuthenticated) {
                       token = authState.accessToken;
                     }
@@ -506,7 +504,8 @@ class _SettingsBody extends ConsumerWidget {
                     if (token == null || token.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Session expired. Please log in again.')),
+                            content:
+                                Text('Session expired. Please log in again.')),
                       );
                       return;
                     }
@@ -528,7 +527,7 @@ class _SettingsBody extends ConsumerWidget {
                       ref.read(authNotifierProvider.notifier).logout();
                       if (!context.mounted) return;
                       context.go(AppRoutes.login);
-                      
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text(
@@ -536,16 +535,17 @@ class _SettingsBody extends ConsumerWidget {
                       );
                     } else {
                       if (!context.mounted) return;
-                      
+
                       String errorMessage = 'Failed to unsubscribe';
                       try {
                         final errorBody = jsonDecode(response.body);
-                        errorMessage =
-                            errorBody['detail'] ?? errorBody['message'] ?? errorMessage;
+                        errorMessage = errorBody['detail'] ??
+                            errorBody['message'] ??
+                            errorMessage;
                       } catch (_) {
                         errorMessage = 'Server error: ${response.statusCode}';
                       }
-                      
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(errorMessage)),
                       );

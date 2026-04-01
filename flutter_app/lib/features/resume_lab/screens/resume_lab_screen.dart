@@ -40,7 +40,7 @@ class ResumeLab extends StatelessWidget {
           children: [
             // Tab 0: Resume Versions
             ResumeVersionsScreen(),
-            
+
             // Tab 1: Upload
             ResumeUploadScreen(),
           ],

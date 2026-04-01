@@ -201,8 +201,9 @@ class DashboardScreen extends ConsumerWidget {
                                 style: FilledButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(14),
-                                    side:
-                                        BorderSide(color: colors.ring.withValues(alpha: 0.4)),
+                                    side: BorderSide(
+                                        color:
+                                            colors.ring.withValues(alpha: 0.4)),
                                   ),
                                   elevation: 0,
                                   backgroundColor: colors.surfaceSecondary,
@@ -328,8 +329,9 @@ class _StatCard extends StatelessWidget {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.caption
-                  .copyWith(color: colors.foregroundSecondary, fontWeight: FontWeight.w500),
+              style: AppTextStyles.caption.copyWith(
+                  color: colors.foregroundSecondary,
+                  fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -839,7 +841,9 @@ class _ProfileMenuButton extends ConsumerWidget {
           child: Row(
             children: [
               Icon(
-                isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                isDarkMode
+                    ? Icons.light_mode_outlined
+                    : Icons.dark_mode_outlined,
                 size: 18,
                 color: colors.foreground,
               ),
@@ -859,11 +863,11 @@ class _ProfileMenuButton extends ConsumerWidget {
                 : themeMode == ThemeMode.light
                     ? ThemeMode.dark
                     : ThemeMode.system;
-            
+
             ref.read(themeModeProvider.notifier).state = nextMode;
           },
         ),
-        PopupMenuDivider(height: 8),
+        const PopupMenuDivider(height: 8),
         // Edit profile
         PopupMenuItem<String>(
           value: 'profile',
@@ -898,7 +902,7 @@ class _ProfileMenuButton extends ConsumerWidget {
           ),
           onTap: () => context.go(AppRoutes.settings),
         ),
-        PopupMenuDivider(height: 8),
+        const PopupMenuDivider(height: 8),
         // Sign out
         PopupMenuItem<String>(
           value: 'logout',
