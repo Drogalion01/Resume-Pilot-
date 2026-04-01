@@ -50,6 +50,11 @@ class RemindersWidget extends ConsumerWidget {
           label: const Text('Add Reminder'),
           style: OutlinedButton.styleFrom(
             minimumSize: const Size.fromHeight(40),
+            side: BorderSide(
+              color: colors.primary,
+              width: 1.5,
+            ),
+            foregroundColor: colors.primary,
           ),
         ),
       ],

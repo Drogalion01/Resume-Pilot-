@@ -452,6 +452,43 @@ abstract class AppTheme {
       dividerColor: c.borderSubtle,
     );
 
+    // ── TimePicker ─────────────────────────────────────────────────────────
+    final timePickerTheme = TimePickerThemeData(
+      backgroundColor: c.surfacePrimary,
+      dialBackgroundColor: c.surfaceSecondary,
+      hourMinuteColor: c.surfaceSecondary,
+      hourMinuteTextColor: c.foreground,
+      dayPeriodColor: c.primaryLight,
+      dayPeriodTextColor: c.primary,
+      dayPeriodShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadii.button),
+      ),
+      dialHandColor: c.primary,
+      dialTextColor: c.foreground,
+      entryModeIconColor: c.primary,
+      helpTextStyle: AppTextStyles.caption.copyWith(color: c.foreground),
+      inputDecorationTheme: InputDecorationTheme(
+        fillColor: c.surfaceSecondary,
+        filled: true,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.px12,
+          vertical: AppSpacing.px8,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadii.input),
+          borderSide: BorderSide(color: c.inputBorder),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadii.input),
+          borderSide: BorderSide(color: c.inputBorder),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadii.input),
+          borderSide: BorderSide(color: c.inputFocus, width: 1.5),
+        ),
+      ),
+    );
+
     // ── Assemble ─────────────────────────────────────────────────────────
     return ThemeData(
       useMaterial3: true,
@@ -493,6 +530,7 @@ abstract class AppTheme {
       tooltipTheme: tooltipTheme,
       iconButtonTheme: iconButtonTheme,
       tabBarTheme: tabBarTheme,
+      timePickerTheme: timePickerTheme,
       // Ink ripple tuning
       splashFactory: InkRipple.splashFactory,
       // Page transitions (Android-native feel)
