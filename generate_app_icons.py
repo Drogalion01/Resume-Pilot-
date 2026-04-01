@@ -18,9 +18,14 @@ print(f"Logo mode: {logo.mode}")
 # The circular compass icon is roughly in the center-top portion
 width, height = logo.size
 
-# Crop to extract just the icon portion (exclude "Resume Pilot" text)
-# The icon circle is approximately centered in the upper half
-icon_crop_box = (400, 150, 2800, 2450)  # Extract the compass circle icon
+# For pure icon: extract centered square region
+# Since it's just an icon, use larger central region for better quality
+crop_size = int(min(width, height) * 0.9)
+left = (width - crop_size) // 2
+top = (height - crop_size) // 2
+right = left + crop_size
+bottom = top + crop_size
+icon_crop_box = (left, top, right, bottom)
 icon_img = logo.crop(icon_crop_box)
 print(f"Cropped icon size: {icon_img.size}")
 
